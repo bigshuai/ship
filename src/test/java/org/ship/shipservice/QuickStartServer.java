@@ -17,7 +17,7 @@ import org.springside.modules.test.spring.Profiles;
 public class QuickStartServer {
 
 	public static final int PORT = 8080;
-	public static final String CONTEXT = "/quickstart";
+	public static final String CONTEXT = "/shipService";
 	public static final String[] TLD_JAR_NAMES = new String[] { "sitemesh", "spring-webmvc", "shiro-web",
 			"springside-core" };
 

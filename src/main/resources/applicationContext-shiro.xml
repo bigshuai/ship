@@ -16,17 +16,20 @@
 		<property name="accountService" ref="accountService"/>
 	</bean>
 	
-	<!-- Shiro Filter -->
+	<!-- Shiro Filter 过滤器会调用realm中的授权或认证的方法来获取授权或认证信息-->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
+		<!-- 登陆页面地址 -->
 		<property name="loginUrl" value="/login" />
+		<!-- 登陆成功页面地址 -->
 		<property name="successUrl" value="/" />
 		<property name="filterChainDefinitions">
+		  <!-- anon 表示匿名访问（不需要认证与授权）authc 表示需要认证每一个对应一种过滤器 -->
 			<value>
 				/login = authc
 				/logout = logout
 				/static/** = anon
-				/api/** = anon
+				/api/** = authc
 				/register/** = anon
 				/admin/** = roles[admin]
 				/** = user
