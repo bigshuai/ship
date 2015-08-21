@@ -37,7 +37,7 @@ public class RegisterController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String register(@Valid User user, RedirectAttributes redirectAttributes) {
 		accountService.registerUser(user);
-		redirectAttributes.addFlashAttribute("username", user.getLoginName());
+		//redirectAttributes.addFlashAttribute("username", user.getLoginName());
 		return "redirect:/login";
 	}
 
@@ -47,10 +47,11 @@ public class RegisterController {
 	@RequestMapping(value = "checkLoginName")
 	@ResponseBody
 	public String checkLoginName(@RequestParam("loginName") String loginName) {
-		if (accountService.findUserByLoginName(loginName) == null) {
-			return "true";
-		} else {
-			return "false";
-		}
+//		if (accountService.findUserByLoginName(loginName) == null) {
+//			return "true";
+//		} else {
+//			return "false";
+//		}
+		return "";
 	}
 }

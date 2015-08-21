@@ -35,30 +35,30 @@ public class UserAdminController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {
-		List<User> users = accountService.getAllUser();
-		model.addAttribute("users", users);
+//		List<User> users = accountService.getAllUser();
+//		model.addAttribute("users", users);
 
 		return "account/adminUserList";
 	}
 
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	public String updateForm(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("user", accountService.getUser(id));
+		//model.addAttribute("user", accountService.getUser(id));
 		return "account/adminUserForm";
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(@Valid @ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
-		accountService.updateUser(user);
-		redirectAttributes.addFlashAttribute("message", "更新用户" + user.getLoginName() + "成功");
+		//accountService.updateUser(user);
+		//redirectAttributes.addFlashAttribute("message", "更新用户" + user.getLoginName() + "成功");
 		return "redirect:/admin/user";
 	}
 
 	@RequestMapping(value = "delete/{id}")
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-		User user = accountService.getUser(id);
-		accountService.deleteUser(id);
-		redirectAttributes.addFlashAttribute("message", "删除用户" + user.getLoginName() + "成功");
+//		User user = accountService.getUser(id);
+//		accountService.deleteUser(id);
+		//redirectAttributes.addFlashAttribute("message", "删除用户" + user.getLoginName() + "成功");
 		return "redirect:/admin/user";
 	}
 
@@ -69,7 +69,7 @@ public class UserAdminController {
 	@ModelAttribute
 	public void getUser(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
 		if (id != -1) {
-			model.addAttribute("user", accountService.getUser(id));
+//			//model.addAttribute("user", accountService.getUser(id));
 		}
 	}
 }

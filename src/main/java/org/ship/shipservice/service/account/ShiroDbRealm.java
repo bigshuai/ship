@@ -35,14 +35,15 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-		User user = accountService.findUserByLoginName(token.getUsername());
-		if (user != null) {
-			byte[] salt = Encodes.decodeHex(user.getSalt());
-			return new SimpleAuthenticationInfo(new ShiroUser(user.getId(), user.getLoginName(), user.getName()),
-					user.getPassword(), ByteSource.Util.bytes(salt), getName());
-		} else {
-			return null;
-		}
+		//User user = accountService.findUserByLoginName(token.getUsername());
+//		if (user != null) {
+//			byte[] salt = Encodes.decodeHex(user.getSalt());
+//			return new SimpleAuthenticationInfo(new ShiroUser(user.getId(), user.getLoginName(), user.getName()),
+//					user.getPassword(), ByteSource.Util.bytes(salt), getName());
+//		} else {
+//			return null;
+//		}
+		return null;
 	}
 
 	/**
@@ -51,9 +52,9 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
-		User user = accountService.findUserByLoginName(shiroUser.loginName);
+		//User user = accountService.findUserByLoginName(shiroUser.loginName);
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		info.addRoles(user.getRoleList());
+		//info.addRoles(user.getRoleList());
 		return info;
 	}
 
@@ -62,10 +63,10 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	 */
 	@PostConstruct
 	public void initCredentialsMatcher() {
-		HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(AccountService.HASH_ALGORITHM);
-		matcher.setHashIterations(AccountService.HASH_INTERATIONS);
+		//HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(AccountService.HASH_ALGORITHM);
+		//matcher.setHashIterations(AccountService.HASH_INTERATIONS);
 
-		setCredentialsMatcher(matcher);
+		//setCredentialsMatcher(matcher);
 	}
 
 	public void setAccountService(AccountService accountService) {
