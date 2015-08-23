@@ -21,16 +21,15 @@ public class JavaHttpPost {
 	// HTTP POST request
     private void sendPost() throws Exception {
     	String result = "";  
-        String url = "http://43.254.52.16/shipService/api/v1/register";
+        String url = "http://localhost/shipService/api/v1/userInfo/consumeInfo";
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
         //add reuqest header
         con.setRequestMethod("POST");
 
-        String urlParameters = "phone=12375&password=132245&username=12&shipname=32&shipno=87";
+        String urlParameters = "accountId=14";
         URLEncoder.encode(urlParameters,"UTF-8");
-        System.out.println(urlParameters);
         // Send post request
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -41,9 +40,9 @@ public class JavaHttpPost {
                 new InputStreamReader(con.getInputStream()));  
         String line;  
         while ((line = in.readLine()) != null) {  
-            result += "/n" + line;  
+            result += "" + line;  
         }  
-        System.out.println("Response Code : " + result);
+        System.out.println("测试获取验证码功能 : " + result);
 
     }
 }

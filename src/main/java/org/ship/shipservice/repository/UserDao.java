@@ -12,8 +12,8 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface UserDao extends CrudRepository<User, Long> {
 	User findByPhoneAndPassword(String phone,String password);
+	User findByPhone(String phone);
 	@Modifying
 	@Query("update User u set u.password = ?2 where u.phone = ?1 and u.status=0")
 	int updateUser(String phone, String password);
-	User findByPhone(String phone);
 }

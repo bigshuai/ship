@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ship.shipservice.entity.Account;
 import org.ship.shipservice.entity.User;
 import org.ship.shipservice.service.account.AccountService;
 import org.ship.shipservice.utils.CommonUtils;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping(value="/api/v1")
+@RequestMapping(value="/api/v1/user")
 public class LoginRestController {
 	private static Logger logger = LoggerFactory
 			.getLogger(LoginRestController.class);
@@ -53,6 +54,7 @@ public class LoginRestController {
 			}else{
 				map.put("status",MyConstant.JSON_RETURN_CODE_500);
 				map.put("msg","手机号或密码错误");
+//				throw new RestException(HttpStatus.NOT_FOUND, "手机号或密码错误");
 			}
 		}
 		json = JsonUtil.map2json(map);
@@ -132,6 +134,10 @@ public class LoginRestController {
 			user.setShipno(shipno);
 			if(accountService.findByPhone(phone)==null){
 				user = accountService.registerUser(user);
+				//TODO 创建一个我的钱包
+				Account account = new Account();
+				account.setId(user.getId());
+				accountService.saveAccount(account);
 				if(user.getId()!=0){
 					map.put("status",MyConstant.JSON_RETURN_CODE_200);
 					map.put("msg","用户注册成功");

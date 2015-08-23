@@ -9,7 +9,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.ship.shipservice.entity.Account;
 import org.ship.shipservice.entity.User;
+import org.ship.shipservice.repository.AccountDao;
 import org.ship.shipservice.repository.TaskDao;
 import org.ship.shipservice.repository.UserDao;
 import org.ship.shipservice.service.ServiceException;
@@ -34,7 +36,7 @@ import org.springside.modules.utils.Encodes;
 public class AccountService {
 
 	private UserDao userDao;
-
+	private AccountDao accountDao;
 
 	public User findUserByPhoneAndPassword(String phone,String password) {
 		return userDao.findByPhoneAndPassword(phone,password);
@@ -51,9 +53,19 @@ public class AccountService {
 	public User findByPhone(String phone){
 		return userDao.findByPhone(phone);
 	}
+	
+	public Account saveAccount(Account account){
+		return accountDao.save(account);
+	}
 	@Autowired
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
+	@Autowired
+	public void setAccountDao(AccountDao accountDao) {
+		this.accountDao=accountDao;
+	}
+	
+
 
 }
