@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ConsumeInfoService {
 	private ConsumeInfoDao consumeInfoDao;
 
-	public List<ConsumeInfo> findByAccountId(Integer accountId, int pageNo) {
-		return consumeInfoDao.findByAccountId(accountId);
+	public List<ConsumeInfo> findByAccountId(Integer userId, int pageNo) {
+		return consumeInfoDao.findByUserId(userId);
 	}
 
 	public ConsumeInfoDao getConsumeInfoDao() {

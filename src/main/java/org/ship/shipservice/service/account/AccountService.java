@@ -5,25 +5,12 @@
  *******************************************************************************/
 package org.ship.shipservice.service.account;
 
-import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.ship.shipservice.entity.Account;
 import org.ship.shipservice.entity.User;
-import org.ship.shipservice.repository.AccountDao;
-import org.ship.shipservice.repository.TaskDao;
 import org.ship.shipservice.repository.UserDao;
-import org.ship.shipservice.service.ServiceException;
-import org.ship.shipservice.service.account.ShiroDbRealm.ShiroUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springside.modules.security.utils.Digests;
-import org.springside.modules.utils.Clock;
-import org.springside.modules.utils.Encodes;
 
 /**
  * 用户管理类.
@@ -36,7 +23,6 @@ import org.springside.modules.utils.Encodes;
 public class AccountService {
 
 	private UserDao userDao;
-	private AccountDao accountDao;
 
 	public User findUserByPhoneAndPassword(String phone,String password) {
 		return userDao.findByPhoneAndPassword(phone,password);
@@ -49,21 +35,20 @@ public class AccountService {
 	public int updateUser(String phone,String password) {
 		return userDao.updateUser(phone,password);
 	}
-
+	public int updateName(String phone,String username) {
+		return userDao.updateName(phone,username);
+	}
 	public User findByPhone(String phone){
 		return userDao.findByPhone(phone);
 	}
 	
-	public Account saveAccount(Account account){
-		return accountDao.save(account);
-	}
 	@Autowired
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
-	@Autowired
-	public void setAccountDao(AccountDao accountDao) {
-		this.accountDao=accountDao;
+
+	public UserDao getUserDao() {
+		return userDao;
 	}
 	
 

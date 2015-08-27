@@ -21,14 +21,14 @@ public class JavaHttpPost {
 	// HTTP POST request
     private void sendPost() throws Exception {
     	String result = "";  
-        String url = "http://localhost/shipService/api/v1/userInfo/consumeInfo";
+        String url = "http://localhost/shipService/api/v1/userInfo/advice";
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
         //add reuqest header
         con.setRequestMethod("POST");
 
-        String urlParameters = "accountId=14";
+        String urlParameters = "userId=17&advice=www&email=22@qq.com";
         URLEncoder.encode(urlParameters,"UTF-8");
         // Send post request
         con.setDoOutput(true);
@@ -42,7 +42,7 @@ public class JavaHttpPost {
         while ((line = in.readLine()) != null) {  
             result += "" + line;  
         }  
-        System.out.println("测试获取验证码功能 : " + result);
+        System.out.println("测试个人中心功能 : " + result);
 
     }
 }

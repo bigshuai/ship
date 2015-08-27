@@ -6,7 +6,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="t_consumeInfo")
 public class ConsumeInfo extends IdEntity{
-	private Integer accountId;
+	private Integer userId;
 	private String describe;
 	private Double money;
 	public ConsumeInfo(){
@@ -16,11 +16,11 @@ public class ConsumeInfo extends IdEntity{
 		this.id=id;
 	}
 	
-	public Integer getAccountId() {
-		return accountId;
+	public Integer getUserId() {
+		return userId;
 	}
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 	public String getDescribe() {
 		return describe;

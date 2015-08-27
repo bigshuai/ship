@@ -9,6 +9,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ConsumeInfoDao extends CrudRepository<ConsumeInfo,Long>{
 	@Modifying
-	@Query("select c from ConsumeInfo c where c.accountId=?1")
-	List<ConsumeInfo> findByAccountId(Integer accountId);
+	@Query("select c from ConsumeInfo c where c.userId=?1 ")
+	List<ConsumeInfo> findByUserId(Integer accountId);
 }

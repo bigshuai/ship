@@ -1,10 +1,11 @@
 package org.ship.shipservice.rest;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ship.shipservice.entity.Account;
 import org.ship.shipservice.entity.User;
 import org.ship.shipservice.service.account.AccountService;
 import org.ship.shipservice.utils.CommonUtils;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springside.modules.mapper.JsonMapper;
 
 /**
  * 一键登陆
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginRestController {
 	private static Logger logger = LoggerFactory
 			.getLogger(LoginRestController.class);
+	private static JsonMapper mapper = JsonMapper.nonDefaultMapper();
 	@Autowired
     private AccountService accountService;
 	/**
@@ -50,6 +53,7 @@ public class LoginRestController {
 			if(user!=null){
 				map.put("status",MyConstant.JSON_RETURN_CODE_200);
 				map.put("msg","登陆成功");
+				map.put("result", mapper.toJson(user));
 				logger.info("登陆成功");
 			}else{
 				map.put("status",MyConstant.JSON_RETURN_CODE_500);
@@ -132,15 +136,14 @@ public class LoginRestController {
 			user.setUsername(username);
 			user.setShipname(shipname);
 			user.setShipno(shipno);
+			user.setRegisterDate(new Date());
+			user.setBalance(new BigDecimal(0.00d));
 			if(accountService.findByPhone(phone)==null){
 				user = accountService.registerUser(user);
-				//TODO 创建一个我的钱包
-				Account account = new Account();
-				account.setId(user.getId());
-				accountService.saveAccount(account);
 				if(user.getId()!=0){
 					map.put("status",MyConstant.JSON_RETURN_CODE_200);
 					map.put("msg","用户注册成功");
+					map.put("result", mapper.toJson(user));
 				}else{
 					map.put("status",MyConstant.JSON_RETURN_CODE_500);
 					map.put("msg","用户注册失败");

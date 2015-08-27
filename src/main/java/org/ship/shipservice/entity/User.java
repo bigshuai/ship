@@ -1,5 +1,6 @@
 package org.ship.shipservice.entity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,17 +25,17 @@ import org.hibernate.validator.constraints.NotBlank;
 public class User extends IdEntity {
 	private String username;
 	private String password;
-	private String email;
 	private String phone;
 	private String shipname;
 	private String shipno;
-	private String company;
-	private Picture picture;//头像
+	private String url;// 头像
+	private String city;
 	private int status;
 	private Date registerDate;
-	private Account account;//我的钱包
+	private BigDecimal balance;// 我的钱包
 	private List<CouponList> couponList = new ArrayList<CouponList>();
 	private List<Order> orderList = new ArrayList<Order>();
+
 	public User() {
 	}
 
@@ -60,14 +61,6 @@ public class User extends IdEntity {
 		this.password = password;
 	}
 
-	@Column(name = "email")
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
 	@NotBlank
 	public String getPhone() {
@@ -96,15 +89,6 @@ public class User extends IdEntity {
 		this.shipno = shipno;
 	}
 
-	@Column(name = "company")
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
 	@Column(name = "status")
 	public int getStatus() {
 		return status;
@@ -112,6 +96,14 @@ public class User extends IdEntity {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	@Column(name="city")
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	@Column(name = "create_time")
@@ -122,24 +114,23 @@ public class User extends IdEntity {
 	public void setRegisterDate(Date registerDate) {
 		this.registerDate = registerDate;
 	}
-	@OneToOne(fetch=FetchType.EAGER,cascade=CascadeType.ALL)
-	@JoinColumn(name="pid",unique=true)
-	public Picture getPicture() {
-		return picture;
+
+	@Column(name = "url")
+	public String getUrl() {
+		return url;
 	}
 
-	public void setPicture(Picture picture) {
-		this.picture = picture;
-	}
-	//主键相等的一对一
-	@OneToOne
-	@PrimaryKeyJoinColumn
-	public Account getAccount() {
-		return account;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
+	@Column(name = "balance")
+	public BigDecimal getBalance() {
+		return balance;
+	}
+
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -148,13 +139,14 @@ public class User extends IdEntity {
 	public List<CouponList> getCouponList() {
 		return couponList;
 	}
-   
+
 	public void setCouponList(List<CouponList> couponList) {
 		this.couponList = couponList;
 	}
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name="user_id")
-	@OrderBy(value="create_time desc")
+	@JoinColumn(name = "user_id")
+	@OrderBy(value = "create_time desc")
 	public List<Order> getOrderList() {
 		return orderList;
 	}
