@@ -23,7 +23,7 @@ public class Order extends IdEntity {
 	private Integer status;
 	private Date bookTime;
 	private Date createTime;
-	private GasStation gasStation;
+	private OilStation oilStation;
 	private List<CouponList> couponList = new ArrayList<CouponList>();
 
 	public Order() {
@@ -90,13 +90,13 @@ public class Order extends IdEntity {
 		this.createTime = createTime;
 	}
     @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="gas_station_id")
-	public GasStation getGasStation() {
-		return gasStation;
+    @JoinColumn(name="oil_station_id")
+	public OilStation getOilStation() {
+		return oilStation;
 	}
 
-	public void setGasStation(GasStation gasStation) {
-		this.gasStation = gasStation;
+	public void setOilStation(OilStation oilStation) {
+		this.oilStation = oilStation;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
