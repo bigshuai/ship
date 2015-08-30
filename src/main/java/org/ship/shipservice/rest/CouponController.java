@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
@@ -46,13 +47,12 @@ public class CouponController implements HybConstants{
 		return JSON.toJSONString(result);
 	}
 	
-	@RequestMapping(value="/get", method = RequestMethod.POST)
-	public String getCoupon() {
+	@RequestMapping(value="/get",params = { "cid" }, method = RequestMethod.POST)
+	public String getCoupon(@RequestParam("cid") Long couponId) {
 		Long osId = null;
 		UserBean ub = (UserBean)request.getSession().getAttribute(SESSION_USER);
-		ResResult<List<CouponBean>> result = new ResResult<List<CouponBean>>();
-		List<CouponBean> list = couponService.queryCouponList(osId);
-		result.setResult(list);
+		Long userId = 1L;
+		ResResult<String> result = couponService.getCoupon(userId, couponId);
 		return JSON.toJSONString(result);
 	}
 

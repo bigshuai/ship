@@ -1,12 +1,12 @@
 package org.ship.shipservice.service.coupon.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.domain.CouponBean;
+import org.ship.shipservice.domain.ResResult;
 import org.ship.shipservice.entity.Coupon;
 import org.ship.shipservice.repository.CouponDao;
 import org.ship.shipservice.service.coupon.CouponService;
@@ -43,10 +43,31 @@ public class CouponServiceImpl implements CouponService{
 		return result;
 	}
 	
-	public Map<String, String> getCoupon(Long userId, Long couponId){
+	public ResResult<String> getCoupon(Long userId, Long couponId){
 		//先查询该用户 该优惠券是否已经领取
-		
-		return null;
+		int count = couponDao.checkGetCoupon(userId, couponId);
+		ResResult<String> result = new ResResult<String>();
+		if(count > 0){
+			result.setCode(ErrorConstants.COUPON_GET_EXIST_DAY_ERROR);
+			result.setMsg(ErrorConstants.getErrorMsg(ErrorConstants.COUPON_GET_EXIST_DAY_ERROR));
+		}else{
+			int n = couponDao.checkCouponTime(couponId);
+			if(n > 0){
+				//在有效期内
+				int r = couponDao.saveCoupon(userId, couponId);
+				if(r > 0){
+					result.setCode(ErrorConstants.SUCCESS);
+					result.setMsg(ErrorConstants.getErrorMsg(ErrorConstants.SUCCESS));
+				}else{
+					result.setCode(ErrorConstants.COUPON_GET_ERROR);
+					result.setMsg(ErrorConstants.getErrorMsg(ErrorConstants.COUPON_GET_ERROR));
+				}
+			}else{
+				result.setCode(ErrorConstants.COUPON_GET_OVERTIME_ERROR);
+				result.setMsg(ErrorConstants.getErrorMsg(ErrorConstants.COUPON_GET_OVERTIME_ERROR));
+			}
+		}
+		return result;
 	}
 
 	public CouponDao getCouponDao() {
