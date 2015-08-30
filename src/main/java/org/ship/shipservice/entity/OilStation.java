@@ -16,19 +16,11 @@ public class OilStation extends IdEntity {
 	private Float credit;// 信誉等级
 	private Float quality;// 品质
 	private Float service;// 服务
-	private Integer appraiseNum;//评论数
 	private Integer couponFlag;
-	private String derate;//500-30#200-20
+	private Integer derateFlag;
 	private Integer status;
 	private Date createTime;
 	private Date updateTime;
-
-	public OilStation() {
-	}
-
-	public OilStation(Long id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -68,14 +60,6 @@ public class OilStation extends IdEntity {
 
 	public void setCityId(Integer cityId) {
 		this.cityId = cityId;
-	}
-
-	public Integer getAppraiseNum() {
-		return appraiseNum;
-	}
-
-	public void setAppraiseNum(Integer appraiseNum) {
-		this.appraiseNum = appraiseNum;
 	}
 
 	public Float getCredit() {
@@ -134,11 +118,11 @@ public class OilStation extends IdEntity {
 		this.couponFlag = couponFlag;
 	}
 
-	public String getDerate() {
-		return derate;
+	public Integer getDerateFlag() {
+		return derateFlag;
 	}
 
-	public void setDerate(String derate) {
-		this.derate = derate;
+	public void setDerateFlag(Integer derateFlag) {
+		this.derateFlag = derateFlag;
 	}
 }

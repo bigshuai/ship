@@ -13,6 +13,7 @@ public class Coupon extends IdEntity {
 	private Double faceValue;
 	private Integer limitValue;
 	private Integer type;
+	private Long osId;
 	private Integer effectiveDay;
 	private Date startTime;
 	private Date endTime;
@@ -67,6 +68,14 @@ public class Coupon extends IdEntity {
 
 	public void setLimitValue(Integer limitValue) {
 		this.limitValue = limitValue;
+	}
+
+	public Long getOsId() {
+		return osId;
+	}
+
+	public void setOsId(Long osId) {
+		this.osId = osId;
 	}
 
 	public Integer getType() {
