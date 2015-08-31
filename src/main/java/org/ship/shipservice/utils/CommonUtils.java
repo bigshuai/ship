@@ -2,10 +2,18 @@ package org.ship.shipservice.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
+
+import org.ship.shipservice.domain.CouponBean;
+import org.ship.shipservice.domain.ResResult;
+import org.ship.shipservice.domain.ResultList;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * @author zhf 通用工具类
@@ -91,5 +99,40 @@ public class CommonUtils {
 			e.printStackTrace();
 		}
 		return inputline;
+	}
+	
+	public static <T> String printListStr(T list, int size){
+		ResResult<ResultList<T>> result = new ResResult<ResultList<T>>();
+		ResultList<T> reulstList = new ResultList<T>();
+		reulstList.setDataList(list);
+		reulstList.setSize(size);
+		result.setResult(reulstList);
+		return JSON.toJSONString(result);
+	}
+	
+	public static <T> String printListStr(T list){
+		ResResult<ResultList<T>> result = new ResResult<ResultList<T>>();
+		ResultList<T> reulstList = new ResultList<T>();
+		reulstList.setDataList(list);
+		try {
+			Method m = List.class.getMethod("size");
+			Object size = m.invoke(list);
+			reulstList.setSize(Integer.valueOf(size.toString()));
+			result.setResult(reulstList);
+			return JSON.toJSONString(result);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public static <T> String printObjStr(T obj){
+		ResResult<T> result = new ResResult<T>();
+		result.setResult(obj);
+		return JSON.toJSONString(result);
+	}
+	
+	public static String printObjStr2(Object obj){
+		return JSON.toJSONString(obj);
 	}
 }

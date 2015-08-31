@@ -6,8 +6,10 @@ import java.util.List;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.domain.CouponBean;
+import org.ship.shipservice.domain.OilStationBean;
 import org.ship.shipservice.domain.ResResult;
 import org.ship.shipservice.entity.Coupon;
+import org.ship.shipservice.entity.CouponList;
 import org.ship.shipservice.repository.CouponDao;
 import org.ship.shipservice.service.coupon.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,32 @@ public class CouponServiceImpl implements CouponService{
 			}
 		}
 		return result;
+	}
+	
+	public List<CouponBean> queryUserCouponList(Long userId, Integer status){
+		List<Object[]> list = new ArrayList<Object[]>();
+		if(StringUtils.isEmpty(status)){
+			list = couponDao.queryUserCouponList(userId);
+		}else{
+			list = couponDao.queryUserCouponList(userId, status);
+		}
+		
+		List<CouponBean> result = new ArrayList<CouponBean>();
+		for(Object[] o : list){
+			CouponBean os = new CouponBean();
+			//t.coupon_id, t.`status`,t.coupon_name, t.face_value,t.limit_value,t.start_time,t.end_time,t.create_time 
+			os.setId(Long.valueOf(o[0]+""));
+			os.setStatus(Integer.valueOf(o[1]+""));
+			os.setName(o[2]+"");
+			os.setFaceValue((Float.valueOf(o[3]+"")));
+			os.setLimitValue((Integer.valueOf(o[4]+"")));
+			os.setStartTime(null);
+			os.setEndTime(null);
+			os.setCreateTime(null);
+			result.add(os);
+		}
+		return result;
+		
 	}
 	
 	public ResResult<String> getCoupon(Long userId, Long couponId){

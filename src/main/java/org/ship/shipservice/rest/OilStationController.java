@@ -6,8 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ship.shipservice.domain.OilStationBean;
 import org.ship.shipservice.domain.ResResult;
+import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.entity.City;
 import org.ship.shipservice.service.oil.OilStationService;
+import org.ship.shipservice.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +37,8 @@ public class OilStationController {
 	 */
 	@RequestMapping(value="/city", method = RequestMethod.GET)
 	public String getCity() {
-		ResResult<List<City>> result = new ResResult<List<City>>();
 		List<City> list = oilStationService.queryCityList();
-		result.setResult(list);
-		return JSON.toJSONString(result);
+		return CommonUtils.printListStr(list);
 	}
 	
 	/**
@@ -48,10 +48,8 @@ public class OilStationController {
 	 */
 	@RequestMapping(value="/station", method = RequestMethod.GET)
 	public String getStation(@RequestParam("cityid") Integer cityId) {
-		ResResult<List<OilStationBean>> result = new ResResult<List<OilStationBean>>();
 		List<OilStationBean> list = oilStationService.queryOilList(cityId);
-		result.setResult(list);
-		return JSON.toJSONString(result);
+		return CommonUtils.printListStr(list);
 	}
 	
 	/**
@@ -61,10 +59,8 @@ public class OilStationController {
 	 */
 	@RequestMapping(value="/detail", method = RequestMethod.GET)
 	public String getDetail(@RequestParam("osid") Long osId) {
-		ResResult<OilStationBean> result = new ResResult<OilStationBean>();
 		OilStationBean os = oilStationService.queryDetail(osId);
-		result.setResult(os);
-		return JSON.toJSONString(result);
+		return CommonUtils.printObjStr(os);
 	}
 
 	public OilStationService getOilStationService() {

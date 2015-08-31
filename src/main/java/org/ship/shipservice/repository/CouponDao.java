@@ -3,6 +3,7 @@ package org.ship.shipservice.repository;
 import java.util.List;
 
 import org.ship.shipservice.entity.Coupon;
+import org.ship.shipservice.entity.CouponList;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -31,4 +32,12 @@ public interface CouponDao extends CrudRepository<Coupon, Long> {
 	@Query(value="INSERT INTO t_coupon_list(coupon_id,user_id,status,coupon_name,face_value,limit_value,start_time,end_time,create_time) "
 			+ "SELECT c.id,?1,0,c.`name`,c.face_value,c.limit_value,c.start_time,c.end_time,NOW() FROM t_coupon c where c.id=?2", nativeQuery=true)
 	public int saveCoupon(Long userId, Long cpId);
+
+	@Modifying
+	@Query(value="SELECT t.coupon_id, t.`status`,t.coupon_name, t.face_value,t.limit_value,t.start_time,t.end_time,t.create_time FROM t_coupon_list t where t.user_id=?1 order by t.create_time desc", nativeQuery=true)
+	List<Object[]> queryUserCouponList(Long userId);
+	
+	@Modifying
+	@Query(value="SELECT t.coupon_id, t.`status`,t.coupon_name, t.face_value,t.limit_value,t.start_time,t.end_time,t.create_time FROM t_coupon_list t where t.user_id=?1 and t.status =?2 order by t.create_time desc", nativeQuery=true)
+	List<Object[]> queryUserCouponList(Long userId, Integer status);
 }

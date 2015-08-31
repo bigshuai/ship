@@ -4,11 +4,16 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.sf.ehcache.transaction.xa.commands.Command;
+
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.CouponBean;
+import org.ship.shipservice.domain.OilStationBean;
 import org.ship.shipservice.domain.ResResult;
+import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.domain.UserBean;
 import org.ship.shipservice.service.coupon.CouponService;
+import org.ship.shipservice.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +46,21 @@ public class CouponController implements HybConstants{
 			osId = Long.valueOf(request.getParameter("osid"));
 		} catch (NumberFormatException e) {
 		}
-		ResResult<List<CouponBean>> result = new ResResult<List<CouponBean>>();
 		List<CouponBean> list = couponService.queryCouponList(osId);
-		result.setResult(list);
-		return JSON.toJSONString(result);
+		return CommonUtils.printListStr(list);
+	}
+	
+	@RequestMapping(value="/user", method = RequestMethod.GET)
+	public String getUserCouponList() {
+		Integer status = null;
+		try {
+			status = Integer.valueOf(request.getParameter("s"));
+		} catch (NumberFormatException e) {
+		}
+		UserBean ub = (UserBean)request.getSession().getAttribute(SESSION_USER);
+		Long userId = 1L;
+		List<CouponBean> list = couponService.queryUserCouponList(userId, status);
+		return CommonUtils.printListStr(list);
 	}
 	
 	@RequestMapping(value="/get",params = { "cid" }, method = RequestMethod.POST)
@@ -53,7 +69,7 @@ public class CouponController implements HybConstants{
 		UserBean ub = (UserBean)request.getSession().getAttribute(SESSION_USER);
 		Long userId = 1L;
 		ResResult<String> result = couponService.getCoupon(userId, couponId);
-		return JSON.toJSONString(result);
+		return CommonUtils.printObjStr2(result);
 	}
 
 	public CouponService getCouponService() {

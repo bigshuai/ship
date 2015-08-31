@@ -6,7 +6,7 @@ public class CouponBean {
 	private Long id;
 	private String name;
 	private String desc;
-	private Double faceValue;
+	private Float faceValue;
 	private Integer limitValue;
 	private Integer type;
 	private Long osId;
@@ -34,10 +34,10 @@ public class CouponBean {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
-	public Double getFaceValue() {
+	public Float getFaceValue() {
 		return faceValue;
 	}
-	public void setFaceValue(Double faceValue) {
+	public void setFaceValue(Float faceValue) {
 		this.faceValue = faceValue;
 	}
 	public Integer getLimitValue() {
