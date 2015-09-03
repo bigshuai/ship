@@ -10,12 +10,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -35,7 +33,7 @@ public class User extends IdEntity {
 	private BigDecimal balance;// 我的钱包
 	private List<CouponList> couponList = new ArrayList<CouponList>();
 	private List<Order> orderList = new ArrayList<Order>();
-
+    private String token;
 	public User() {
 	}
 
@@ -153,6 +151,14 @@ public class User extends IdEntity {
 
 	public void setOrderList(List<Order> orderList) {
 		this.orderList = orderList;
+	}
+	@Transient
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	@Override

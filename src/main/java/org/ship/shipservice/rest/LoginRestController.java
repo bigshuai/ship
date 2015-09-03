@@ -2,14 +2,14 @@ package org.ship.shipservice.rest;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ship.shipservice.entity.User;
 import org.ship.shipservice.service.account.AccountService;
 import org.ship.shipservice.utils.CommonUtils;
-import org.ship.shipservice.utils.JsonUtil;
 import org.ship.shipservice.utils.MyConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springside.modules.mapper.JsonMapper;
 
 /**
  * 一键登陆
@@ -31,7 +30,8 @@ import org.springside.modules.mapper.JsonMapper;
 public class LoginRestController {
 	private static Logger logger = LoggerFactory
 			.getLogger(LoginRestController.class);
-	private static JsonMapper mapper = JsonMapper.nonDefaultMapper();
+	@Autowired 
+	private ServletContext servletContext;
 	@Autowired
     private AccountService accountService;
 	/**
@@ -42,27 +42,21 @@ public class LoginRestController {
 	 */
 	@RequestMapping(value="/login",params={"phone","password"},method = RequestMethod.POST)
 	public String login(@RequestParam("phone") String phone,@RequestParam("password") String password) {
-		String json = "";
-		Map<Object, Object> map = new HashMap<Object, Object>();
 		if(StringUtils.isEmpty(phone)||StringUtils.isEmpty(password)){
-			map.put("status",MyConstant.JSON_RETURN_CODE_400);
-			map.put("msg",MyConstant.JSON_RETURN_MESSAGE_400);
-			logger.info(MyConstant.JSON_RETURN_MESSAGE_400);
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
 			User user = accountService.findUserByPhoneAndPassword(phone,password);
 			if(user!=null){
-				map.put("status",MyConstant.JSON_RETURN_CODE_200);
-				map.put("msg","登陆成功");
-				map.put("result", mapper.toJson(user));
-				logger.info("登陆成功");
+				user.setPassword("");
+				String token = CommonUtils.getMD5(user.getId()+System.currentTimeMillis()+"");
+				servletContext.setAttribute(user.getId()+"", token);
+				user.setToken(token);
+				return CommonUtils.printObjStr(user, "200", "用户登陆成功");
 			}else{
-				map.put("status",MyConstant.JSON_RETURN_CODE_500);
-				map.put("msg","手机号或密码错误");
-//				throw new RestException(HttpStatus.NOT_FOUND, "手机号或密码错误");
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+
 			}
 		}
-		json = JsonUtil.map2json(map);
-		return json;
 	}
 	/**
 	 * 获取验证码
@@ -70,20 +64,12 @@ public class LoginRestController {
 	 * @return
 	 */
 	@RequestMapping(value="/code", method = RequestMethod.POST)
-	public String getCode(@RequestParam("phone") Integer phone) {
-		// CommonUtils.sendMessage(phone, CommonUtils.createRandom(true, 6));
-		String json = "";
-		Map<Object, Object> map = new HashMap<Object, Object>();
-		if(phone==0){
-			map.put("status",MyConstant.JSON_RETURN_CODE_400);
-			map.put("msg",MyConstant.JSON_RETURN_MESSAGE_400);
-			logger.info(MyConstant.JSON_RETURN_MESSAGE_400);
+	public String getCode(@RequestParam("phone") String phone) {
+		if(StringUtils.isEmpty(phone)){
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
-			map.put("status",MyConstant.JSON_RETURN_CODE_200);
-			map.put("msg",CommonUtils.createRandom(true, 6));
+			return CommonUtils.printObjStr(CommonUtils.createRandom(true, 6), "200", "验证码");
 		}
-		json = JsonUtil.map2json(map);
-		return json;
 	}
 	/**
 	 * 重置密码
@@ -91,26 +77,22 @@ public class LoginRestController {
 	 * @param password
 	 * @return
 	 */
-	@RequestMapping(value="/update",params={"phone","password"},method = RequestMethod.POST)
-	public String updatePwd(@RequestParam("phone") String phone,@RequestParam("password") String password){
-		String json = "";
-		Map<Object, Object> map = new HashMap<Object, Object>();
+	@RequestMapping(value="/update",params={"phone","password","id","token"},method = RequestMethod.POST)
+	public String updatePwd(@RequestParam("phone") String phone,@RequestParam("password") String password,@RequestParam("id") String id ,@RequestParam("token") String token,HttpSession httpSession){
 		if(StringUtils.isEmpty(phone)||StringUtils.isEmpty(password)){
-			map.put("status",MyConstant.JSON_RETURN_CODE_400);
-			map.put("msg",MyConstant.JSON_RETURN_MESSAGE_400);
-			logger.info(MyConstant.JSON_RETURN_MESSAGE_400);
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
-			int count = accountService.updateUser(phone,password);
-			if(count!=0){
-				map.put("status",MyConstant.JSON_RETURN_CODE_200);
-				map.put("msg","密码更新成功");
+			if(servletContext.getAttribute(id).equals(token)){
+				int count = accountService.updateUser(phone,password);
+				if(count!=0){
+					return CommonUtils.printStr( "200", "密码更新成功");
+				}else{
+					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+				}
 			}else{
-				map.put("status",MyConstant.JSON_RETURN_CODE_500);
-				map.put("msg","用户不存在");
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 			}
 		}
-		json = JsonUtil.map2json(map);
-		return json;
 	}
 	/**
 	 * 用户注册
@@ -123,12 +105,8 @@ public class LoginRestController {
 	 */
 	@RequestMapping(value="/register",params={"phone","password","username","shipname","shipno"},method = RequestMethod.POST)
 	public String register(@RequestParam("phone") String phone,@RequestParam("password") String password,@RequestParam("username") String username,@RequestParam("shipname") String shipname,@RequestParam("shipno") String shipno){
-		String json = "";
-		Map<Object, Object> map = new HashMap<Object, Object>();
 		if(StringUtils.isEmpty(phone)||StringUtils.isEmpty(password)){
-			map.put("status",MyConstant.JSON_RETURN_CODE_400);
-			map.put("msg",MyConstant.JSON_RETURN_MESSAGE_400);
-			logger.info(MyConstant.JSON_RETURN_MESSAGE_400);
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
 			User user = new User();
 			user.setPhone(phone);
@@ -141,21 +119,35 @@ public class LoginRestController {
 			if(accountService.findByPhone(phone)==null){
 				user = accountService.registerUser(user);
 				if(user.getId()!=0){
-					map.put("status",MyConstant.JSON_RETURN_CODE_200);
-					map.put("msg","用户注册成功");
-					map.put("result", mapper.toJson(user));
+					user.setPassword("");
+					String token = CommonUtils.getMD5(user.getId()+System.currentTimeMillis()+"");
+					servletContext.setAttribute(user.getId()+"", token);
+					user.setToken(token);
+					return CommonUtils.printObjStr(user, "200", "用户注册成功");
 				}else{
-					map.put("status",MyConstant.JSON_RETURN_CODE_500);
-					map.put("msg","用户注册失败");
+					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 				}
 			}else{
-				map.put("status",MyConstant.JSON_RETURN_CODE_200);
-				map.put("msg","用户已存在");
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 			}
-			
 		}
-		json = JsonUtil.map2json(map);
-		return json;
+	}
+	/**
+	 * 登出
+	 * @param id
+	 * @param token
+	 * @return
+	 */
+	@RequestMapping(value="/logout",params="{id,token}",method=RequestMethod.POST)
+	public String logout(@RequestParam("id") String id,@RequestParam("token") String token){
+		if(StringUtils.isEmpty(id)||StringUtils.isEmpty(token)){
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+		}else if(servletContext.getAttribute(id).equals(token)){
+			servletContext.removeAttribute(id);
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_200, MyConstant.JSON_RETURN_MESSAGE_200);
+		}else{
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+		}
 	}
 	
 }

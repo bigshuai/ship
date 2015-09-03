@@ -14,6 +14,7 @@ import org.ship.shipservice.entity.UserAdvice;
 import org.ship.shipservice.service.account.AccountService;
 import org.ship.shipservice.service.account.AdviceService;
 import org.ship.shipservice.service.account.ConsumeInfoService;
+import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.JsonUtil;
 import org.ship.shipservice.utils.MyConstant;
 import org.slf4j.Logger;
@@ -47,12 +48,8 @@ public class UserInfoRestController {
 	
 	@RequestMapping(value = "/list", params = { "phone" }, method = RequestMethod.POST)
 	public String userInfo(@RequestParam("phone") String phone) {
-		String json = "";
-		Map<Object, Object> map = new HashMap<Object, Object>();
 		if (StringUtils.isEmpty(phone)) {
-			map.put("status", MyConstant.JSON_RETURN_CODE_400);
-			map.put("msg", MyConstant.JSON_RETURN_MESSAGE_400);
-			logger.info(MyConstant.JSON_RETURN_MESSAGE_400);
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		} else {
 			User user = accountService.findByPhone(phone);
 			int couponCount = user.getCouponList().size();
@@ -64,13 +61,8 @@ public class UserInfoRestController {
 					}
 				}
 			}
-			map.put("status", MyConstant.JSON_RETURN_CODE_200);
-			map.put("user", mapper.toJson(user));
-			map.put("couponCount", couponCount);
-			map.put("orderCount", orderCount);
+			return CommonUtils.printObjStr(mapper.toJson(user).toString()+couponCount+orderCount, "200", "用户登陆成功");
 		}
-		json = JsonUtil.map2json(map);
-		return json;
 	}
 
 	@RequestMapping(value = "/consumeInfo", params = { "userId" }, method = RequestMethod.POST)
@@ -142,15 +134,15 @@ public class UserInfoRestController {
 				user.setUsername(username);
 				int result = accountService.updateName(phone, username);
 				if(result==1){
-					map.put("status", MyConstant.JSON_RETURN_CODE_200);
+					map.put("code", MyConstant.JSON_RETURN_CODE_200);
 					map.put("msg", "用户名更新成功");
 					map.put("result", mapper.toJson(user));
 				}else{
-					map.put("status", MyConstant.JSON_RETURN_CODE_500);
+					map.put("code", MyConstant.JSON_RETURN_CODE_500);
 					map.put("msg", MyConstant.JSON_RETURN_MESSAGE_500);
 				}
 			}else{
-				map.put("status", MyConstant.JSON_RETURN_CODE_200);
+				map.put("code", MyConstant.JSON_RETURN_CODE_200);
 				map.put("msg", "用户不存在");
 			}
 		}
@@ -162,7 +154,7 @@ public class UserInfoRestController {
 		String json = "";
 		Map<Object, Object> map = new HashMap<Object, Object>();
 		if(userId==0||StringUtils.isEmpty(advice)){
-			map.put("status", MyConstant.JSON_RETURN_CODE_400);
+			map.put("code", MyConstant.JSON_RETURN_CODE_400);
 			map.put("msg", MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
 			UserAdvice useradvice = adviceService.findByUserId(userId);
@@ -175,7 +167,7 @@ public class UserInfoRestController {
 				uadvice.setEmail(email);
 				adviceService.getAdviceDao().save(uadvice);
 			}
-			map.put("status", MyConstant.JSON_RETURN_CODE_200);
+			map.put("code", MyConstant.JSON_RETURN_CODE_200);
 			map.put("msg", MyConstant.JSON_RETURN_MESSAGE_200);
 		}
 		json = JsonUtil.map2json(map);

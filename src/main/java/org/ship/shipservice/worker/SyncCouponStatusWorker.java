@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 public class SyncCouponStatusWorker {
 	@Scheduled(cron="0/5 * * * * ? ") //间隔5秒执行  
 	public void process(){  
-        System.out.println("process.....");  
+//        System.out.println("process.....");  
     }  
 }
