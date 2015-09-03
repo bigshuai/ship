@@ -6,10 +6,9 @@ import java.util.List;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.domain.CouponBean;
-import org.ship.shipservice.domain.OilStationBean;
 import org.ship.shipservice.domain.ResResult;
+import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.entity.Coupon;
-import org.ship.shipservice.entity.CouponList;
 import org.ship.shipservice.repository.CouponDao;
 import org.ship.shipservice.service.coupon.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,33 +23,53 @@ public class CouponServiceImpl implements CouponService{
 	private CouponDao couponDao;
 	
 	@Override
-	public List<CouponBean> queryCouponList(Long osId) {
+	public ResultList queryCouponList(Long osId, Integer page, Integer pageSize) {
+		ResultList rl = new ResultList();
+		int start = (page - 1) * pageSize;
 		List<CouponBean> result = new ArrayList<CouponBean>();
-		List<Coupon> list = null;
+		List<Object[]> list = null;
+		int total = 0;
+		//id, name,desc, face_value, limit_value,os_id,type,`status`,effective_day,start_time,end_time
 		if(StringUtils.isEmpty(osId)){
-			list = couponDao.queryCouponAll();
+			list = couponDao.queryCouponAll(start, pageSize);
+			total = couponDao.queryCouponAllTotal();
 		}else{
-			list = couponDao.queryCouponList(osId);
+			list = couponDao.queryCouponList(osId, start, pageSize);
+			total = couponDao.queryCouponTotalList(osId);
 		}
 		for(int i = 0 ; (list != null && i < list.size()); i++){
+			Object[] o = list.get(i);
 			CouponBean bean = new CouponBean();
-			Coupon c = list.get(i);
-			try {
-				PropertyUtils.copyProperties(bean, c);
-				result.add(bean);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			bean.setId(Long.valueOf(o[0] + ""));
+			bean.setName(o[1] + "");
+			bean.setDesc(o[2] + "");
+			bean.setFaceValue(Float.valueOf(o[3] + ""));
+			bean.setLimitValue(Integer.valueOf(o[4] + ""));
+			bean.setOsId(Long.valueOf(o[5] + ""));
+			bean.setType(Integer.valueOf(o[6] + ""));
+			bean.setStatus(Integer.valueOf(o[7] + ""));
+			bean.setEffectiveDay(Integer.valueOf(o[8] + ""));
+			bean.setStartTime(o[9] + "");
+			bean.setEndTime(o[10] + "");
+			result.add(bean);
 		}
-		return result;
+		rl.setDataList(result);
+		rl.setPage(page);
+		rl.setTotal(total);
+		return rl;
 	}
 	
-	public List<CouponBean> queryUserCouponList(Long userId, Integer status){
+	public ResultList queryUserCouponList(Long userId, Integer status, Integer page, Integer pageSize){
+		ResultList rl = new ResultList();
 		List<Object[]> list = new ArrayList<Object[]>();
+		int start = (page - 1) * pageSize;
+		int total = 0;
 		if(StringUtils.isEmpty(status)){
-			list = couponDao.queryUserCouponList(userId);
+			list = couponDao.queryUserCouponList(userId, start, pageSize);
+			total = couponDao.queryUserCouponTotal(userId);
 		}else{
-			list = couponDao.queryUserCouponList(userId, status);
+			list = couponDao.queryUserCouponList(userId, status, start, pageSize);
+			total = couponDao.queryUserCouponSTotal(userId, status);
 		}
 		
 		List<CouponBean> result = new ArrayList<CouponBean>();
@@ -67,7 +86,10 @@ public class CouponServiceImpl implements CouponService{
 			os.setCreateTime(null);
 			result.add(os);
 		}
-		return result;
+		rl.setDataList(result);
+		rl.setPage(page);
+		rl.setTotal(total);
+		return rl;
 		
 	}
 	

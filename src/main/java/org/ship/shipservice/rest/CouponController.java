@@ -4,11 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.ehcache.transaction.xa.commands.Command;
-
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.CouponBean;
-import org.ship.shipservice.domain.OilStationBean;
 import org.ship.shipservice.domain.ResResult;
 import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.domain.UserBean;
@@ -35,7 +32,7 @@ public class CouponController implements HybConstants{
     private CouponService couponService;
 	
 	/**
-	 * 获取加油站列表
+	 * 获取优惠券列表
 	 * @param phone
 	 * @return
 	 */
@@ -46,7 +43,9 @@ public class CouponController implements HybConstants{
 			osId = Long.valueOf(request.getParameter("osid"));
 		} catch (NumberFormatException e) {
 		}
-		List<CouponBean> list = couponService.queryCouponList(osId);
+		Integer[] pageInfo = CommonUtils.getPageInfo(request);
+		logger.debug("getCouponList start.osId="+osId + ",page=" + JSON.toJSONString(pageInfo));
+		ResultList list = couponService.queryCouponList(osId, pageInfo[0], pageInfo[1]);
 		return CommonUtils.printListStr(list);
 	}
 	
@@ -57,14 +56,17 @@ public class CouponController implements HybConstants{
 			status = Integer.valueOf(request.getParameter("s"));
 		} catch (NumberFormatException e) {
 		}
+		logger.debug("getUserCouponList start.status="+status);
 		UserBean ub = (UserBean)request.getSession().getAttribute(SESSION_USER);
 		Long userId = 1L;
-		List<CouponBean> list = couponService.queryUserCouponList(userId, status);
+		Integer[] pageInfo = CommonUtils.getPageInfo(request);
+		ResultList list = couponService.queryUserCouponList(userId, status, pageInfo[0], pageInfo[1]);
 		return CommonUtils.printListStr(list);
 	}
 	
 	@RequestMapping(value="/get",params = { "cid" }, method = RequestMethod.POST)
 	public String getCoupon(@RequestParam("cid") Long couponId) {
+		logger.debug("getCoupon start.couponId="+couponId);
 		Long osId = null;
 		UserBean ub = (UserBean)request.getSession().getAttribute(SESSION_USER);
 		Long userId = 1L;

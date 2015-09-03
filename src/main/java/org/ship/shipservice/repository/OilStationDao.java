@@ -31,8 +31,21 @@ public interface OilStationDao extends CrudRepository<OilStation, Long> {
 			+ ") t "
 			+ "LEFT JOIN "
 			+ "t_derate d on (t.id=d.os_id or d.os_id=0) group by t.id,t.name,t.credit,"
-			+ "t.coupon_flag,t.derate_flag,t.num,t.status", nativeQuery = true)
-	List<Object[]> findByCityId(Integer cityId);
+			+ "t.coupon_flag,t.derate_flag,t.num,t.status order by id desc limit ?2,?3", nativeQuery = true)
+	List<Object[]> findByCityId(Integer cityId, Integer start, Integer end);
+	
+	@Query(value = "select count(1) from (select t.id,t.name,t.credit,t.coupon_flag,t.num,t.status, "
+			+ "case when t.derate_flag=1 then GROUP_CONCAT(d.info) ELSE '' END derate from "
+			+ "("
+			+ "select o.id,o.name,o.credit,o.coupon_flag,o.derate_flag,o.status, count(*) num "
+			+ "from t_oil_station o,t_appraise a "
+			+ "where o.city_id=?1 and o.status=1 and o.id=a.os_id and a.status=1 "
+			+ "group by o.id,o.name,o.credit,o.coupon_flag,o.derate_flag,o.status"
+			+ ") t "
+			+ "LEFT JOIN "
+			+ "t_derate d on (t.id=d.os_id or d.os_id=0) group by t.id,t.name,t.credit,"
+			+ "t.coupon_flag,t.derate_flag,t.num,t.status) e", nativeQuery = true)
+	int findCountByCityId(Integer cityId);
 
 	@Modifying
 	@Query("select o.name,o.desc,o.address,o.credit,o.quality,o.service, count(*) from OilStation o,Appraise a where o.status=1 and o.id=a.osId and a.status=1 group by o.name,o.desc,o.address,o.credit,o.quality,o.service")

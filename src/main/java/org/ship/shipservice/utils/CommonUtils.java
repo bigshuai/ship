@@ -10,6 +10,9 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.domain.CouponBean;
 import org.ship.shipservice.domain.ResResult;
 import org.ship.shipservice.domain.ResultList;
@@ -103,29 +106,62 @@ public class CommonUtils {
 		return inputline;
 	}
 	
-	public static <T> String printListStr(T list, int size){
-		ResResult<ResultList<T>> result = new ResResult<ResultList<T>>();
-		ResultList<T> reulstList = new ResultList<T>();
-		reulstList.setDataList(list);
-		reulstList.setSize(size);
-		result.setResult(reulstList);
+	public static Integer[] getPageInfo(HttpServletRequest request){
+		Integer page = null;
+		Integer pageSize = null;
+		try {
+			page = Integer.valueOf(request.getParameter("page"));
+			pageSize = Integer.valueOf(request.getParameter("pageSize"));
+		} catch (NumberFormatException e) {
+		}
+		
+		if(page == null){
+			page = 1;
+		}
+		
+		if(pageSize == null){
+			pageSize = 20;
+		}
+		
+		return new Integer[]{page, pageSize};
+	}
+ 	
+	public static <T> String printListStr(T list, int page, int totalSize){
+		ResResult<T> result = new ResResult<T>();
+		result.setPage(page);
+		result.setTotalSize(totalSize);
+		result.setResult(list);
+		return JSON.toJSONString(result);
+	}
+	
+	public static <T> String printListStr(T list, int totalSize){
+		return printListStr(list,1 , totalSize);
+	}
+	
+	public static String printListStr(ResultList list){
+		ResResult result = new ResResult();
+		result.setPage(list.getPage());
+		result.setTotalSize(list.getTotal());
+		result.setResult(list.getDataList());
 		return JSON.toJSONString(result);
 	}
 	
 	public static <T> String printListStr(T list){
-		ResResult<ResultList<T>> result = new ResResult<ResultList<T>>();
-		ResultList<T> reulstList = new ResultList<T>();
-		reulstList.setDataList(list);
-		try {
-			Method m = List.class.getMethod("size");
-			Object size = m.invoke(list);
-			reulstList.setSize(Integer.valueOf(size.toString()));
-			result.setResult(reulstList);
-			return JSON.toJSONString(result);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return "";
+		ResResult<T> result = new ResResult<T>();
+		result.setResult(list);
+		return JSON.toJSONString(result);
+	}
+	
+	public static <T> String printObjStr(T obj, String code, String msg){
+		ResResult<T> result = new ResResult<T>();
+		result.setCode(code);
+		result.setMsg(msg);
+		result.setResult(obj);
+		return JSON.toJSONString(result);
+	}
+	
+	public static <T> String printObjStr(T obj, String code){
+		return printObjStr(obj, code, ErrorConstants.getErrorMsg(code));
 	}
 	public static <T> String printListStr(T list,String code,String msg){
 		ResResult<ResultList<T>> result = new ResResult<ResultList<T>>();
@@ -159,6 +195,20 @@ public class CommonUtils {
 	
 	public static <T> String printStr(String code,String msg){
 		ResResult<T> result = new ResResult<T>();
+		result.setCode(code);
+		result.setMsg(msg);
+		return JSON.toJSONString(result);
+	}
+	
+	public static String printObjStr(String code){
+		ResResult result = new ResResult();
+		result.setCode(code);
+		result.setMsg(ErrorConstants.getErrorMsg(code));
+		return JSON.toJSONString(result);
+	}
+	
+	public static String printObjStr(String code, String msg){
+		ResResult result = new ResResult();
 		result.setCode(code);
 		result.setMsg(msg);
 		return JSON.toJSONString(result);
