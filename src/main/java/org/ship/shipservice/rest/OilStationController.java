@@ -4,10 +4,14 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ship.shipservice.domain.OilStationBean;
 import org.ship.shipservice.domain.ResultList;
+import org.ship.shipservice.entity.Appraise;
+import org.ship.shipservice.service.appraise.AppraiseService;
 import org.ship.shipservice.service.oil.OilStationService;
 import org.ship.shipservice.utils.CommonUtils;
+import org.ship.shipservice.utils.MyConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSON;
 
 @RestController
 @RequestMapping(value="/api/v1/os")
@@ -25,6 +31,9 @@ public class OilStationController {
 	
 	@Autowired
     private OilStationService oilStationService;
+	
+	@Autowired
+	private AppraiseService appraiseService;
 	
 	/**
 	 * 获取城市列表
@@ -64,6 +73,16 @@ public class OilStationController {
 		return CommonUtils.printObjStr(os);
 	}
 
+	@RequestMapping(value="/saveAppraise" ,method=RequestMethod.POST)
+	public String saveAppraise(@RequestParam("oilAppraise") String oilAppraise){
+		if(StringUtils.isEmpty(oilAppraise)){
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+		}else{
+			Appraise appraise = JSON.parseObject(oilAppraise, Appraise.class); 
+			appraiseService.saveOilAppraise(appraise);
+			return CommonUtils.printStr( "200", "评价成功");
+		}
+	}
 	public OilStationService getOilStationService() {
 		return oilStationService;
 	}

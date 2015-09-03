@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -12,10 +13,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "t_order")
 public class Order extends IdEntity {
+	private Integer userId;
 	private Integer gasType;
 	private Integer type;
 	private Double money;
@@ -32,6 +33,15 @@ public class Order extends IdEntity {
 
 	public Order(Long id) {
 		this.id = id;
+	}
+
+	@Column(name = "user_id")
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 	public Integer getGasType() {
@@ -82,6 +92,7 @@ public class Order extends IdEntity {
 		this.bookTime = bookTime;
 	}
 
+	@Column(name = "create_time")
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -89,8 +100,9 @@ public class Order extends IdEntity {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-    @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="oil_station_id")
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "oil_station_id")
 	public OilStation getOilStation() {
 		return oilStation;
 	}

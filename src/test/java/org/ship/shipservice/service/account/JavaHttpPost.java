@@ -21,14 +21,14 @@ public class JavaHttpPost {
 	// HTTP POST request
     private void sendPost() throws Exception {
     	String result = "";  
-        String url = "http://localhost/shipService/api/v1/userInfo/advice";
+        String url = "http://localhost/shipService/api/v1/os/saveAppraise";
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
         //add reuqest header
         con.setRequestMethod("POST");
 
-        String urlParameters = "userId=17&advice=www&email=22@qq.com";
+        String urlParameters = "oilAppraise={userId:1}";
         URLEncoder.encode(urlParameters,"UTF-8");
         // Send post request
         con.setDoOutput(true);
