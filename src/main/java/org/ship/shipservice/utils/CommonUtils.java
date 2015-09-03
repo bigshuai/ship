@@ -163,32 +163,32 @@ public class CommonUtils {
 	public static <T> String printObjStr(T obj, String code){
 		return printObjStr(obj, code, ErrorConstants.getErrorMsg(code));
 	}
-	public static <T> String printListStr(T list,String code,String msg){
-		ResResult<ResultList<T>> result = new ResResult<ResultList<T>>();
-		ResultList<T> reulstList = new ResultList<T>();
-		reulstList.setDataList(list);
-		try {
-			Method m = List.class.getMethod("size");
-			Object size = m.invoke(list);
-			reulstList.setSize(Integer.valueOf(size.toString()));
-			result.setResult(reulstList);
-			result.setCode(code);
-			result.setMsg(msg);
-			return JSON.toJSONString(result);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return "";
-	}
+//	public static <T> String printListStr(T list,String code,String msg){
+//		ResResult<ResultList<T>> result = new ResResult<ResultList<T>>();
+//		ResultList<T> reulstList = new ResultList<T>();
+//		reulstList.setDataList(list);
+//		try {
+//			Method m = List.class.getMethod("size");
+//			Object size = m.invoke(list);
+//			reulstList.setSize(Integer.valueOf(size.toString()));
+//			result.setResult(reulstList);
+//			result.setCode(code);
+//			result.setMsg(msg);
+//			return JSON.toJSONString(result);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//		return "";
+//	}
 	public static <T> String printObjStr(T obj){
 		ResResult<T> result = new ResResult<T>();
 		result.setResult(obj);
 		return JSON.toJSONString(result);
 	}
-	public static <T> String printObjStr(T obj,String code,String msg){
+	public static <T> String printObjStr(T obj,Integer code,String msg){
 		ResResult<T> result = new ResResult<T>();
 		result.setResult(obj);
-		result.setCode(code);
+		result.setCode(code+"");
 		result.setMsg(msg);
 		return JSON.toJSONString(result);
 	}

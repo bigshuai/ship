@@ -61,7 +61,7 @@ public class UserInfoRestController {
 					}
 				}
 			}
-			return CommonUtils.printObjStr(mapper.toJson(user).toString()+couponCount+orderCount, "200", "用户登陆成功");
+			return CommonUtils.printObjStr(mapper.toJson(user).toString()+couponCount+orderCount, 200, "用户登陆成功");
 		}
 	}
 

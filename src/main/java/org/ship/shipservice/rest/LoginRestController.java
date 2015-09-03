@@ -51,7 +51,7 @@ public class LoginRestController {
 				String token = CommonUtils.getMD5(user.getId()+System.currentTimeMillis()+"");
 				servletContext.setAttribute(user.getId()+"", token);
 				user.setToken(token);
-				return CommonUtils.printObjStr(user, "200", "用户登陆成功");
+				return CommonUtils.printObjStr(user, 200, "用户登陆成功");
 			}else{
 				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 
@@ -68,7 +68,7 @@ public class LoginRestController {
 		if(StringUtils.isEmpty(phone)){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
-			return CommonUtils.printObjStr(CommonUtils.createRandom(true, 6), "200", "验证码");
+			return CommonUtils.printObjStr(CommonUtils.createRandom(true, 6), 200, "验证码");
 		}
 	}
 	/**
@@ -123,7 +123,7 @@ public class LoginRestController {
 					String token = CommonUtils.getMD5(user.getId()+System.currentTimeMillis()+"");
 					servletContext.setAttribute(user.getId()+"", token);
 					user.setToken(token);
-					return CommonUtils.printObjStr(user, "200", "用户注册成功");
+					return CommonUtils.printObjStr(user, 200, "用户注册成功");
 				}else{
 					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 				}
