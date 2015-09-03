@@ -1,14 +1,12 @@
 package org.ship.shipservice.service.coupon;
 
-import java.util.List;
-
-import org.ship.shipservice.domain.CouponBean;
 import org.ship.shipservice.domain.ResResult;
+import org.ship.shipservice.domain.ResultList;
 
 public interface CouponService {
-	public List<CouponBean> queryCouponList(Long osId);
+	public ResultList queryCouponList(Long osId, Integer page, Integer pageSize);
 	
-	public List<CouponBean> queryUserCouponList(Long userId, Integer status);
+	public ResultList queryUserCouponList(Long userId, Integer status, Integer page, Integer pageSize);
  	
 	public  ResResult<String> getCoupon(Long userId, Long couponId);
 }

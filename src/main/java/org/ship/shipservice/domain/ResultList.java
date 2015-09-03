@@ -1,25 +1,26 @@
 package org.ship.shipservice.domain;
 
-public class ResultList<T> {
+public class ResultList {
+	private Integer page;
 	private Integer total;
-	private Integer size;
-	private T dataList;
+	private Object dataList;
+	
+	public Integer getPage() {
+		return page;
+	}
+	public void setPage(Integer page) {
+		this.page = page;
+	}
 	public Integer getTotal() {
 		return total;
 	}
 	public void setTotal(Integer total) {
 		this.total = total;
 	}
-	public Integer getSize() {
-		return size;
-	}
-	public void setSize(Integer size) {
-		this.size = size;
-	}
-	public T getDataList() {
+	public Object getDataList() {
 		return dataList;
 	}
-	public void setDataList(T dataList) {
+	public void setDataList(Object dataList) {
 		this.dataList = dataList;
 	}
 }

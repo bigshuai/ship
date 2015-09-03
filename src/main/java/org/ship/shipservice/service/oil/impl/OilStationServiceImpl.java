@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.ship.shipservice.domain.OilBean;
 import org.ship.shipservice.domain.OilStationBean;
+import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.entity.City;
 import org.ship.shipservice.entity.Oil;
 import org.ship.shipservice.repository.OilStationDao;
@@ -20,8 +21,10 @@ public class OilStationServiceImpl implements OilStationService {
 	@Autowired
 	private OilStationDao oilStationDao;
 	
-	public List<OilStationBean> queryOilList(Integer cityId){
-		List<Object[]> list = oilStationDao.findByCityId(cityId);
+	public ResultList queryOilList(Integer cityId, int page, int pageSize){
+		ResultList r = new ResultList();
+		int start = (page - 1)*pageSize;
+		List<Object[]> list = oilStationDao.findByCityId(cityId, start, pageSize);
 		List<OilStationBean> result = new ArrayList<OilStationBean>();
 		for(Object[] o : list){
 			OilStationBean os = new OilStationBean();
@@ -35,11 +38,17 @@ public class OilStationServiceImpl implements OilStationService {
 			os.setDerate(o[6]+"");
 			result.add(os);
 		}
-		return result;
+		r.setDataList(result);
+		r.setPage(page);
+		r.setTotal(oilStationDao.findCountByCityId(cityId));
+		return r;
 	}
 	
-	public List<City> queryCityList(){
-		return oilStationDao.queryCityList();
+	public ResultList queryCityList(){
+		ResultList r = new ResultList();
+		List<City> list = oilStationDao.queryCityList();
+		r.setDataList(list);
+		return r;
 	}
 	
 	@Override

@@ -11,19 +11,19 @@ public class TestCoupon  extends TestBase{
 	}
 	
 	public static void testCouponList(){
-		String url = "http://localhost:8080/shipService/api/v1/coupon/list?osId=1";
-		System.out.println("ccc ="+httpGet(url));
+		String url = "http://localhost:8080/shipService/api/v1/coupon/list?osId=1&page=1&pageSize=10";
+		System.out.println("优惠券列表 ="+httpGet(url));
 	}
 	
 	public static void testUserCouponList(){
-		String url = "http://localhost:8080/shipService/api/v1/coupon/user";
-		System.out.println("ccc ="+httpGet(url));
+		String url = "http://localhost:8080/shipService/api/v1/coupon/user?page=2&pageSize=10";
+		System.out.println("用户优惠券列表 ="+httpGet(url));
 	}
 	
 	public static void testAddCoupon(){
 		String url = "http://localhost:8080/shipService/api/v1/coupon/get";
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("cid","1");
-		System.out.println("ccc ="+httpPost(url, params));
+		System.out.println("领取优惠券 ="+httpPost(url, params));
 	}
 }

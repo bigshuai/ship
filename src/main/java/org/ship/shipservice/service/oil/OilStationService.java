@@ -1,10 +1,7 @@
 package org.ship.shipservice.service.oil;
 
-import java.util.List;
-
 import org.ship.shipservice.domain.OilStationBean;
-import org.ship.shipservice.entity.City;
-import org.ship.shipservice.entity.OilStation;
+import org.ship.shipservice.domain.ResultList;
 
 
 public interface OilStationService {
@@ -14,7 +11,7 @@ public interface OilStationService {
 	 * @param cityId
 	 * @return
 	 */
-	public List<OilStationBean> queryOilList(Integer cityId);
+	public ResultList queryOilList(Integer cityId, int page, int pageSize);
 	
 	/**
 	 * 
@@ -27,5 +24,5 @@ public interface OilStationService {
 	 * 
 	 * @return
 	 */
-	public List<City> queryCityList();
+	public ResultList queryCityList();
 }
