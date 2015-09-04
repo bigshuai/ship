@@ -40,7 +40,7 @@ public class TestBase {
                 NameValuePair nameValuePair = new BasicNameValuePair(entry.getKey(), String.valueOf(entry.getValue()));  
                 valuePairs.add(nameValuePair);  
             }  
-            UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(valuePairs, "GBK");  
+            UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(valuePairs, "UTF8");  
             httpPost.setEntity(formEntity);  
             HttpResponse resp = client.execute(httpPost);  
               

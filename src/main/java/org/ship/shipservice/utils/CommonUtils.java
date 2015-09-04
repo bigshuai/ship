@@ -2,13 +2,18 @@ package org.ship.shipservice.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +21,7 @@ import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.domain.CouponBean;
 import org.ship.shipservice.domain.ResResult;
 import org.ship.shipservice.domain.ResultList;
+import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 
@@ -163,23 +169,7 @@ public class CommonUtils {
 	public static <T> String printObjStr(T obj, String code){
 		return printObjStr(obj, code, ErrorConstants.getErrorMsg(code));
 	}
-//	public static <T> String printListStr(T list,String code,String msg){
-//		ResResult<ResultList<T>> result = new ResResult<ResultList<T>>();
-//		ResultList<T> reulstList = new ResultList<T>();
-//		reulstList.setDataList(list);
-//		try {
-//			Method m = List.class.getMethod("size");
-//			Object size = m.invoke(list);
-//			reulstList.setSize(Integer.valueOf(size.toString()));
-//			result.setResult(reulstList);
-//			result.setCode(code);
-//			result.setMsg(msg);
-//			return JSON.toJSONString(result);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
-//		return "";
-//	}
+	
 	public static <T> String printObjStr(T obj){
 		ResResult<T> result = new ResResult<T>();
 		result.setResult(obj);
@@ -200,20 +190,17 @@ public class CommonUtils {
 		return JSON.toJSONString(result);
 	}
 	
-	public static String printObjStr(String code){
+	public static String printStr(String code){
 		ResResult result = new ResResult();
 		result.setCode(code);
 		result.setMsg(ErrorConstants.getErrorMsg(code));
 		return JSON.toJSONString(result);
 	}
 	
-	public static String printObjStr(String code, String msg){
+	public static String printStr(){
 		ResResult result = new ResResult();
-		result.setCode(code);
-		result.setMsg(msg);
 		return JSON.toJSONString(result);
 	}
-	
 	public static String printObjStr2(Object obj){
 		return JSON.toJSONString(obj);
 	}
@@ -246,5 +233,49 @@ public class CommonUtils {
         //logger.info("MD5摘要信息：" + s);
         return s;
     }
+	
+	public static String getIp(){
+		String ip = null;
+		try {
+			ip = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		if(StringUtils.isEmpty(ip)){
+			ip = "127.0.0.1";
+		}
+		return ip;
+	}
+	
+	public static String getPayRequestNo(String userId){
+		return UUID.randomUUID().toString().substring(0, 26) + "-" + userId;
+	}
+	
+	public static String decode(String str){
+		try {
+			if(!StringUtils.isEmpty(str)){
+				return URLDecoder.decode(str,"UTF-8");
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public static String decode2(String str){
+		try {
+			if(!StringUtils.isEmpty(str)){
+				return URLDecoder.decode(URLDecoder.decode(str,"GBK"),"GBK");
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
 
+	public static void main(String[] args) throws UnsupportedEncodingException {
+		String f = "%E7%8E%8B%E6%B4%AA%E4%BE%A0";
+		System.out.println(URLEncoder.encode("工商银行", "GBK"));
+		System.out.println(decode(f));
+	}
 }

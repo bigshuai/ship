@@ -3,12 +3,10 @@ package org.ship.shipservice.service.coupon.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.domain.CouponBean;
 import org.ship.shipservice.domain.ResResult;
 import org.ship.shipservice.domain.ResultList;
-import org.ship.shipservice.entity.Coupon;
 import org.ship.shipservice.repository.CouponDao;
 import org.ship.shipservice.service.coupon.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
