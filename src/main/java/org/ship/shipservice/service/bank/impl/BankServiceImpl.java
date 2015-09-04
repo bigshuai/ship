@@ -118,10 +118,11 @@ public class BankServiceImpl implements BankService {
 		try {
 			PayResponse<SignRes> res= client.checkSign(HybConstants.MERCHANTNO, requestNo, code);
 			if(res.getHttpCode()==200 && res.isSignResult()){
-				if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
+				if(HybConstants.TEST || HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
 					//签约成功，发送短信，返回到验证码页面
 					//保存银行卡信息到t_bank
-					int r = bankDao.updateSign(res.getObj().getAgreementNo(), requestNo);
+					String agreementNo = HybConstants.TEST?"22222":res.getObj().getAgreementNo();
+					int r = bankDao.updateSign(agreementNo, requestNo);
 					if(r > 0){
 						return null;
 					}else{
