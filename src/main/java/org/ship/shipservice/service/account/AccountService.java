@@ -35,8 +35,8 @@ public class AccountService {
 	public int updateUser(String phone,String password) {
 		return userDao.updateUser(phone,password);
 	}
-	public int updateName(String phone,String username) {
-		return userDao.updateName(phone,username);
+	public User updateName(User user) {
+		return userDao.save(user);
 	}
 	public User findByPhone(String phone){
 		return userDao.findByPhone(phone);

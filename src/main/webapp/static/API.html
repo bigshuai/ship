@@ -1,0 +1,98 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <title></title>
+<style id="system" type="text/css">h1,h2,h3,h4,h5,h6,p,blockquote {    margin: 0;    padding: 0;}body {    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;    font-size: 13px;    line-height: 18px;    color: #737373;    margin: 10px 13px 10px 13px;}a {    color: #0069d6;}a:hover {    color: #0050a3;    text-decoration: none;}a img {    border: none;}p {    margin-bottom: 9px;}h1,h2,h3,h4,h5,h6 {    color: #404040;    line-height: 36px;}h1 {    margin-bottom: 18px;    font-size: 30px;}h2 {    font-size: 24px;}h3 {    font-size: 18px;}h4 {    font-size: 16px;}h5 {    font-size: 14px;}h6 {    font-size: 13px;}hr {    margin: 0 0 19px;    border: 0;    border-bottom: 1px solid #ccc;}blockquote {    padding: 13px 13px 21px 15px;    margin-bottom: 18px;    font-family:georgia,serif;    font-style: italic;}blockquote:before {    content:"C";    font-size:40px;    margin-left:-10px;    font-family:georgia,serif;    color:#eee;}blockquote p {    font-size: 14px;    font-weight: 300;    line-height: 18px;    margin-bottom: 0;    font-style: italic;}code, pre {    font-family: Monaco, Andale Mono, Courier New, monospace;}code {    background-color: #fee9cc;    color: rgba(0, 0, 0, 0.75);    padding: 1px 3px;    font-size: 12px;    -webkit-border-radius: 3px;    -moz-border-radius: 3px;    border-radius: 3px;}pre {    display: block;    padding: 14px;    margin: 0 0 18px;    line-height: 16px;    font-size: 11px;    border: 1px solid #d9d9d9;    white-space: pre-wrap;    word-wrap: break-word;}pre code {    background-color: #fff;    color:#737373;    font-size: 11px;    padding: 0;}@media screen and (min-width: 768px) {    body {        width: 748px;        margin:10px auto;    }}</style><style id="custom" type="text/css"></style></head>
+<body marginheight="0"><h1>航运宝API</h1>
+<p>=========================================
+</p>
+<h2>注册登录模块</h2>
+<h2>1 注册</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/user/register
+#参数#  param={phone:123475,password:132245,username:12,shipname:32,shipno=87} 
+       （手机和密码不能为空，其他选填）
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"用户注册成功"}</code></pre>
+<h2>2 登录</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/user/login
+#参数#  phone=13444444&amp;password=132245&amp;deviceToken=yuuhjioj
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"用户登陆成功","result":{"balance":0.00,"couponList":[],"id":22,"orderList":[],"password":"","phone":"13444444","registerDate":1441335358000,"shipname":"32","shipno":"87","status":0,"token":"8bdbda6aa3344c3a20808d77ad85ddda","username":"12"}}</code></pre>
+<h2>3 获取验证码</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/user/code
+#参数#  phone=18516293301
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"验证码","result":"655322"}</code></pre>
+<h2>4 重置密码</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/user/update
+#参数#  phone=18516293301&amp;password=111111&amp;id=1&amp;token=8bdbda6aa3344c3a20808d77ad85ddda
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"重置成功"}</code></pre>
+<h2>5 登出</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/user/logout
+#参数#  id=1&amp;token=8bdbda6aa3344c3a20808d77ad85ddda
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"登出成功"}</code></pre>
+<p>===================================================
+</p>
+<h2>用户中心模块</h2>
+<h2>1 详情列表</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/userInfo/list
+#参数#  phone=18516293301
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"详情列表","result":{"balance":0.00,"couponCount":0,"couponList":[],"id":22,"orderCount":0,"orderList":[],"password":"132245","phone":"13444444","registerDate":1441335358000,"shipname":"32","shipno":"87","status":0,"username":"12"}}
+        没有头像url不传</code></pre>
+<h2>2 上传头像</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/userInfo/uploadHeadImg
+#参数#  phone=18516293301&amp;file=
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"上传成功","result":"43.254.55.158/shipService/headImage/123222114751441372101675.jpg"}</code></pre>
+<h2>3 更新昵称</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/userInfo/updateUsername
+#参数#  phone=18516293301&amp;userInfo={username=hello,shipname=boat,shipno=p988888}  需要更新哪个字段传哪个
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"更新名字成功","result":{"balance":0.00,"couponList":[],"id":22,"orderList":[],"password":"132245","phone":"13444444","registerDate":1441335358000,"shipname":"32","shipno":"87","status":0,"username":"zhangsan"}}</code></pre>
+<h2>4 消费详情</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/userInfo/consumeInfo
+#参数#  userId=17
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"消费详情","result":[{"describe":"222","id":1,"money":33,"userId":17},{"describe":"wwww","id":2,"money":21,"userId":17}]}</code></pre>
+<h2>5 用户建议</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/userInfo/advice
+#参数#  userId=17&amp;advice=hao&amp;email=email.qq.com
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"请求成功"}</code></pre>
+<p>==================================================
+
+</p>
+<p><h2>用户订单模块</h2>
+
+</p>
+<h2>1 订单列表</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/order/list
+#参数#  userId=1&amp;status=4  4完成的订单 其他未完成
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"请求完成","result":[{"couponList":[],"createTime":1441290791000,"id":1,"oilStation":{"address":"上海市罗星路","cityId":1,"couponFlag":1,"createTime":1440833639000,"credit":5,"derateFlag":1,"desc":"微风航海加油站","id":1,"name":"微风航海加油站","phone":"123456","quality":5,"service":5,"status":1,"updateTime":1440867763000},"status":4,"userId":1}]}</code></pre>
+<p>===================================================
+
+</p>
+<p><h2>加油站模块</h2>
+
+</p>
+<h2>1 加油站评价</h2>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/os/saveAppraise
+#参数#  oilAppraise={userid:1,orderId:1,credit:1,quality:1,service:1} 评价默认都是1
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"评价成功"}</code></pre>
+</body></html>

@@ -19,4 +19,5 @@ public interface UserDao extends CrudRepository<User, Long> {
 	@Modifying
 	@Query("update User u set u.username = ?2 where u.phone = ?1 and u.status=0")
 	int updateName(String phone, String username);
+	User save(User user);
 }

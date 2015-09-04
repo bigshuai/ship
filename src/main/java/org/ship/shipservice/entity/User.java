@@ -34,6 +34,8 @@ public class User extends IdEntity {
 	private List<CouponList> couponList = new ArrayList<CouponList>();
 	private List<Order> orderList = new ArrayList<Order>();
     private String token;
+    private Integer couponCount;
+    private Integer orderCount;
 	public User() {
 	}
 
@@ -159,6 +161,22 @@ public class User extends IdEntity {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+	@Transient
+	public Integer getCouponCount() {
+		return couponCount;
+	}
+
+	public void setCouponCount(Integer couponCount) {
+		this.couponCount = couponCount;
+	}
+	@Transient
+	public Integer getOrderCount() {
+		return orderCount;
+	}
+
+	public void setOrderCount(Integer orderCount) {
+		this.orderCount = orderCount;
 	}
 
 	@Override

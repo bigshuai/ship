@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
+
 /**
  * 一键登陆
  * 
@@ -40,21 +42,20 @@ public class LoginRestController {
 	 * @param password
 	 * @return
 	 */
-	@RequestMapping(value="/login",params={"phone","password"},method = RequestMethod.POST)
-	public String login(@RequestParam("phone") String phone,@RequestParam("password") String password) {
-		if(StringUtils.isEmpty(phone)||StringUtils.isEmpty(password)){
+	@RequestMapping(value="/login",method = RequestMethod.POST)
+	public String login(@RequestParam("phone") String phone,@RequestParam("password") String password,@RequestParam("deviceToken") String deviceToken) {
+		if(StringUtils.isEmpty(phone)||StringUtils.isEmpty(password)||StringUtils.isEmpty(deviceToken)){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
 			User user = accountService.findUserByPhoneAndPassword(phone,password);
 			if(user!=null){
 				user.setPassword("");
-				String token = CommonUtils.getMD5(user.getId()+System.currentTimeMillis()+"");
+				String token = CommonUtils.getMD5(deviceToken+System.currentTimeMillis()+"");
 				servletContext.setAttribute(user.getId()+"", token);
 				user.setToken(token);
 				return CommonUtils.printObjStr(user, 200, "用户登陆成功");
 			}else{
 				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
-
 			}
 		}
 	}
@@ -96,34 +97,25 @@ public class LoginRestController {
 	}
 	/**
 	 * 用户注册
-	 * @param phone
-	 * @param password
-	 * @param username
-	 * @param shipname
-	 * @param shipno
+	 * @param param={phone:123475,password:132245,username:12,shipname:32,shipno=87}
 	 * @return
 	 */
-	@RequestMapping(value="/register",params={"phone","password","username","shipname","shipno"},method = RequestMethod.POST)
-	public String register(@RequestParam("phone") String phone,@RequestParam("password") String password,@RequestParam("username") String username,@RequestParam("shipname") String shipname,@RequestParam("shipno") String shipno){
-		if(StringUtils.isEmpty(phone)||StringUtils.isEmpty(password)){
+	@RequestMapping(value="/register",method = RequestMethod.POST)
+	public String register(@RequestParam("param") String param){
+		User user = JSON.parseObject(param, User.class);
+		if(user.getPhone()==null||user.getPassword()==null){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
-			User user = new User();
-			user.setPhone(phone);
-			user.setPassword(password);
-			user.setUsername(username);
-			user.setShipname(shipname);
-			user.setShipno(shipno);
 			user.setRegisterDate(new Date());
 			user.setBalance(new BigDecimal(0.00d));
-			if(accountService.findByPhone(phone)==null){
+			if(accountService.findByPhone(user.getPhone())==null){
 				user = accountService.registerUser(user);
 				if(user.getId()!=0){
 					user.setPassword("");
 					String token = CommonUtils.getMD5(user.getId()+System.currentTimeMillis()+"");
 					servletContext.setAttribute(user.getId()+"", token);
 					user.setToken(token);
-					return CommonUtils.printObjStr(user, 200, "用户注册成功");
+					return CommonUtils.printStr("200", "用户注册成功");
 				}else{
 					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 				}
