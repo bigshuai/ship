@@ -69,7 +69,9 @@ public class UserInfoRestController {
 			}
 			user.setCouponCount(couponCount);
 			user.setOrderCount(orderCount);
-			user.setPassword("");
+			user.setPassword(null);
+			user.setCouponList(null);
+			user.setOrderList(null);
 			return CommonUtils.printObjStr(user, 200, "用户中心");
 		}
 	}
@@ -142,8 +144,24 @@ public class UserInfoRestController {
 				if(json.get("shipno")!=null){
 					user.setShipno(json.get("shipno").toString());
 				}
+				if(json.get("city")!=null){
+					user.setCity(json.get("city").toString());
+				}
 				user = accountService.updateName(user);
+				int couponCount = user.getCouponList().size();
+				int orderCount = 0;
+				if (user.getOrderList().size() != 0) {
+					for (Order order : user.getOrderList()) {
+						if (order.getStatus() != 4) {
+							orderCount = orderCount + 1;
+						}
+					}
+				}
+				user.setCouponCount(couponCount);
+				user.setOrderCount(orderCount);
 				user.setPassword(null);
+				user.setCouponList(null);
+				user.setOrderList(null);
 				if(user.getId()!=0){
 					return CommonUtils.printObjStr(user, 200, "更新成功");
 				}else{

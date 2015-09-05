@@ -7,6 +7,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ship.shipservice.entity.Order;
 import org.ship.shipservice.entity.User;
 import org.ship.shipservice.service.account.AccountService;
 import org.ship.shipservice.utils.CommonUtils;
@@ -49,10 +50,23 @@ public class LoginRestController {
 		}else{
 			User user = accountService.findUserByPhoneAndPassword(phone,password);
 			if(user!=null){
-				user.setPassword("");
+				user.setPassword(null);
 				String token = CommonUtils.getMD5(deviceToken+System.currentTimeMillis()+"");
 				servletContext.setAttribute(user.getId()+"", token);
 				user.setToken(token);
+				int couponCount = user.getCouponList().size();
+				int orderCount = 0;
+				if (user.getOrderList().size() != 0) {
+					for (Order order : user.getOrderList()) {
+						if (order.getStatus() != 4) {
+							orderCount = orderCount + 1;
+						}
+					}
+				}
+				user.setCouponCount(couponCount);
+				user.setOrderCount(orderCount);
+				user.setCouponList(null);
+				user.setOrderList(null);
 				return CommonUtils.printObjStr(user, 200, "用户登陆成功");
 			}else{
 				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
@@ -69,7 +83,13 @@ public class LoginRestController {
 		if(StringUtils.isEmpty(phone)){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
-			return CommonUtils.printObjStr(CommonUtils.createRandom(true, 6), 200, "验证码");
+			String code = CommonUtils.createRandom(true, 6);
+			String message=CommonUtils.sendMessage(phone, code);
+			if(message.split(",")[0].equals("0")){
+				return CommonUtils.printObjStr(code, 200, "验证码");
+			}else{
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "验证码发送失败");
+			}
 		}
 	}
 	/**

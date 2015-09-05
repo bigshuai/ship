@@ -18,7 +18,6 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ship.shipservice.constants.ErrorConstants;
-import org.ship.shipservice.domain.CouponBean;
 import org.ship.shipservice.domain.ResResult;
 import org.ship.shipservice.domain.ResultList;
 import org.springframework.util.StringUtils;
@@ -72,10 +71,10 @@ public class CommonUtils {
 	 * @param phone
 	 * @return
 	 */
-	public static String sendMessage() {
+	public static String sendMessage(String phone,String content) {
 		String inputline = "";
 		// 发送内容
-		String sign = "签名";
+		String sign = "航运宝";
 		// 创建StringBuffer对象用来操作字符串
 		StringBuffer sb = new StringBuffer(
 				"http://web.1xinxi.cn/asmx/smsservice.aspx?");
@@ -84,9 +83,9 @@ public class CommonUtils {
 		// 向StringBuffer追加密码（登陆网页版，在管理中心--基本资料--接口密码，是28位的）
 		sb.append("&pwd=B57C526FC74B32DEA9A9FBE7ED7A");
 		// 向StringBuffer追加手机号码
-		sb.append("&mobile=18516293301");
+		sb.append("&mobile="+phone);
 		// 向StringBuffer追加消息内容转URL标准码
-		sb.append("&content=" + URLEncoder.encode("测试"));
+		sb.append("&content=" + URLEncoder.encode("您申请的手机验证码是:"+content+",请输入验证,谢谢!"));
 		// 追加发送时间，可为空，为空为及时发送
 		sb.append("&stime=");
 		// 加签名

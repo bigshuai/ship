@@ -31,7 +31,7 @@ public class Order extends IdEntity {
 	private String sessionToken;
 	private Date bookTime;
 	private Date createTime;
-	private OilStation oilStation;
+	//private OilStation oilStation;
 	private List<CouponList> couponList = new ArrayList<CouponList>();
 
 	public Order() {
@@ -100,15 +100,15 @@ public class Order extends IdEntity {
 		this.createTime = createTime;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "oil_station_id")
-	public OilStation getOilStation() {
-		return oilStation;
-	}
-
-	public void setOilStation(OilStation oilStation) {
-		this.oilStation = oilStation;
-	}
+//	@OneToOne(fetch = FetchType.EAGER)
+//	@JoinColumn(name = "os_id")
+//	public OilStation getOilStation() {
+//		return oilStation;
+//	}
+//
+//	public void setOilStation(OilStation oilStation) {
+//		this.oilStation = oilStation;
+//	}
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "order_id")

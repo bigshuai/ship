@@ -5,9 +5,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-import org.apache.commons.httpclient.NameValuePair;
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.OrderBean;
 import org.ship.shipservice.domain.ResultList;
