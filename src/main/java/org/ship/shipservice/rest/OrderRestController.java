@@ -1,6 +1,7 @@
 package org.ship.shipservice.rest;
 
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,17 +70,16 @@ public class OrderRestController {
 		
 		String r = this.checkOrderParam(order);
 		if(StringUtils.isEmpty(r)){
-			String res = orderService.createOrder(order);
-			if(StringUtils.isEmpty(res)){
-				return CommonUtils.printStr();
+			Map<String, String> res = orderService.createOrder(order);
+			if(StringUtils.isEmpty(res.get("msg"))){
+				return CommonUtils.printObjStr(res);
 			}else{
-				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res);
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
 			}
 		}else{
 			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
 		}
 	} 
-	
 	
 	@RequestMapping(value="/notify", method = RequestMethod.POST)
 	public String notify(@RequestBody String body) {

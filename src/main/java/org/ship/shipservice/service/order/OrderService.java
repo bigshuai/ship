@@ -2,7 +2,9 @@ package org.ship.shipservice.service.order;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.OrderBean;
@@ -22,7 +24,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import com.alibaba.fastjson.JSON;
 import com.sj.pay.client.PayResponse;
 import com.sj.pay.client.SjPayClient;
 import com.sj.pay.client.domain.OrderRes;
@@ -51,9 +52,10 @@ public class OrderService {
 		return r;
 	}
 	
-	public String createOrder(OrderBean order) {
+	public Map<String, String> createOrder(OrderBean order) {
 		SjPayClient client = SjPayClient.getInstance();
 		PaymentOrder pOrder = new PaymentOrder();
+		Map<String, String> result = new HashMap<String, String>();
 		try {
 			//根据ID获取最新商品信息
 			List<Oil> oils = oilStationDao.queryOil(Long.valueOf(order.getProductId()));
@@ -79,23 +81,27 @@ public class OrderService {
 					String orderNo = pOrder.getMerchantOrderNo();
 					String sftOrderNo = res.getObj().getSftOrderNo();
 					String sessionToken = res.getObj().getSessionToken();
-					int r orderDao.addOrder(order.getUserId(), order.getOsId(), oil.getId(), oil.getName(), 1, pOrder.getAmount(),
+					int r = orderDao.addOrder(order.getUserId(), order.getOsId(), oil.getId(), oil.getName(), 1, pOrder.getAmount(),
 							order.getPrice(), order.getNum(), 0, orderNo, sftOrderNo, sessionToken, null);
 					if(r > 0){
-						return null;
+						result.put("orderNo", orderNo);
+						result.put("orderCreateTime", res.getObj().getOrderCreateTime());
+						result.put("sessionToken", sessionToken);
+						result.put("amount", pOrder.getAmount());
+						return result;
 					}else{
-						return "订单创建失败，请稍后再试。";
+						result.put("msg", "订单创建失败，请稍后再试。");
 					}
 				}else{
-					return res.getReturnMsg();
+					result.put("msg", res.getReturnMsg());
 				}
 			}else{
-				return "签约校验失败，请稍后再试。";
+				 result.put("msg", "订单创建失败，请稍后再试。");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return result;
 	}
 	
 	private BigDecimal calculateAmount(Oil oil, Long productId,Integer num, Long osId, Long couponId){
