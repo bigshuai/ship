@@ -248,7 +248,11 @@ public class CommonUtils {
 	}
 	
 	public static String getPayRequestNo(String userId){
-		return UUID.randomUUID().toString().substring(0, 26) + "-" + userId;
+		return UUID.randomUUID().toString().substring(0, 25) + userId;
+	}
+	
+	public static String getMerchantOrderNo(String userId){
+		return UUID.randomUUID().toString().substring(0, 25) + userId;
 	}
 	
 	public static String decode(String str){

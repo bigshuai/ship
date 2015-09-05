@@ -41,7 +41,7 @@ public class CouponServiceImpl implements CouponService{
 			bean.setId(Long.valueOf(o[0] + ""));
 			bean.setName(o[1] + "");
 			bean.setDesc(o[2] + "");
-			bean.setFaceValue(Float.valueOf(o[3] + ""));
+			bean.setFaceValue(Integer.valueOf(o[3] + ""));
 			bean.setLimitValue(Integer.valueOf(o[4] + ""));
 			bean.setOsId(Long.valueOf(o[5] + ""));
 			bean.setType(Integer.valueOf(o[6] + ""));
@@ -77,7 +77,7 @@ public class CouponServiceImpl implements CouponService{
 			os.setId(Long.valueOf(o[0]+""));
 			os.setStatus(Integer.valueOf(o[1]+""));
 			os.setName(o[2]+"");
-			os.setFaceValue((Float.valueOf(o[3]+"")));
+			os.setFaceValue((Integer.valueOf(o[3]+"")));
 			os.setLimitValue((Integer.valueOf(o[4]+"")));
 			os.setStartTime(null);
 			os.setEndTime(null);

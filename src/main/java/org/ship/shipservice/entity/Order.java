@@ -1,5 +1,6 @@
 package org.ship.shipservice.entity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,11 +18,17 @@ import javax.persistence.Table;
 @Table(name = "t_order")
 public class Order extends IdEntity {
 	private Integer userId;
-	private Integer gasType;
+	private Long osId;
+	private Long productId;
+	private String productName;
 	private Integer type;
 	private Double money;
+	private BigDecimal price;
 	private Integer num;
 	private Integer status;
+	private String orderNo;
+	private String sftOrderNo;
+	private String sessionToken;
 	private Date bookTime;
 	private Date createTime;
 	private OilStation oilStation;
@@ -42,14 +49,6 @@ public class Order extends IdEntity {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
-	}
-
-	public Integer getGasType() {
-		return gasType;
-	}
-
-	public void setGasType(Integer gasType) {
-		this.gasType = gasType;
 	}
 
 	public Integer getType() {
@@ -120,5 +119,59 @@ public class Order extends IdEntity {
 	public void setCouponList(List<CouponList> couponList) {
 		this.couponList = couponList;
 	}
+	public Long getOsId() {
+		return osId;
+	}
 
+	public void setOsId(Long osId) {
+		this.osId = osId;
+	}
+
+	public Long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
+
+	public String getSftOrderNo() {
+		return sftOrderNo;
+	}
+
+	public void setSftOrderNo(String sftOrderNo) {
+		this.sftOrderNo = sftOrderNo;
+	}
+
+	public String getSessionToken() {
+		return sessionToken;
+	}
+
+	public void setSessionToken(String sessionToken) {
+		this.sessionToken = sessionToken;
+	}
 }

@@ -72,4 +72,8 @@ public interface OilStationDao extends CrudRepository<OilStation, Long> {
 	@Modifying
 	@Query("select o from Oil o where o.osId=?1")
 	public List<Oil> queryOils(Integer osId);
+	
+	@Modifying
+	@Query("select o from Oil o where o.id=?1")
+	public List<Oil> queryOil(Long id);
 }
