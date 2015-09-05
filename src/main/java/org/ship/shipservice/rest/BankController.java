@@ -1,6 +1,5 @@
 package org.ship.shipservice.rest;
 
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,10 +57,8 @@ public class BankController implements HybConstants{
 	 * @return
 	 */
 	@RequestMapping(value="/list", method = RequestMethod.GET)
-	public String getUserBankList() {
+	public String getUserBankList(@RequestParam("userId") Long userId) {
 		logger.debug("getUserBankList start。");
-		UserBean ub = (UserBean)request.getSession().getAttribute(SESSION_USER);
-		Long userId = 1L;
 		ResultList rl = bankService.getUserBankList(userId);
 		return CommonUtils.printListStr(rl);
 	}
@@ -75,9 +72,9 @@ public class BankController implements HybConstants{
 	public String precheckForSign(@RequestBody String body) {
 		logger.debug("getCoupon start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
-		String requestNo = CommonUtils.getPayRequestNo(jo.getString("uid"));
+		String requestNo = CommonUtils.getPayRequestNo(jo.getString(HybConstants.USERID));
 		BankBean bank = new BankBean();
-		bank.setUserId(jo.getLong("uid"));
+		bank.setUserId(jo.getLong(HybConstants.USERID));
 		bank.setRequestNo(requestNo);
 		bank.setBankCode(jo.getString("bankCode"));
 		bank.setBankName(CommonUtils.decode(jo.getString("bankName")));
@@ -111,7 +108,7 @@ public class BankController implements HybConstants{
 	public String sign(@RequestBody String body) {
 		logger.debug("getCoupon start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
-		String userId = jo.getString("uid");
+		String userId = jo.getString(HybConstants.USERID);
 		String requestNo = jo.getString("requestNo");
 		String code = jo.getString("code");
 		String r = this.checkSign(userId, requestNo, code);

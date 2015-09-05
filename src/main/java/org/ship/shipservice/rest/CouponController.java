@@ -50,26 +50,21 @@ public class CouponController implements HybConstants{
 	}
 	
 	@RequestMapping(value="/user", method = RequestMethod.GET)
-	public String getUserCouponList() {
+	public String getUserCouponList(@RequestParam("userId") Long userId) {
 		Integer status = null;
 		try {
 			status = Integer.valueOf(request.getParameter("s"));
 		} catch (NumberFormatException e) {
 		}
 		logger.debug("getUserCouponList start.status="+status);
-		UserBean ub = (UserBean)request.getSession().getAttribute(SESSION_USER);
-		Long userId = 1L;
 		Integer[] pageInfo = CommonUtils.getPageInfo(request);
 		ResultList list = couponService.queryUserCouponList(userId, status, pageInfo[0], pageInfo[1]);
 		return CommonUtils.printListStr(list);
 	}
 	
-	@RequestMapping(value="/get",params = { "cid" }, method = RequestMethod.POST)
-	public String getCoupon(@RequestParam("cid") Long couponId) {
+	@RequestMapping(value="/get",params = { "cid", "userId"}, method = RequestMethod.POST)
+	public String getCoupon(@RequestParam("cid") Long couponId,@RequestParam("userId") Long userId) {
 		logger.debug("getCoupon start.couponId="+couponId);
-		Long osId = null;
-		UserBean ub = (UserBean)request.getSession().getAttribute(SESSION_USER);
-		Long userId = 1L;
 		ResResult<String> result = couponService.getCoupon(userId, couponId);
 		return CommonUtils.printObjStr2(result);
 	}

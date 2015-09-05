@@ -10,7 +10,7 @@ import javax.persistence.Table;
 public class Coupon extends IdEntity {
 	private String name;
 	private String desc;
-	private Float faceValue;
+	private Integer faceValue;
 	private Integer limitValue;
 	private Integer type;
 	private Long osId;
@@ -23,7 +23,7 @@ public class Coupon extends IdEntity {
 	public Coupon() {
 	}
 
-	public Coupon(String name, String desc, Float faceValue,
+	public Coupon(String name, String desc, Integer faceValue,
 			Integer limitValue, Integer type, Integer effectiveDay,
 			Date startTime, Date endTime, Date createTime, Integer status) {
 		this.name = name;
@@ -54,11 +54,11 @@ public class Coupon extends IdEntity {
 		this.desc = desc;
 	}
 
-	public Float getFaceValue() {
+	public Integer getFaceValue() {
 		return faceValue;
 	}
 
-	public void setFaceValue(Float faceValue) {
+	public void setFaceValue(Integer faceValue) {
 		this.faceValue = faceValue;
 	}
 

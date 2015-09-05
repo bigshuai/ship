@@ -11,4 +11,11 @@ public interface HybConstants {
 	
 	static final boolean TEST = true;
 	/**支付常量结束-----------------------------------------------*/
+	
+	
+	static final String NOTIFYURL = "http://121.40.91.82/shipService/api/v1/order/notify";
+	
+	static final String MERCHANTMY = "abcdefg";
+	
+	static final String USERID = "userId";
 }
