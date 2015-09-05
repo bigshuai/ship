@@ -16,4 +16,6 @@ public interface HybConstants {
 	static final String NOTIFYURL = "http://121.40.91.82/shipService/api/v1/order/notify";
 	
 	static final String MERCHANTMY = "abcdefg";
+	
+	static final String USERID = "userId";
 }

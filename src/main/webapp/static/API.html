@@ -178,6 +178,7 @@
 <code>#链接#  http://43.254.55.158/shipService/api/v1/coupon/get
 #参数#  
 	cid		优惠券ID（必填）
+	userId  用户ID(必填)
 #返回值# 
 示例    {"code":"200","msg":"请求完成"}				
 </code>
@@ -186,6 +187,7 @@
 <pre>
 <code>#链接#  http://43.254.55.158//shipService/api/v1/os/detail
 #参数#  
+    userId		用户ID(必填)
 	s			状态（0-未使用 1-已使用 9-已过期  不传或空查询全部数据）
 	page			当前页（选填）
 	pageSize		页大小（选填）
@@ -213,7 +215,7 @@
 <pre>
 <code>#链接#  http://43.254.55.158/shipService/api/v1/bank/list
 #参数#  
-	cid		优惠券ID（必填）
+	userId		用户ID（必填）
 #返回值# 
 示例    {"code":"200","msg":"请求完成","result":[{"bankCardType":"DR","bankCardTypeName":"借记卡","bankCode":"COMM","bankName":"通银行交","cardNo":"6789","id":1}]}
 </code>

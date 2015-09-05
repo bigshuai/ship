@@ -5,7 +5,9 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import org.apache.commons.httpclient.NameValuePair;
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.OrderBean;
 import org.ship.shipservice.domain.ResultList;
@@ -27,6 +29,7 @@ import org.springframework.util.StringUtils;
 import com.sj.pay.client.PayResponse;
 import com.sj.pay.client.SjPayClient;
 import com.sj.pay.client.domain.OrderRes;
+import com.sj.pay.client.domain.PayInfo;
 import com.sj.pay.client.domain.PaymentOrder;
 /**
  * @author zhf
@@ -102,6 +105,37 @@ public class OrderService {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	public Map<String, String> precheckForPayment(String sessionToken, String code, String orderNo){
+		try {
+			SjPayClient client = SjPayClient.getInstance();
+			PayInfo info = new PayInfo();
+			info.setSessionToken("");
+			info.setAgreementNo("");
+//			info.setOutMemberId(outMemberId);
+			
+//			new NameValuePair("outMemberId", UUID.randomUUID().toString()
+//					.substring(0, 30)),
+//			new NameValuePair("bankCode", "CMBC"),
+//			new NameValuePair("bankCardType", "DR"),
+//			new NameValuePair("bankCardNo", "6226228023505478"),
+//			new NameValuePair("realName", "zhangsan"),
+//			new NameValuePair("idNo", "320114198004123791"),
+//			new NameValuePair("idType", "IC"),
+//			new NameValuePair("mobileNo", "13166344393"),
+//			new NameValuePair("userIp", "127.0.0.1"),
+//			new NameValuePair(
+//					"riskExtItems",
+//					"{\"outMemberId\":\"outMemberId\",\"outMemberRegistTime\":\"20110707112233\",\"outMemberRegistIP\":\"127.0.0.1\",\"outMemberVerifyStatus\":\"1\",\"outMemberName\":\"aa\",\"outMemberMobile\":\"15521366554\"}") };
+
+			
+			client.precheckForPayment(info);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	private BigDecimal calculateAmount(Oil oil, Long productId,Integer num, Long osId, Long couponId){

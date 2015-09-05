@@ -81,6 +81,26 @@ public class OrderRestController {
 		}
 	} 
 	
+	@RequestMapping(value="/pfp", method = RequestMethod.POST)
+	public String precheckForPayment(@RequestBody String body) {
+		logger.debug("createOrder start.body=" + body);
+		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
+		String sessionToken = jo.getString("sessionToken");
+		String code = jo.getString("code");
+		String orderNo = jo.getString("orderNo");
+		String r = this.checkPfpOrderParam(sessionToken, orderNo, code);
+		if(StringUtils.isEmpty(r)){
+			Map<String, String> res = orderService.precheckForPayment(sessionToken, code, orderNo);
+			if(StringUtils.isEmpty(res.get("msg"))){
+				return CommonUtils.printObjStr(res);
+			}else{
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
+			}
+		}else{
+			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
+		}
+	} 
+	
 	@RequestMapping(value="/notify", method = RequestMethod.POST)
 	public String notify(@RequestBody String body) {
 		logger.debug("createOrder start.body=" + body);
@@ -141,6 +161,10 @@ public class OrderRestController {
 	} 
 	
 	private String checkOrderParam(OrderBean order){
+		return null;
+	}
+	
+	private String checkPfpOrderParam(String sessionToken, String orderNo, String code){
 		return null;
 	}
 

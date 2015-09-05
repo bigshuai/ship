@@ -34,6 +34,6 @@ public interface BankDao extends CrudRepository<Coupon, Long> {
 			String bankCardNo,String realName,String idNo,String idType,String mobileNo,String cvv2,String validThru);
 	
 	@Modifying
-	@Query(value="update t_bank set status=1,agreement_no=?1 where request_no=?2)", nativeQuery=true)
+	@Query(value="update t_bank set status=1,agreement_no=?1 where request_no=?2", nativeQuery=true)
 	public int updateSign(String agreementNo, String requestNo);
 }
