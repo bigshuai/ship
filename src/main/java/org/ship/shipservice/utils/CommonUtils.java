@@ -1,6 +1,8 @@
 package org.ship.shipservice.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
@@ -21,6 +23,7 @@ import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.domain.ResResult;
 import org.ship.shipservice.domain.ResultList;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
 
@@ -62,7 +65,33 @@ public class CommonUtils {
 
 		return retStr;
 	}
-
+	/**
+	 * 上传图片
+	 * @param newFileName
+	 * @param filedata
+	 * @param httpRequest
+	 * @return
+	 */
+	public  static String saveFile(String newFileName, MultipartFile filedata,HttpServletRequest httpRequest) {
+		// 根据配置文件获取服务器图片存放路径
+		String saveFilePath =httpRequest.getRealPath("")+"/picture";
+		/* 构建文件目录 */
+		File fileDir = new File(saveFilePath);
+		if (!fileDir.exists()) {
+			fileDir.mkdirs();
+		}
+		try {
+			FileOutputStream out = new FileOutputStream(new File(saveFilePath, newFileName));
+			// 写入文件
+			out.write(filedata.getBytes());
+			out.flush();
+			out.close();
+			return "43.254.55.158"+httpRequest.getContextPath()+"/headImage/"+newFileName;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";		
+		}
+	}
 	/**
 	 * HTTP接口 发送短信
 	 * http://sms.1xinxi.cn/asmx/smsservice.aspx?name=登录名&pwd=接口密码&mobile

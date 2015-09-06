@@ -40,6 +40,7 @@
 				<constructor-arg ref="dataSource"/>
 			</bean>
 		</property>
+		<property name="showSql" value="true"></property>
 	</bean>
 
 	<!-- Spring Data Jpa配置 -->
