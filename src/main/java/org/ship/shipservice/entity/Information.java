@@ -21,7 +21,9 @@ public class Information extends IdEntity {
 	private String photo;
 	private String descri;
 	private Integer isDelete;
-
+	private Long userId;
+	private String tag;
+	private String city;
 	public Information() {
 
 	}

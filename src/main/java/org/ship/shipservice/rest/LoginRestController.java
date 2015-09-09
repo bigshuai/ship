@@ -2,6 +2,7 @@ package org.ship.shipservice.rest;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -15,6 +16,9 @@ import org.ship.shipservice.utils.MyConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +41,8 @@ public class LoginRestController {
 	private ServletContext servletContext;
 	@Autowired
     private AccountService accountService;
+	@Autowired  
+    private RedisTemplate<String, String> redisTemplate;  
 	/**
 	 * 用户登陆
 	 * @param phone
@@ -84,6 +90,7 @@ public class LoginRestController {
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
 			String code = CommonUtils.createRandom(true, 6);
+			redisTemplate.opsForValue().set(phone, code,30l,TimeUnit.MINUTES);//验证码30分钟失效
 			String message=CommonUtils.sendMessage(phone, code);
 			if(message.split(",")[0].equals("0")){
 				return CommonUtils.printObjStr(code, 200, "验证码");
@@ -128,19 +135,24 @@ public class LoginRestController {
 		}else{
 			user.setRegisterDate(new Date());
 			user.setBalance(new BigDecimal(0.00d));
-			if(accountService.findByPhone(user.getPhone())==null){
-				user = accountService.registerUser(user);
-				if(user.getId()!=0){
-					user.setPassword("");
-					String token = CommonUtils.getMD5(user.getId()+System.currentTimeMillis()+"");
-					servletContext.setAttribute(user.getId()+"", token);
-					user.setToken(token);
-					return CommonUtils.printStr("200", "用户注册成功");
+			String code = redisTemplate.boundValueOps(user.getPhone()).get();
+			if(code!=null&&!code.equals("")){
+				if(accountService.findByPhone(user.getPhone())==null&&code.equals(user.getCode())){
+					user = accountService.registerUser(user);
+					if(user.getId()!=0){
+						user.setPassword("");
+						String token = CommonUtils.getMD5(user.getId()+System.currentTimeMillis()+"");
+						servletContext.setAttribute(user.getId()+"", token);
+						user.setToken(token);
+						return CommonUtils.printStr("200", "用户注册成功");
+					}else{
+						return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+					}
 				}else{
 					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 				}
 			}else{
-				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "验证码失效");
 			}
 		}
 	}
@@ -161,5 +173,8 @@ public class LoginRestController {
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}
 	}
-	
+	@RequestMapping(value="/test",method=RequestMethod.POST)
+	public void test(@RequestParam("phone") String phone){
+		redisTemplate.opsForValue().set("22", "33",200,TimeUnit.MILLISECONDS);
+	}
 }

@@ -114,7 +114,7 @@ public class CommonUtils {
 		// 向StringBuffer追加手机号码
 		sb.append("&mobile="+phone);
 		// 向StringBuffer追加消息内容转URL标准码
-		sb.append("&content=" + URLEncoder.encode("您申请的手机验证码是:"+content+",请输入验证,谢谢!"));
+		sb.append("&content=" + URLEncoder.encode("欢迎注册为航运宝会员，您的验证码是"+content+",1分钟有效,如不是本人操作,请忽略。谢谢!"));
 		// 追加发送时间，可为空，为空为及时发送
 		sb.append("&stime=");
 		// 加签名

@@ -80,6 +80,11 @@ public class InformationController {
 
 		}
 	}
+	/**
+	 * 保存或更新资讯 
+	 * @param info
+	 * @return
+	 */
 	@RequestMapping(value="saveInfo",method=RequestMethod.POST)
 	public String saveInformation(@RequestParam("info") String info){
 		Information infor = JSON.parseObject(info, Information.class);
@@ -90,6 +95,12 @@ public class InformationController {
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}
 	}
+	/**
+	 * 获取资讯列表
+	 * 
+	 * @param param
+	 * @return
+	 */
 	@RequestMapping(value="getInfo",method=RequestMethod.POST)
 	public String queryInfomation(@RequestParam("param") String param){
 		Information infor = JSON.parseObject(param, Information.class);
