@@ -93,7 +93,7 @@ public class UserInfoRestController {
 
 	@RequestMapping(value = "/uploadHeadImg", method = RequestMethod.POST)
 	public String uploadImage(
-			@RequestParam("userfile") MultipartFile headImage,
+			@RequestParam("file") MultipartFile headImage,
 			@RequestParam("phone") String phone,HttpServletRequest httpRequest) {
 		// 保存相对路径到数据库 图片写入服务器
 		if (headImage != null && !headImage.isEmpty()) {
@@ -206,7 +206,7 @@ public class UserInfoRestController {
 			out.write(filedata.getBytes());
 			out.flush();
 			out.close();
-			return "43.254.55.158"+httpRequest.getContextPath()+"/headImage/"+newFileName;
+			return "http://43.254.55.158"+httpRequest.getContextPath()+"/headImage/"+newFileName;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";		

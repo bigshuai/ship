@@ -73,9 +73,10 @@ public class LoginRestController {
 				user.setOrderCount(orderCount);
 				user.setCouponList(null);
 				user.setOrderList(null);
+				logger.info("用户:"+user.getPhone()+"登陆");
 				return CommonUtils.printObjStr(user, 200, "用户登陆成功");
 			}else{
-				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "当前用户不存在");
 			}
 		}
 	}

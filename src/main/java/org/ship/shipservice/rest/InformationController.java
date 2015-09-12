@@ -1,9 +1,11 @@
 package org.ship.shipservice.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ship.shipservice.entity.Advert;
 import org.ship.shipservice.entity.InfoType;
 import org.ship.shipservice.entity.Information;
 import org.ship.shipservice.repository.impl.InformationDaoImpl;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springside.modules.mapper.JsonMapper;
+
+
 
 
 
@@ -114,5 +118,4 @@ public class InformationController {
 		List<Information> infoList=inforDaoImpl.findInfoByParam(str);
 		return CommonUtils.printListStr(infoList);
 	}
-	
 }
