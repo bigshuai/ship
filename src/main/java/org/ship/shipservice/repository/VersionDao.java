@@ -1,11 +1,10 @@
 package org.ship.shipservice.repository;
 
-
-import org.ship.shipservice.entity.ConsumeInfo;
+import org.ship.shipservice.entity.Version;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ConsumeInfoDao extends CrudRepository<ConsumeInfo,Long>{
-	Page<ConsumeInfo> findByUserId(Integer accountId,Pageable pageable);
+public interface VersionDao extends CrudRepository<Version, Long>{
+Page<Version> findByType(Integer type,Pageable pageable);
 }

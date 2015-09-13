@@ -1,6 +1,5 @@
 package org.ship.shipservice.rest;
 
-import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +9,7 @@ import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.OrderBean;
 import org.ship.shipservice.domain.ResultList;
+import org.ship.shipservice.entity.Order;
 import org.ship.shipservice.service.order.OrderService;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
@@ -17,6 +17,8 @@ import org.ship.shipservice.utils.RequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,12 +48,13 @@ public class OrderRestController {
 	 * @return
 	 */
 	@RequestMapping(value="/list", method = RequestMethod.POST)
-	public String getOrderList(@RequestParam("userId") Integer userId,@RequestParam("status") Integer status) {
+	public String getOrderList(@RequestParam("userId") Integer userId,@RequestParam("status") Integer status,@RequestParam("page") Integer page) {
 		if(userId==0){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
-			ResultList orders = orderService.findOrderByUserId(userId, status);
-			return CommonUtils.printListStr(orders.getDataList());
+			PageRequest pageRequest = new PageRequest(page, 10);
+			Page<Order> orders = orderService.findByUserIdAndStatus(userId, status,pageRequest);
+			return CommonUtils.printObjStr(orders, 200, "订单列表");
 		}
 	}
 	

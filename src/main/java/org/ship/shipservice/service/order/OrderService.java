@@ -20,6 +20,8 @@ import org.ship.shipservice.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -46,11 +48,9 @@ public class OrderService {
 	@Autowired
 	private CouponDao couponDao;
 	
-	public ResultList findOrderByUserId(Integer userId ,Integer status){
-		ResultList r = new ResultList();
-		List<Order> list = orderDao.findByUserId(userId, status);
-		r.setDataList(list);
-		return r;
+	public Page<Order> findByUserIdAndStatus(Integer userId ,Integer status,PageRequest pageRequest){
+		Page<Order> list = orderDao.findByUserIdAndStatus(userId, status,pageRequest);
+		return list;
 	}
 	
 	public Map<String, String> createOrder(OrderBean order) {

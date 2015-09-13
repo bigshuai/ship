@@ -106,12 +106,12 @@ public class LoginRestController {
 	 * @param password
 	 * @return
 	 */
-	@RequestMapping(value="/update",params={"phone","password","id","token"},method = RequestMethod.POST)
-	public String updatePwd(@RequestParam("phone") String phone,@RequestParam("password") String password,@RequestParam("id") String id ,@RequestParam("token") String token,HttpSession httpSession){
+	@RequestMapping(value="/update",params={"phone","password","code"},method = RequestMethod.POST)
+	public String updatePwd(@RequestParam("phone") String phone,@RequestParam("password") String password,@RequestParam("code") String code){
 		if(StringUtils.isEmpty(phone)||StringUtils.isEmpty(password)){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
-			if(servletContext.getAttribute(id).equals(token)){
+			if(code.equals(redisTemplate.boundValueOps(phone).get())){
 				int count = accountService.updateUser(phone,password);
 				if(count!=0){
 					return CommonUtils.printStr( "200", "密码更新成功");
@@ -119,7 +119,7 @@ public class LoginRestController {
 					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 				}
 			}else{
-				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "验证码已失效");
 			}
 		}
 	}
@@ -173,9 +173,5 @@ public class LoginRestController {
 		}else{
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}
-	}
-	@RequestMapping(value="/test",method=RequestMethod.POST)
-	public void test(@RequestParam("phone") String phone){
-		redisTemplate.opsForValue().set("22", "33",200,TimeUnit.MILLISECONDS);
 	}
 }

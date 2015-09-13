@@ -1,6 +1,5 @@
 package org.ship.shipservice.rest;
 
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 

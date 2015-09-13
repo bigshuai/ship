@@ -3,11 +3,20 @@ package org.ship.shipservice.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.loading.PrivateClassLoader;
+
+import org.apache.commons.lang3.StringUtils;
 import org.ship.shipservice.entity.Advert;
+import org.ship.shipservice.entity.Version;
+import org.ship.shipservice.service.home.HomeService;
 import org.ship.shipservice.utils.CommonUtils;
+import org.ship.shipservice.utils.MyConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeRestController {
 	private static Logger logger = LoggerFactory
 			.getLogger(HomeRestController.class);
+	@Autowired
+	private HomeService homeService;
 	/**
 	 * 首页图片
 	 */
@@ -35,5 +46,22 @@ public class HomeRestController {
 		adList.add(ad3);
 		logger.info(CommonUtils.printListStr(adList));
 		return CommonUtils.printListStr(adList);
+	}
+	
+	/**
+	 * 版本更新
+	 */
+	@RequestMapping(value="checkVersion")
+	public String checkVersion(@RequestParam("version") String version,@RequestParam("type") Integer type){
+		if (StringUtils.isEmpty(version)) {
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+		} else {
+			Page<Version> versionPage = homeService.findVersion(type);
+			if(!versionPage.getContent().get(0).getName().equals(version)){
+				return CommonUtils.printObjStr(versionPage.getContent().get(0), 200, "版本需要升级");
+			}else{
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_200, "已是最新版本");
+			}
+		}
 	}
 }

@@ -1,11 +1,9 @@
 package org.ship.shipservice.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.ship.shipservice.entity.Advert;
 import org.ship.shipservice.entity.InfoType;
 import org.ship.shipservice.entity.Information;
 import org.ship.shipservice.repository.impl.InformationDaoImpl;
