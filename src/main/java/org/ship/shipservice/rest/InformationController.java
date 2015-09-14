@@ -1,13 +1,17 @@
 package org.ship.shipservice.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ship.shipservice.domain.ResultList;
+import org.ship.shipservice.entity.City;
 import org.ship.shipservice.entity.InfoType;
 import org.ship.shipservice.entity.Information;
 import org.ship.shipservice.repository.impl.InformationDaoImpl;
 import org.ship.shipservice.service.information.InformationService;
+import org.ship.shipservice.service.oil.OilStationService;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
 import org.slf4j.Logger;
@@ -19,6 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springside.modules.mapper.JsonMapper;
+
+
+
+
 
 
 
@@ -36,6 +44,8 @@ public class InformationController {
 	private InformationService informationService;
 	@Autowired
 	private InformationDaoImpl inforDaoImpl;
+	@Autowired
+    private OilStationService oilStationService;
 	/**
 	 * 资讯类型
 	 * @param id
@@ -47,6 +57,8 @@ public class InformationController {
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		} else {
 			InfoType infoType = informationService.findInfoTypeById(id);
+			ResultList r = oilStationService.queryCityList();
+			infoType.setCityList((ArrayList<City>)r.getDataList());
 			return CommonUtils.printObjStr(infoType, 200, "资讯类型");
 		}
 	}

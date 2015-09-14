@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "t_info_type")
@@ -16,7 +17,7 @@ public class InfoType extends IdEntity {
 	private String infoType;
 	private List<InfoTypeOne> infoTypeOneList;
 	private List<InfoAction> infoActionList;
-
+	private List<City> cityList;
 	public InfoType() {
 	}
 
@@ -48,5 +49,13 @@ public class InfoType extends IdEntity {
 	public void setInfoActionList(List<InfoAction> infoActionList) {
 		this.infoActionList = infoActionList;
 	}
+	@Transient
+	public List<City> getCityList() {
+		return cityList;
+	}
 
+	public void setCityList(List<City> cityList) {
+		this.cityList = cityList;
+	}
+	
 }
