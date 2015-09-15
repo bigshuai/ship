@@ -9,7 +9,16 @@ public interface HybConstants {
 	static final String MERCHANTNO = "245888";
 	static final String SUCCESS = "SUCCESS";
 	
+	static final String PAY_SUCCESS = "";
+	
 	static final boolean TEST = true;
+	
+	static final String OUTMEMBERID = "outMemberId";
+	static final String OUTMEMBERREGISTTIME = "20110707112233";
+	static final String OUTMEMBERREGISTIP = "127.0.0.1";
+	static final String OUTMEMBERVERIFYSTATUS = "1";
+	static final String OUTMEMBERNAME = "aa";
+	static final String OUTMEMBERMOBILE = "15521366554";
 	/**支付常量结束-----------------------------------------------*/
 	
 	

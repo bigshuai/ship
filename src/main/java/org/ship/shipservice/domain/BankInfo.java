@@ -7,6 +7,7 @@ public class BankInfo {
 	private String bankName;
 	private String bankCardType;
 	private String bankCardTypeName;
+	private String agreementNo;
 	
 	public Long getId() {
 		return id;
@@ -43,5 +44,11 @@ public class BankInfo {
 	}
 	public void setBankCardTypeName(String bankCardTypeName) {
 		this.bankCardTypeName = bankCardTypeName;
+	}
+	public String getAgreementNo() {
+		return agreementNo;
+	}
+	public void setAgreementNo(String agreementNo) {
+		this.agreementNo = agreementNo;
 	}
 }

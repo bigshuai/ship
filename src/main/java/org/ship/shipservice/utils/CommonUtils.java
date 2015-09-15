@@ -14,7 +14,10 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +29,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
+import com.sun.jna.platform.win32.Guid;
 
 /**
  * @author zhf 通用工具类
@@ -33,7 +37,7 @@ import com.alibaba.fastjson.JSON;
 
 public class CommonUtils {
 	 static char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8','9', 'a', 'b', 'c', 'd', 'e', 'f' };
-	 /**
+	/**
 	 * 随机生成验证码
 	 * 
 	 * @param numberFlag
@@ -279,8 +283,15 @@ public class CommonUtils {
 		return UUID.randomUUID().toString().substring(0, 25) + userId;
 	}
 	
-	public static String getMerchantOrderNo(String userId){
-		return UUID.randomUUID().toString().substring(0, 25) + userId;
+	/**
+	 * 获取订单号
+	 * @param userId
+	 * @return
+	 */
+	public static synchronized String getMerchantOrderNo(String userId){
+		//格式  H20150908userIdSystem.currentTimeMillis()5位随机数
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+		return "H"+format.format(new Date())+ userId +System.currentTimeMillis() + String.format("%05d", new Random().nextInt(10000));
 	}
 	
 	public static String decode(String str){

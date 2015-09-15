@@ -54,6 +54,7 @@ public class BankServiceImpl implements BankService {
 			bean.setBankCardTypeName(CardType.valueOf((o[3] + "")).getName());
 			String cadrNo = RSAUtil.decrypt(o[4] + "");
 			bean.setCardNo(cadrNo.substring(cadrNo.length()-4));
+			bean.setAgreementNo((o[5] + ""));
 			result.add(bean);
 		}
 		rl.setDataList(result);

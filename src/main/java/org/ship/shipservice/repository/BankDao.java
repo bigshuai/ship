@@ -15,7 +15,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface BankDao extends CrudRepository<Coupon, Long> {
 
 	@Modifying
-	@Query(value="select t.id, t.bank_code,t.bank_name, t.bank_cardtype, t.bank_cardno "
+	@Query(value="select t.id, t.bank_code,t.bank_name, t.bank_cardtype, t.bank_cardno,agreement_no "
 			+ "from t_bank t "
 			+ "where t.user_id=?1 and t.`status`=1 ORDER BY t.create_time desc", nativeQuery=true)
 	public List<Object[]> queryUserBankList(Long userId);

@@ -101,10 +101,14 @@
 <h3>1 订单列表</h3>
 <pre>
 <code>#链接#  http://43.254.55.158/shipService/api/v1/order/list
-#参数#  userId=1&amp;status=4  4完成的订单 其他未完成
+#参数#   userId   用户ID（必填）
+        status   1-未完成  9-完成 （必填）
+        page			当前页（选填）
+	    pageSize		页大小（选填）
+       
 #返回值# 
 1. 失败 {"code":"400","msg":"请求参数错误"}
-2. 成功 {"code":"200","msg":"请求完成","result":[{"couponList":[],"createTime":1441290791000,"id":1,"oilStation":{"address":"上海市罗星路","cityId":1,"couponFlag":1,"createTime":1440833639000,"credit":5,"derateFlag":1,"desc":"微风航海加油站","id":1,"name":"微风航海加油站","phone":"123456","quality":5,"service":5,"status":1,"updateTime":1440867763000},"status":4,"userId":1}]}
+2. 成功 {"code":"200","msg":"请求完成","page":1,"result":[{"bookTime":"null","createTime":"2015-09-05 16:56:53.0","id":6,"money":"850.24","num":3,"orderNo":"a088556a-b509-4993-b28d-81","osId":1,"osName":"微风航海加油站","price":"300.08","productId":"1","productName":"机油","sftOrderNo":"20150905165654515693","status":4,"type":4}],"totalSize":1}
 </code>
 </pre>
 

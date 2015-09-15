@@ -47,17 +47,25 @@ public class OrderRestController {
 	 * @param userId status
 	 * @return
 	 */
-	@RequestMapping(value="/list", method = RequestMethod.POST)
-	public String getOrderList(@RequestParam("userId") Integer userId,@RequestParam("status") Integer status,@RequestParam("page") Integer page) {
+	@RequestMapping(value="/list", method = RequestMethod.GET)
+	public String getOrderList(@RequestParam("userId") Long userId,@RequestParam("status") Integer status) {
 		if(userId==0){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
-			PageRequest pageRequest = new PageRequest(page, 10);
-			Page<Order> orders = orderService.findByUserIdAndStatus(userId, status,pageRequest);
-			return CommonUtils.printObjStr(orders, 200, "订单列表");
+//			PageRequest pageRequest = new PageRequest(page, 10);
+//			Page<Order> orders = orderService.findByUserIdAndStatus(userId, status,pageRequest);
+//			return CommonUtils.printObjStr(orders, 200, "订单列表");
+			Integer[] pageInfo = CommonUtils.getPageInfo(request);
+			ResultList list = orderService.queryOrderUserList(userId, status,pageInfo[0], pageInfo[1]);
+			return CommonUtils.printListStr(list);
 		}
 	}
 	
+	/**
+	 * 创建订单
+	 * @param body
+	 * @return
+	 */
 	@RequestMapping(value="/cpo", method = RequestMethod.POST)
 	public String createOrder(@RequestBody String body) {
 		logger.debug("createOrder start.body=" + body);
@@ -84,16 +92,45 @@ public class OrderRestController {
 		}
 	} 
 	
+	/**
+	 * 支付预校验
+	 * @param body
+	 * @return
+	 */
 	@RequestMapping(value="/pfp", method = RequestMethod.POST)
 	public String precheckForPayment(@RequestBody String body) {
 		logger.debug("createOrder start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
 		String sessionToken = jo.getString("sessionToken");
-		String code = jo.getString("code");
 		String orderNo = jo.getString("orderNo");
-		String r = this.checkPfpOrderParam(sessionToken, orderNo, code);
+		String agreementNo = jo.getString("agreementNo");
+		String r = this.checkPfpOrderParam(sessionToken, orderNo, agreementNo);
 		if(StringUtils.isEmpty(r)){
-			Map<String, String> res = orderService.precheckForPayment(sessionToken, code, orderNo);
+			String res = orderService.precheckForPayment(sessionToken, orderNo, agreementNo);
+			if(StringUtils.isEmpty(res)){
+				return CommonUtils.printStr();
+			}else{
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res);
+			}
+		}else{
+			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
+		}
+	} 
+	
+	/**
+	 * 支付
+	 * @param body
+	 * @return
+	 */
+	@RequestMapping(value="/pay", method = RequestMethod.POST)
+	public String pay(@RequestBody String body) {
+		logger.debug("pay start.body=" + body);
+		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
+		String sessionToken = jo.getString("sessionToken");
+		String code = jo.getString("code");
+		String r = null;
+		if(StringUtils.isEmpty(r)){
+			Map<String, String> res = orderService.payment(sessionToken, code);
 			if(StringUtils.isEmpty(res.get("msg"))){
 				return CommonUtils.printObjStr(res);
 			}else{
@@ -104,6 +141,11 @@ public class OrderRestController {
 		}
 	} 
 	
+	/**
+	 * 支付通知
+	 * @param body
+	 * @return
+	 */
 	@RequestMapping(value="/notify", method = RequestMethod.POST)
 	public String notify(@RequestBody String body) {
 		logger.debug("createOrder start.body=" + body);
@@ -155,6 +197,8 @@ public class OrderRestController {
 				//处理自己相关的逻辑，可以选择入库，然后，前台隔断时间扫描数据库获取相关标识是否获取到数据
 				logger.info("处理相关逻辑成功");
 				
+				//更新数据库
+				
 				return "OK";//盛付通后台通过notifyUrl通知商户,商户做业务处理后,需要以字符串(OK)的形式反馈处理结果处理成功,盛付通系统收到此结果后不再进行后续通知
 			}
 		}catch(Exception e){
@@ -167,7 +211,7 @@ public class OrderRestController {
 		return null;
 	}
 	
-	private String checkPfpOrderParam(String sessionToken, String orderNo, String code){
+	private String checkPfpOrderParam(String sessionToken, String orderNo, String agreementNo){
 		return null;
 	}
 

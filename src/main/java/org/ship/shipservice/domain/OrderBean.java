@@ -1,16 +1,28 @@
 package org.ship.shipservice.domain;
 
 public class OrderBean {
-	private Long userId;
-	private String merchantOrderNo;
+	//o.id,o.os_id,s.name,o.product_id,o.product_name,o.type,o.money,o.price,o.num,
+	//o.status,o.order_no,o.sft_order_no,o.book_time,o.create_time
+	private Long id;
+	private Long osId;
+	private String osName;
 	private String productId;
 	private String productName;
 	private String productDesc;
+	private Integer type;
+	private String money;
 	private Integer num;
-	private Long couponId;
 	private String price;
+	private Integer status;
+	private String orderNo;
+	private String sftOrderNo;
+	private String bookTime;
+	private String createTime;
+	
+	private Long userId;
+	private String merchantOrderNo;
+	private Long couponId;
 	private String amount;
-	private Long osId;
 	
 	public Long getUserId() {
 		return userId;
@@ -71,5 +83,59 @@ public class OrderBean {
 	}
 	public void setOsId(Long osId) {
 		this.osId = osId;
+	}
+	public Integer getType() {
+		return type;
+	}
+	public void setType(Integer type) {
+		this.type = type;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getOsName() {
+		return osName;
+	}
+	public void setOsName(String osName) {
+		this.osName = osName;
+	}
+	public String getMoney() {
+		return money;
+	}
+	public void setMoney(String money) {
+		this.money = money;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
+	public String getSftOrderNo() {
+		return sftOrderNo;
+	}
+	public void setSftOrderNo(String sftOrderNo) {
+		this.sftOrderNo = sftOrderNo;
+	}
+	public String getBookTime() {
+		return bookTime;
+	}
+	public void setBookTime(String bookTime) {
+		this.bookTime = bookTime;
+	}
+	public String getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
 	}
 }
