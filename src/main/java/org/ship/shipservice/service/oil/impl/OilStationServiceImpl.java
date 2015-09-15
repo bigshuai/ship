@@ -36,6 +36,9 @@ public class OilStationServiceImpl implements OilStationService {
 			os.setAppraiseNum(Integer.valueOf(o[4]+""));
 			os.setStatus(Integer.valueOf(o[5]+""));
 			os.setDerate(o[6]+"");
+			os.setPicUrl(o[7]+"");
+			os.setLatitude(o[8]+"");
+			os.setLongitude(o[9]+"");
 			result.add(os);
 		}
 		r.setDataList(result);

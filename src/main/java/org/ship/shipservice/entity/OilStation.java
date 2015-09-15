@@ -11,6 +11,9 @@ public class OilStation extends IdEntity {
 	private String name;
 	private String desc;
 	private String address;
+	private String picUrl;
+	private String latitude;
+	private String longitude;
 	private String phone;
 	private Integer cityId;
 	private Float credit;// 信誉等级
@@ -124,5 +127,29 @@ public class OilStation extends IdEntity {
 
 	public void setDerateFlag(Integer derateFlag) {
 		this.derateFlag = derateFlag;
+	}
+
+	public String getPicUrl() {
+		return picUrl;
+	}
+
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
 	}
 }
