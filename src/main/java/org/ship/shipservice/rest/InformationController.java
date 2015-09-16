@@ -125,6 +125,12 @@ public class InformationController {
 		if(infor.getInfoAction()!=null){
 			str+=" and info.infoAction="+infor.getInfoAction();
 		}
+		if(infor.getInfoTypeOne()!=null){
+			str+=" and info.infoTypeOne="+infor.getInfoTypeOne();
+		}
+		if(infor.getInfoTypeTwo()!=null){
+			str+=" and info.infoTypeTwo="+infor.getInfoTypeTwo();
+		}
 		List<Information> infoList=inforDaoImpl.findInfoByParam(str);
 		return CommonUtils.printListStr(infoList);
 	}
