@@ -6,10 +6,12 @@ import java.util.Map;
 
 public class TestBank  extends TestBase{
 	public static void main(String[] args) {
-		testBankInfo();
-		testUserBankList();
+		//testBankInfo();
+		//testUserBankList();
 		//testPrecheckForSign();
-		testSign();
+		//testBankList();
+		//testSign();
+		testUnSign();
 	}
 	
 	public static void testBankInfo(){
@@ -17,15 +19,20 @@ public class TestBank  extends TestBase{
 		System.out.println("银行卡信息 ="+httpGet(url));
 	}
 	
+	public static void testBankList(){
+		String url = "http://localhost:8080/shipService/api/v1/bank/instList";
+		System.out.println("银行卡信息 ="+httpGet(url));
+	}
+	
 	public static void testUserBankList(){
-		String url = "http://localhost:8080/shipService/api/v1/bank/list";
+		String url = "http://localhost:8080/shipService/api/v1/bank/list?userId=1";
 		System.out.println("银行卡信息 ="+httpGet(url));
 	}
 	
 	public static void testPrecheckForSign(){
 		String url = "http://localhost:8080/shipService/api/v1/bank/pfs";
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("uid","123");
+		params.put("userId","123");
 		params.put("bankCode","ICBC");
 		params.put("bankName", "工商银行");
 		params.put("bankCardType","DR");
@@ -40,9 +47,17 @@ public class TestBank  extends TestBase{
 	public static void testSign(){
 		String url = "http://localhost:8080/shipService/api/v1/bank/sign";
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("uid","1");
+		params.put("userId","1");
 		params.put("requestNo","92976a01-0f35-41a7-acea-f0-123");
 		params.put("code", "123456");
 		System.out.println("领取优惠券 ="+httpPost(url, params));
+	}
+	
+	public static void testUnSign(){
+		String url = "http://localhost:8080/shipService/api/v1/bank/unsign";
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("userId","1");
+		params.put("bankId","3");
+		System.out.println("UnSign ="+httpPost(url, params));
 	}
 }

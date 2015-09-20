@@ -20,4 +20,16 @@ public interface UserDao extends CrudRepository<User, Long> {
 	@Query("update User u set u.username = ?2 where u.phone = ?1 and u.status=0")
 	int updateName(String phone, String username);
 	User save(User user);
+	
+	@Query(value="UPDATE t_user_bank set fund=fund+?2 where user_id=?1", nativeQuery=true)
+	public int recharge(Long userId, String amount);
+	
+	@Query(value="UPDATE t_user_bank set fund=fund+?2 where user_id=?1", nativeQuery=true)
+	public int deductCharge(Long userId, String amount);
+	
+	@Query(value="select fund t_user_bank where user_id=?1 and status=1", nativeQuery=true)
+	public String getUserFund(Long userId);
+	
+	@Query(value="select phone t_user where user_id=?1 and status=0", nativeQuery=true)
+	public String getUserPhone(Long userId);
 }

@@ -21,10 +21,11 @@ public interface BankDao extends CrudRepository<Coupon, Long> {
 	public List<Object[]> queryUserBankList(Long userId);
 	
 	@Modifying
-	@Query(value="select t.id, t.bank_code,t.bank_name, t.bank_cardtype, t.bank_cardno "
-			+ "from t_bank_agreement t "
-			+ "where t.user_id=?1 and t.`status`=1 ORDER BY t.create_time desc", nativeQuery=true)
-	public List<Object[]> queryUserBankSList(Long userId);
+	@Query(value="select t.bank_code, t.bank_cardtype, t.bank_cardno,t.real_name,t.id_no, t.id_type"
+			+ ",t.mobile_no,t.cvv2,t.valid_thru "
+			+ "from t_bank t "
+			+ "where t.user_id=?1 and t.id=?2 and t.`status`=1", nativeQuery=true)
+	public Object[] queryBankForId(Long userId, Long id);
 	
 	@Modifying
 	@Query(value="insert into t_bank(user_id,request_no,bank_code,bank_name,bank_cardtype,bank_cardno,real_name,"
@@ -36,4 +37,15 @@ public interface BankDao extends CrudRepository<Coupon, Long> {
 	@Modifying
 	@Query(value="update t_bank set status=1,agreement_no=?1 where request_no=?2", nativeQuery=true)
 	public int updateSign(String agreementNo, String requestNo);
+	
+	@Query(value="select agreement_no from t_bank where id=?1 and user_id=?2", nativeQuery=true)
+	public String getAgreementNo(Long bankId, Long userId);
+	
+	@Modifying
+	@Query(value="update t_bank set status=?1 where id=?2", nativeQuery=true)
+	public String updateStastus(Integer status, Long bankId);
+	
+	@Modifying
+	@Query(value="delete from t_bank where id=?1", nativeQuery=true)
+	public int deleteBank(Long bankId);
 }

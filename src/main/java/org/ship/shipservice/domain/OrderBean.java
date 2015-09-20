@@ -17,6 +17,7 @@ public class OrderBean {
 	private String orderNo;
 	private String sftOrderNo;
 	private String bookTime;
+	private String bookAddr;
 	private String createTime;
 	
 	private Long userId;
@@ -137,5 +138,11 @@ public class OrderBean {
 	}
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
+	}
+	public String getBookAddr() {
+		return bookAddr;
+	}
+	public void setBookAddr(String bookAddr) {
+		this.bookAddr = bookAddr;
 	}
 }

@@ -1,6 +1,9 @@
 package org.ship.shipservice.rest;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,6 +46,7 @@ public class OilStationController {
 	@RequestMapping(value="/city", method = RequestMethod.GET)
 	public String getCity() {
 		logger.debug("getCity start.");
+		String ff = request.getRealPath("");
 		Integer[] pageInfo = CommonUtils.getPageInfo(request);
 		ResultList r = oilStationService.queryCityList();
 		return CommonUtils.printListStr(r.getDataList());
@@ -83,6 +87,30 @@ public class OilStationController {
 			return CommonUtils.printStr( "200", "评价成功");
 		}
 	}
+	
+	/**
+	 * 获取加油站列表
+	 * @param phone
+	 * @return
+	 */
+	@RequestMapping(value="/oil", method = RequestMethod.GET)
+	public String getOils() {
+		logger.debug("getOils start.cityId=" );
+		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
+		Map<String, String> oil = new HashMap<String, String>();
+		oil.put("productName", "柴油");
+		list.add(oil);
+		
+		Map<String, String> oil1 = new HashMap<String, String>();
+		oil1.put("productName", "机油");
+		list.add(oil1);
+		
+		Map<String, String> oil2 = new HashMap<String, String>();
+		oil2.put("productName", "180");
+		list.add(oil2);
+		return CommonUtils.printListStr(list);
+	}
+	
 	public OilStationService getOilStationService() {
 		return oilStationService;
 	}

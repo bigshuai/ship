@@ -9,7 +9,6 @@ import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.OrderBean;
 import org.ship.shipservice.domain.ResultList;
-import org.ship.shipservice.entity.Order;
 import org.ship.shipservice.service.order.OrderService;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
@@ -17,8 +16,6 @@ import org.ship.shipservice.utils.RequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,12 +49,37 @@ public class OrderRestController {
 		if(userId==0){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
-//			PageRequest pageRequest = new PageRequest(page, 10);
-//			Page<Order> orders = orderService.findByUserIdAndStatus(userId, status,pageRequest);
-//			return CommonUtils.printObjStr(orders, 200, "订单列表");
 			Integer[] pageInfo = CommonUtils.getPageInfo(request);
 			ResultList list = orderService.queryOrderUserList(userId, status,pageInfo[0], pageInfo[1]);
 			return CommonUtils.printListStr(list);
+		}
+	}
+	
+	@RequestMapping(value="/cmo", method = RequestMethod.POST)
+	public String createMakeOrder(@RequestBody String body) {
+		logger.debug("createOrder start.body=" + body);
+		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
+		OrderBean order = new OrderBean();
+		order.setUserId(jo.getLong("userId"));
+		order.setProductName(jo.getString("productName"));
+		order.setNum(jo.getInteger("num"));
+		order.setBookTime(jo.getString("bookTime"));
+		order.setBookAddr(CommonUtils.decode(jo.getString("addr")));
+		//订单类型 1-正常加油订单  11-预约加油
+		String r = this.checkOrderParam(order);
+		if(StringUtils.isEmpty(r)){
+			try {
+				Map<String, String> res = orderService.createMakeOrder(order);
+				if(StringUtils.isEmpty(res.get("msg"))){
+					return CommonUtils.printObjStr(res);
+				}else{
+					return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
+				}
+			} catch (Exception e) {
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, e.getMessage());
+			}
+		}else{
+			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
 		}
 	}
 	
@@ -71,21 +93,25 @@ public class OrderRestController {
 		logger.debug("createOrder start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
 		OrderBean order = new OrderBean();
-		order.setUserId(jo.getLong("uId"));
+		order.setUserId(jo.getLong("userId"));
 		order.setProductId(jo.getString("productId"));
 		order.setProductName(jo.getString("productName"));
 		order.setPrice(jo.getString("price"));
 		order.setNum(jo.getInteger("num"));
 		order.setCouponId(jo.getLong("couponId"));
 		order.setOsId(jo.getLong("osId"));
-		
+		//订单类型 1-正常加油订单
 		String r = this.checkOrderParam(order);
 		if(StringUtils.isEmpty(r)){
-			Map<String, String> res = orderService.createOrder(order);
-			if(StringUtils.isEmpty(res.get("msg"))){
-				return CommonUtils.printObjStr(res);
-			}else{
-				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
+			try {
+				Map<String, String> res = orderService.createOrder(order, 1);
+				if(StringUtils.isEmpty(res.get("msg"))){
+					return CommonUtils.printObjStr(res);
+				}else{
+					return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
+				}
+			} catch (Exception e) {
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, e.getMessage());
 			}
 		}else{
 			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
@@ -101,12 +127,15 @@ public class OrderRestController {
 	public String precheckForPayment(@RequestBody String body) {
 		logger.debug("createOrder start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
-		String sessionToken = jo.getString("sessionToken");
+		//String sessionToken = jo.getString("sessionToken");
+		Long userId =  jo.getLong("userId");
 		String orderNo = jo.getString("orderNo");
-		String agreementNo = jo.getString("agreementNo");
-		String r = this.checkPfpOrderParam(sessionToken, orderNo, agreementNo);
+		//String agreementNo = jo.getString("agreementNo");
+		Long bankId = jo.getLong("bankId");
+		
+		String r = this.checkPfpOrderParam(userId, bankId, orderNo);
 		if(StringUtils.isEmpty(r)){
-			String res = orderService.precheckForPayment(sessionToken, orderNo, agreementNo);
+			String res = orderService.precheckForPayment(userId, bankId, orderNo);
 			if(StringUtils.isEmpty(res)){
 				return CommonUtils.printStr();
 			}else{
@@ -126,20 +155,138 @@ public class OrderRestController {
 	public String pay(@RequestBody String body) {
 		logger.debug("pay start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
-		String sessionToken = jo.getString("sessionToken");
+		Long userId =  jo.getLong("userId");
+		String orderNo = jo.getString("orderNo");
 		String code = jo.getString("code");
 		String r = null;
 		if(StringUtils.isEmpty(r)){
-			Map<String, String> res = orderService.payment(sessionToken, code);
-			if(StringUtils.isEmpty(res.get("msg"))){
-				return CommonUtils.printObjStr(res);
-			}else{
-				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
+			try {
+				Map<String, String> res = orderService.payment(userId, orderNo, code);
+				if(StringUtils.isEmpty(res.get("msg"))){
+					return CommonUtils.printObjStr(res);
+				}else{
+					return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
+				}
+			} catch (Exception e) {
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, e.getMessage());
 			}
+			
 		}else{
 			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
 		}
 	} 
+	
+	/**
+	 * 充值支付预校验
+	 * @param body
+	 * @return
+	 */
+	@RequestMapping(value="/crcp", method = RequestMethod.POST)
+	public String cRechargePay(@RequestBody String body) {
+		logger.debug("pay start.body=" + body);
+		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
+		Long userId =  jo.getLong("userId");
+		String orderNo = jo.getString("orderNo");
+		String r = null;
+		if(StringUtils.isEmpty(r)){
+			try {
+				Map<String, String> res = orderService.cRechargePay(userId, orderNo);
+				if(StringUtils.isEmpty(res.get("msg"))){
+					return CommonUtils.printObjStr(res);
+				}else{
+					return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
+				}
+			} catch (Exception e) {
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, e.getMessage());
+			}
+			
+		}else{
+			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
+		}
+	}
+	
+	/**
+	 * 充值支付
+	 * @param body
+	 * @return
+	 */
+	@RequestMapping(value="/rcp", method = RequestMethod.POST)
+	public String rechargePay(@RequestBody String body) {
+		logger.debug("pay start.body=" + body);
+		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
+		Long userId =  jo.getLong("userId");
+		String orderNo = jo.getString("orderNo");
+		String code = jo.getString("code");
+		String r = null;
+		if(StringUtils.isEmpty(r)){
+			try {
+				Map<String, String> res = orderService.rechargePay(userId, orderNo, code);
+				if(StringUtils.isEmpty(res.get("msg"))){
+					return CommonUtils.printObjStr(res);
+				}else{
+					return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
+				}
+			} catch (Exception e) {
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, e.getMessage());
+			}
+			
+		}else{
+			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
+		}
+	} 
+	
+	/**
+	 * 创建充值订单
+	 * @param body
+	 * @return
+	 */
+	@RequestMapping(value="/prc", method = RequestMethod.POST)
+	public String recharge(@RequestBody String body) {
+		logger.debug("pay start.body=" + body);
+		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
+		String amount = jo.getString("amount");
+		Long userId = jo.getLong("userId");
+		Long bankId = jo.getLong("bankId");
+		String r = null;
+		if(StringUtils.isEmpty(r)){
+			try {
+				OrderBean order = new OrderBean();
+				order.setUserId(userId);
+				order.setAmount(amount);
+				Map<String, String> res = orderService.rechargeOrder(order, bankId);
+				if(StringUtils.isEmpty(res.get("msg"))){
+					return CommonUtils.printObjStr(res);
+				}else{
+					return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
+				}
+			} catch (Exception e) {
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, e.getMessage());
+			}
+			
+		}else{
+			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
+		}
+	} 
+	
+	/**
+	 * 更新订单状态
+	 * @param body
+	 * @return
+	 */
+	@RequestMapping(value="/us", method = RequestMethod.POST)
+	public String updateStatus(@RequestBody String body) {
+		logger.debug("updateStatus start.body=" + body);
+		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
+		Long userId =  jo.getLong("userId");
+		String orderNo = jo.getString("orderNo");
+		Integer status = jo.getInteger("status");
+		Map<String, String> res = orderService.updateStatus(userId, orderNo, status);
+		if(StringUtils.isEmpty(res.get("msg"))){
+			return CommonUtils.printObjStr(res);
+		}else{
+			return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
+		}
+	}
 	
 	/**
 	 * 支付通知
@@ -195,11 +342,23 @@ public class OrderRestController {
 			logger.info("加签串："+signMd5Msg);
 			if(SignMsg!=null&&SignMsg.equalsIgnoreCase(signMd5Msg)){
 				//处理自己相关的逻辑，可以选择入库，然后，前台隔断时间扫描数据库获取相关标识是否获取到数据
-				logger.info("处理相关逻辑成功");
+				logger.info("处理相关逻辑成功 OrderNo=" + OrderNo);
+				//根据orderNo更新数据库状态
+				int r = 0;
+				try {
+					if(OrderNo.startsWith("U")){
+						//用户充值订单
+						r = orderService.userRecharge(Integer.valueOf(TransStatus), OrderNo, OrderAmount, TransAmount);
+					}else{
+						r = orderService.updateOrder(Integer.valueOf(TransStatus), OrderNo, OrderAmount, TransAmount);
+					}
+					if(r > 0){
+						return "OK";//盛付通后台通过notifyUrl通知商户,商户做业务处理后,需要以字符串(OK)的形式反馈处理结果处理成功,盛付通系统收到此结果后不再进行后续通知
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				
-				//更新数据库
-				
-				return "OK";//盛付通后台通过notifyUrl通知商户,商户做业务处理后,需要以字符串(OK)的形式反馈处理结果处理成功,盛付通系统收到此结果后不再进行后续通知
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -208,6 +367,10 @@ public class OrderRestController {
 	} 
 	
 	private String checkOrderParam(OrderBean order){
+		return null;
+	}
+	
+	private String checkPfpOrderParam(Long userId, Long bankId, String orderNo){
 		return null;
 	}
 	

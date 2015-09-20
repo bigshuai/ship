@@ -125,7 +125,89 @@
 #返回值# 
 1. 失败 {"code":"400","msg":"请求参数错误"}
 2. 成功 {"code":"200","msg":"请求完成","result":{"amount":"850.24","orderCreateTime":"20150905165604","sessionToken":"A9B3F736580B6DDD0CCFF5D841D4CCC9964B0E7F71D2D424CD29A1584A7B47F501C00D36081ECD03","orderNo":"a088556a-b509-4993-b28d-81"}}
+</code>
+</pre>
 
+<h3>3 支付(银行卡)预校验(POST)</h3>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/order/pay
+#参数#
+      userId
+      orderNo      订单NO(必填)
+      bankId       银行卡ID（选填）
+#返回值# 
+1. 失败
+2. 成功 {"code":"200","msg":"请求完成"}
+</code>
+</pre>
+
+<h3>4 支付(银行卡)(POST)</h3>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/order/cpo
+#参数#
+      userId
+      orderNo      订单NO(必填)
+      code    手机验证码（选填）
+#返回值# 
+1. 失败 {"code":"10030002","msg":"手机验证码有误[输入的验证码有误]"}
+2. 成功 {"code":"200","msg":"请求完成"}
+</code>
+</pre>
+
+<h3>5 创建充值(POST)</h3>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/order/prc
+#参数#
+      userId
+      productId      商品ID(必填)
+      productName    商品名称（选填）
+      price          单价（选填）
+      num            数量（必填）
+      couponId       优惠券ID（选填）
+      osId           加油站ID（必填）
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"请求完成","result":{"amount":"6444","orderCreateTime":"20150919145017","orderNo":"U201509191144264541722200034"}}
+</code>
+</pre>
+
+<h3>3 充值预校验(POST)</h3>
+           见 支付预校验
+<h3>4 充值支付(POST)</h3>
+          见  支付
+ 
+<h3>5 获取预约油品(GET)</h3>
+<pre><code>#链接#  http://43.254.55.158/shipService//api/v1/os/oil
+#参数#
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"请求完成","result":{"amount":"850.24","orderCreateTime":"20150905165604","sessionToken":"A9B3F736580B6DDD0CCFF5D841D4CCC9964B0E7F71D2D424CD29A1584A7B47F501C00D36081ECD03","orderNo":"a088556a-b509-4993-b28d-81"}}
+</code>
+</pre>
+          
+<h3>6 创建预约订单(POST)</h3>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/order/cmo
+#参数#
+      userId
+      productName    商品名称（选填）
+      num            数量（必填）
+      bookTime       预约时间（选填）
+      addr           地址（必填）
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功{"code":"200","msg":"请求完成","result":[{"productName":"柴油"},{"productName":"机油"},{"productName":"180"}]}
+</code>
+</pre>
+
+<h3>6 更新订单状态(POST)</h3>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/order/us
+#参数#
+	userId
+	orderNo
+	status
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"请求完成"}
+</code>
+</pre>
+          
 <p>===================================================
 
 </p>
@@ -210,7 +292,7 @@
 </pre>
 <h3>3 获取用户优惠券列表</h3>
 <pre>
-<code>#链接#  http://43.254.55.158//shipService/api/v1/os/detail
+<code>#链接#  http://43.254.55.158//shipService/api/v1/coupon/user
 #参数#  
     userId		用户ID(必填)
 	s			状态（0-未使用 1-已使用 9-已过期  不传或空查询全部数据）
@@ -277,6 +359,32 @@
 #返回值# 
     requestNo			签约请求号
 示例  {"code":"200","msg":"请求完成"}				
+											
+</code>
+</pre>
+
+<h3>5 获取可使用的银行卡列表(GET)</h3>
+<pre>
+<code>#链接#  http://43.254.55.158/shipService/api/v1/bank/instList
+#参数#  
+	bankCardType	选填
+	bankCode	选填
+#返回值# 
+    requestNo			签约请求号
+示例  {"code":"200","msg":"请求完成","result":[{"bankCardType":"CR","bankCode":"SDE","bankName":"顺德农信社"},{"bankCardType":"DR","bankCode":"GDB","bankName":"广发银行"},{"bankCardType":"DR","bankCode":"HXB","bankName":"华夏银行"},{"bankCardType":"CR","bankCode":"LZ","bankName":"兰州银行"},{"bankCardType":"CR","bankCode":"YICHANG","bankName":"宜昌市商业银行"},{"bankCardType":"CR","bankCode":"WZCB","bankName":"温州市商业银行"},{"bankCardType":"CR","bankCode":"ORDOS","bankName":"鄂尔多斯银行"},{"bankCardType":"CR","bankCode":"OFDL","bankName":"大连银行"},{"bankCardType":"CR","bankCode":"CSCB","bankName":"长沙银行"},{"bankCardType":"CR","bankCode":"UCCB","bankName":"乌鲁木齐商业银行"},{"bankCardType":"CR","bankCode":"YDXH","bankName":"尧都农村商业银行"},{"bankCardType":"DR","bankCode":"HKBEA","bankName":"东亚银行"},{"bankCardType":"DR","bankCode":"CMBC","bankName":"民生银行"},{"bankCardType":"CR","bankCode":"CHENGDE","bankName":"承德银行"},{"bankCardType":"DR","bankCode":"ICBC","bankName":"工商银行"},{"bankCardType":"CR","bankCode":"CZCB","bankName":"浙江稠州商业银行"},{"bankCardType":"CR","bankCode":"MINTAI","bankName":"浙江民泰商业银行"},{"bankCardType":"CR","bankCode":"GNXS","bankName":"广州农商银行"},{"bankCardType":"DR","bankCode":"BOC","bankName":"中国银行"},{"bankCardType":"DR","bankCode":"PSBC","bankName":"中国邮储银行"},{"bankCardType":"DR","bankCode":"SHRCB","bankName":"上海农村商业银行"},{"bankCardType":"CR","bankCode":"QH","bankName":"青海银行"},{"bankCardType":"CR","bankCode":"HRBCB","bankName":"哈尔滨银行"},{"bankCardType":"CR","bankCode":"WFCCB","bankName":"潍坊银行"},{"bankCardType":"DR","bankCode":"BOS","bankName":"上海银行"},{"bankCardType":"CR","bankCode":"HCCB","bankName":"杭州银行"},{"bankCardType":"CR","bankCode":"NCC","bankName":"南昌银行"},{"bankCardType":"CR","bankCode":"HEB","bankName":"河北银行"},{"bankCardType":"CR","bankCode":"WHCCB","bankName":"威海市商业银行"},{"bankCardType":"DR","bankCode":"SZPAB","bankName":"平安银行"},{"bankCardType":"DR","bankCode":"BCCB","bankName":"北京银行"},{"bankCardType":"CR","bankCode":"CQRCB","bankName":"重庆农村商业银行"},{"bankCardType":"CR","bankCode":"JY","bankName":"江阴农村商业银行"},{"bankCardType":"DR","bankCode":"CCB","bankName":"建设银行"},{"bankCardType":"CR","bankCode":"JSB","bankName":"江苏银行"},{"bankCardType":"CR","bankCode":"NBCB","bankName":"宁波银行"},{"bankCardType":"DR","bankCode":"CIB","bankName":"兴业银行"},{"bankCardType":"CR","bankCode":"JJCCB","bankName":"九江银行"},{"bankCardType":"DR","bankCode":"CMB","bankName":"招商银行"},{"bankCardType":"DR","bankCode":"COMM","bankName":"交通银行"},{"bankCardType":"CR","bankCode":"CQC","bankName":"重庆银行"},{"bankCardType":"CR","bankCode":"ZJTLCB","bankName":"浙江泰隆商业银行"},{"bankCardType":"CR","bankCode":"GYCCB","bankName":"贵阳银行"},{"bankCardType":"CR","bankCode":"FJNX","bankName":"福建省农村信用社"},{"bankCardType":"CR","bankCode":"HSBANK","bankName":"徽商银行"},{"bankCardType":"CR","bankCode":"GZCB","bankName":"广州市商业银行"},{"bankCardType":"DR","bankCode":"CITIC","bankName":"中信银行"},{"bankCardType":"CR","bankCode":"NJCB","bankName":"南京银行"},{"bankCardType":"CR","bankCode":"SR","bankName":"上饶银行"},{"bankCardType":"DR","bankCode":"ABC","bankName":"农业银行"},{"bankCardType":"DR","bankCode":"SPDB","bankName":"浦东发展银行"},{"bankCardType":"CR","bankCode":"WJRCB","bankName":"吴江农村商业银行"},{"bankCardType":"CR","bankCode":"CDRCB","bankName":"成都农商银行"},{"bankCardType":"DR","bankCode":"CEB","bankName":"光大银行"},{"bankCardType":"CR","bankCode":"LJ","bankName":"龙江银行"},{"bankCardType":"CR","bankCode":"JINZHOU","bankName":"锦州银行"},{"bankCardType":"CR","bankCode":"QLB","bankName":"齐鲁银行"}]}				
+											
+</code>
+</pre>
+
+<h3>6 银行卡解约(POST)</h3>
+<pre>
+<code>#链接#  http://43.254.55.158/shipService/api/v1/bank/unsign
+#参数#  
+	userId	
+	bankId	
+#返回值# 
+    
+示例  {"code":"10030002","msg":"解约失败，请稍后再试。"}				
 											
 </code>
 </pre>
@@ -373,7 +481,7 @@
 <pre>
 <code>#链接#  http://43.254.55.158/shipService/api/v1/info/getInfo
 #参数#  
-	param={infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,city:"上海市",createTime:"1为正2为倒",tag:"黄沙",price:"1为正2为倒"}&pageNo=1&pageSize=10
+	param={infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",createTime:"1为正2为倒",tag:"黄沙",price:"1为正2为倒"}&pageNo=1&pageSize=10
 	有什么值传什么,传id不传名字,可以类别组合
 #返回值# 
      {"code":"200","msg":"资讯列表","result":[{title:"",infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"},{}]

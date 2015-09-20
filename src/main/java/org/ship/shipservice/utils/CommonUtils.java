@@ -294,6 +294,17 @@ public class CommonUtils {
 		return "H"+format.format(new Date())+ userId +System.currentTimeMillis() + String.format("%05d", new Random().nextInt(10000));
 	}
 	
+	/**
+	 * 获取充值订单号
+	 * @param userId
+	 * @return
+	 */
+	public static synchronized String getRechargeOrderNo(String userId){
+		//格式  H20150908userIdSystem.currentTimeMillis()5位随机数
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+		return "U"+format.format(new Date())+ userId +System.currentTimeMillis() + String.format("%05d", new Random().nextInt(10000));
+	}
+	
 	public static String decode(String str){
 		try {
 			if(!StringUtils.isEmpty(str)){

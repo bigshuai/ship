@@ -57,4 +57,9 @@ public interface CouponDao extends CrudRepository<Coupon, Long> {
 	
 	@Query(value="SELECT count(1) FROM t_coupon_list t where t.user_id=?1 and t.status =?2", nativeQuery=true)
 	public int queryUserCouponSTotal(Long userId, Integer status);
+	
+	@Modifying
+	@Query(value="SELECT t.coupon_id, t.face_value,t.limit_value"
+			+ " FROM t_coupon_list t where t.user_id=?1 and coupon_id=?2 and t.status=0", nativeQuery=true)
+	Object[] queryCouponInfo(Long userId, Long couponId);
 }

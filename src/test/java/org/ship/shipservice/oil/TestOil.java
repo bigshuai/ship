@@ -6,6 +6,7 @@ public class TestOil extends TestBase{
 		testCity();
 		testOilStatin();
 		testOsDetail();
+		testOils();
     }
 	
 	public static void testCity(){
@@ -20,6 +21,11 @@ public class TestOil extends TestBase{
 	
 	public static void testOsDetail(){
 		String url = "http://localhost:8080/shipService/api/v1/os/detail?osid=1";
+		System.out.println("ccc ="+httpGet(url));
+	}
+	
+	public static void testOils(){
+		String url = "http://localhost:8080/shipService/api/v1/os/oil";
 		System.out.println("ccc ="+httpGet(url));
 	}
 }

@@ -1,6 +1,7 @@
 package org.ship.shipservice.rest;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,9 +11,9 @@ import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.BankBean;
 import org.ship.shipservice.domain.BankInfo;
 import org.ship.shipservice.domain.ResultList;
-import org.ship.shipservice.domain.UserBean;
 import org.ship.shipservice.service.bank.BankService;
 import org.ship.shipservice.utils.CommonUtils;
+import org.ship.shipservice.utils.HybException;
 import org.ship.shipservice.utils.RequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,21 @@ public class BankController implements HybConstants{
 	
 	@Autowired
     private BankService bankService;
+	
+	
+	/**
+	 * 根据银行卡查询信息
+	 * @param phone
+	 * @return
+	 */
+	@RequestMapping(value="/instList", method = RequestMethod.GET)
+	public String getInstList() {
+		logger.debug("getBankInfo start.bcn=");
+		String bankCardType = request.getParameter("bankCardType");
+		String bankCode = request.getParameter("bankCode");
+		List<BankInfo> infos = bankService.getInstList(bankCardType, bankCode);
+		return CommonUtils.printListStr(infos);
+	}
 	
 	/**
 	 * 根据银行卡查询信息
@@ -64,7 +80,7 @@ public class BankController implements HybConstants{
 	}
 	
 	/**
-	 * 绑定银行卡
+	 * 绑定银行卡 预校验
 	 * @param couponId
 	 * @return
 	 */
@@ -86,13 +102,17 @@ public class BankController implements HybConstants{
 		bank.setMobileNo(jo.getString("mobileNo"));
 		String r = this.checkPrecheckForSign(bank);
 		if(StringUtils.isEmpty(r)){
-			String res = bankService.precheckForSign(bank);
-			if(StringUtils.isEmpty(res)){
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("requestNo", requestNo);
-				return CommonUtils.printObjStr(map);
-			}else{
-				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res);
+			try {
+				String res = bankService.precheckForSign(bank);
+				if(StringUtils.isEmpty(res)){
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("requestNo", requestNo);
+					return CommonUtils.printObjStr(map);
+				}else{
+					return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res);
+				}
+			} catch (Exception e) {
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, e.getMessage());
 			}
 		}else{
 			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
@@ -113,16 +133,50 @@ public class BankController implements HybConstants{
 		String code = jo.getString("code");
 		String r = this.checkSign(userId, requestNo, code);
 		if(StringUtils.isEmpty(r)){
-			String res = bankService.sign(userId, requestNo, code);
-			if(StringUtils.isEmpty(res)){
-				return CommonUtils.printStr();
-			}else{
-				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res);
+			try {
+				String res = bankService.sign(userId, requestNo, code);
+				if(StringUtils.isEmpty(res)){
+					return CommonUtils.printStr();
+				}else{
+					return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res);
+				}
+			} catch (Exception e) {
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, e.getMessage());
+			}
+			
+		}else{
+			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
+		}
+	}
+	
+	/**
+	 * 解约银行卡
+	 * @param couponId
+	 * @return
+	 */
+	@RequestMapping(value="/unsign", method = RequestMethod.POST)
+	public String unsign(@RequestBody String body) {
+		logger.debug("getCoupon start.body=" + body);
+		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
+		Long userId = jo.getLong(HybConstants.USERID);
+		Long bankId = jo.getLong("bankId");
+		String r = "";
+		if(StringUtils.isEmpty(r)){
+			try {
+				String res = bankService.unsign(userId, bankId);
+				if(StringUtils.isEmpty(res)){
+					return CommonUtils.printStr();
+				}else{
+					return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res);
+				}
+			} catch (Exception e) {
+				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, e.getMessage());
 			}
 		}else{
 			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
 		}
 	}
+	
 	
 	private String checkPrecheckForSign(BankBean bank){
 		return null;
