@@ -76,7 +76,7 @@ public class LoginRestController {
 				logger.info("用户:"+user.getPhone()+"登陆");
 				return CommonUtils.printObjStr(user, 200, "用户登陆成功");
 			}else{
-				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "当前用户不存在");
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "账号或密码错误");
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package org.ship.shipservice.entity;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,6 +25,7 @@ public class Information extends IdEntity {
 	private Long userId;
 	private String tag;
 	private String city;
+	private Date createTime;
 	public Information() {
 
 	}
@@ -136,4 +138,37 @@ public class Information extends IdEntity {
 		this.isDelete = isDelete;
 	}
 
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+	@Column(name = "create_time")
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
 }
