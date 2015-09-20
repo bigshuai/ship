@@ -52,7 +52,8 @@
 #参数#  phone=18516293301&amp;file=
 #返回值# 
 1. 失败 {"code":"400","msg":"请求参数错误"}
-2. 成功 {"code":"200","msg":"上传成功","result":"43.254.55.158/shipService/headImage/123222114751441372101675.jpg"}</code></pre>
+2. 成功 {"code":"200","msg":"上传成功","result":{"url":"http://43.254.55.158/shipService/headImage/185162933011442739917533.jpg"}}
+</code></pre>
 <h3>3 更新用户信息(包含城市)</h3>
 <pre><code>#链接#  http://43.254.55.158/shipService/api/v1/userInfo/updateUser
 #参数#  phone=18516293301&amp;userInfo={username=hello,shipname=boat,shipno=p988888,city="上海"}  需要更新哪个字段传哪个
@@ -324,7 +325,7 @@
 <pre>
 <code>#链接#  http://43.254.55.158/shipService/api/v1/info/getInfo
 #参数#  
-	param={infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",createTime:"1为正2为倒",tag:"黄沙",price:"1为正2为倒"}&pageNo=1&pageSize=10
+	param={infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,city:"上海市",createTime:"1为正2为倒",tag:"黄沙",price:"1为正2为倒"}&pageNo=1&pageSize=10
 	有什么值传什么,传id不传名字,可以类别组合
 #返回值# 
      {"code":"200","msg":"资讯列表","result":[{title:"",infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"},{}]

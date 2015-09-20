@@ -2,11 +2,11 @@ package org.ship.shipservice.rest;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ship.shipservice.domain.UrlBean;
 import org.ship.shipservice.entity.ConsumeInfo;
 import org.ship.shipservice.entity.Favorite;
 import org.ship.shipservice.entity.Information;
@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springside.modules.mapper.JsonMapper;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -99,7 +98,7 @@ public class UserInfoRestController {
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400,
 					MyConstant.JSON_RETURN_MESSAGE_400);
 		} else {
-			PageRequest pageRequest = new PageRequest(page, 10);
+			PageRequest pageRequest = new PageRequest(page-1, 10);
 			Page<ConsumeInfo> cList = consumeInfoService.findByAccountId(
 					userId, pageRequest);
 			return CommonUtils.printObjStr(cList, 200, "消费详情");
@@ -129,8 +128,9 @@ public class UserInfoRestController {
 					String url = saveFile(newFileName, headImage, httpRequest);
 					user.setUrl(url);
 					accountService.getUserDao().save(user);
-					System.out.println(url);
-					return CommonUtils.printObjStr(url, 200, "上传成功");
+					UrlBean urlBean = new UrlBean();
+					urlBean.setUrl(url);
+					return CommonUtils.printObjStr(urlBean, 200, "上传成功");
 				} catch (Exception e) {
 					return CommonUtils.printStr(
 							MyConstant.JSON_RETURN_CODE_500,

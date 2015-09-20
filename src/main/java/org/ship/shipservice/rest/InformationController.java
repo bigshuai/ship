@@ -116,7 +116,7 @@ public class InformationController {
 	 * @return
 	 */
 	@RequestMapping(value="getInfo",method=RequestMethod.POST)
-	public String queryInfomation(@RequestParam("param") String param){
+	public String queryInfomation(@RequestParam("info") String param,@RequestParam("pageNo") Integer pageno,@RequestParam("pageSize") Integer pagesize){
 		Information infor = JSON.parseObject(param, Information.class);
 		String str =" ";
 		if(infor.getInfoType()!=null){
@@ -131,6 +131,19 @@ public class InformationController {
 		if(infor.getInfoTypeTwo()!=null){
 			str+=" and info.infoTypeTwo="+infor.getInfoTypeTwo();
 		}
+		if(infor.getCity()!=null){
+			str+=" and info.city like %"+infor.getCity()+"%";
+		}
+		str +="order by info.createTime desc";
+		if(infor.getPrice()!=null){
+			if(infor.getPrice().equals(1)){
+				str+=" , info.price asc";
+			}else if(infor.getPrice().equals(2)){
+				str+=" , info.price desc";
+			}
+			
+		}
+		str +=" limit "+ pageno +", "+pagesize;
 		List<Information> infoList=inforDaoImpl.findInfoByParam(str);
 		return CommonUtils.printListStr(infoList);
 	}
