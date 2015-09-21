@@ -3,6 +3,7 @@ package org.ship.shipservice.rest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -94,12 +95,13 @@ public class BankController implements HybConstants{
 		bank.setRequestNo(requestNo);
 		bank.setBankCode(jo.getString("bankCode"));
 		bank.setBankName(CommonUtils.decode(jo.getString("bankName")));
-		bank.setBankCardType(jo.getString("bankCardType"));
 		bank.setBankCardNo(jo.getString("bankCardNo"));
+		bank.setBankCardType(jo.getString("bankCardType"));
 		bank.setRealName(CommonUtils.decode(jo.getString("realName")));
 		bank.setIdNo(jo.getString("idNo"));
 		bank.setIdType(jo.getString("idType"));
 		bank.setMobileNo(jo.getString("mobileNo"));
+		
 		String r = this.checkPrecheckForSign(bank);
 		if(StringUtils.isEmpty(r)){
 			try {

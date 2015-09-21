@@ -148,6 +148,7 @@ public class OrderService {
 			order.setPrice(oil.getPrice()+"");
 			BigDecimal amount = this.calculateAmount(order.getUserId(), oil, Long.valueOf(order.getProductId()), 
 					order.getNum(), order.getOsId(), order.getCouponId());
+			amount = new BigDecimal("0.01");
 			order.setAmount(amount.toPlainString());
 			pOrder.setMerchantNo(HybConstants.MERCHANTNO);
 			pOrder.setMerchantOrderNo(CommonUtils.getMerchantOrderNo(order.getUserId()+""));
@@ -291,26 +292,18 @@ public class OrderService {
 			info.setMerchantNo(HybConstants.MERCHANTNO);
 			info.setSessionToken(orderDao.querySessionToken(orderNo, userId));
 			//info.setAgreementNo(bankDao.getAgreementNo(bankId, userId));
-			Object[] bi = bankDao.queryBankForId(userId, bankId);
+			Object[] bi = bankDao.queryPayBankForId(userId, bankId);
 			Object[] bankInfo = (Object[]) bi[0];
-			//@Query(value="select t.bank_code, t.bank_cardtype, t.bank_cardno,t.real_name,t.id_no, t.id_type"
-			//		+ ", t.mobile_no,  t.cvv2, t.valid_thru "
-			String outMemberId = UUID.randomUUID().toString().substring(0, 30);
-			info.setOutMemberId(outMemberId);
-			info.setBankCode(bankInfo[0]+"");
-			info.setBankCardType(bankInfo[1]+"");
-			info.setBankCardNo(RSAUtil.decrypt(bankInfo[2]+""));
-			info.setRealName(RSAUtil.decrypt(bankInfo[3]+""));
-			info.setIdNo(RSAUtil.decrypt(bankInfo[4]+""));
-			info.setIdType(bankInfo[5]+"");
-			info.setMobileNo(RSAUtil.decrypt(bankInfo[6]+""));
-			if(bankInfo.length > 6){
-				info.setCvv2(bankInfo[7]+"");
-				info.setValidThru(bankInfo[8]+"");
-			}
-			info.setUserIp("127.0.0.1");
+			//t.agreement_no, t.out_member_id,t.real_name,t.id_no, t.id_type,t.mobile_no
+			info.setAgreementNo(bankInfo[0]+"");
+			info.setOutMemberId(bankInfo[1]+"");
+			info.setRealName(RSAUtil.decrypt(bankInfo[2]+""));
+			info.setIdNo(RSAUtil.decrypt(bankInfo[3]+""));
+			info.setIdType(bankInfo[4]+"");
+			info.setMobileNo(RSAUtil.decrypt(bankInfo[5]+""));
 			info.setUserIp(CommonUtils.getIp());
-			info.setRiskExtItems(this.getExt(outMemberId));
+			info.setUserIp(CommonUtils.getIp());
+			info.setRiskExtItems(this.getExt(info.getOutMemberId()));
 			PayResponse<String> res= client.precheckForPayment(info);
 			if(res.getHttpCode()==200 && res.isSignResult()){
 				if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){

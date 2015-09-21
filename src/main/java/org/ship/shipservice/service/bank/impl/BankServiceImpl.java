@@ -23,6 +23,7 @@ import com.sj.pay.client.SjPayClient;
 import com.sj.pay.client.domain.Inst;
 import com.sj.pay.client.domain.PrecheckSign;
 import com.sj.pay.client.domain.SignRes;
+import com.sj.pay.constants.PayConstants;
 
 @Component
 @Transactional
@@ -105,8 +106,6 @@ public class BankServiceImpl implements BankService {
 			sign.setIdNo(bank.getIdNo());
 			sign.setIdType("IC");
 			sign.setMobileNo(bank.getMobileNo());
-			//sign.setCvv2(bank.getCvv2());
-			//sign.setValidThru(bank.getValidThru());
 			sign.setUserIp(CommonUtils.getIp());
 			
 			//签约成功，发送短信，返回到验证码页面
@@ -121,7 +120,7 @@ public class BankServiceImpl implements BankService {
 			}
 			int r = bankDao.saveBankInfo(bank.getUserId(), bank.getRequestNo(), bank.getBankCode(), bank.getBankName(),
 				bank.getBankCardType(),bankCardNo, realName, idNo, "IC",
-				mobileNo, bank.getCvv2(), bank.getValidThru());
+				mobileNo, bank.getCvv2(), bank.getValidThru(), sign.getOutMemberId());
 			if(r > 0){
 				//数据库更新成功 调用接口
 				PayResponse<String> res = client.precheckForSign(sign);

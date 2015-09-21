@@ -27,12 +27,19 @@ public interface BankDao extends CrudRepository<Coupon, Long> {
 			+ "where t.user_id=?1 and t.id=?2 and t.`status`=1", nativeQuery=true)
 	public Object[] queryBankForId(Long userId, Long id);
 	
+	
+	@Modifying
+	@Query(value="select t.agreement_no, t.out_member_id,t.real_name,t.id_no, t.id_type,t.mobile_no "
+			+ "from t_bank t "
+			+ "where t.user_id=?1 and t.id=?2 and t.`status`=1", nativeQuery=true)
+	public Object[] queryPayBankForId(Long userId, Long id);
+	
 	@Modifying
 	@Query(value="insert into t_bank(user_id,request_no,bank_code,bank_name,bank_cardtype,bank_cardno,real_name,"
-			+ "id_no,id_type,mobile_no,cvv2,valid_thru,status,create_time) "
-			+ "VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,0,now())", nativeQuery=true)
+			+ "id_no,id_type,mobile_no,cvv2,valid_thru,status,create_time,out_member_id) "
+			+ "VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,0,now(),?13)", nativeQuery=true)
 	public int saveBankInfo(Long userId,String requestNo,String bankCode,String bankName,String bankCardType,
-			String bankCardNo,String realName,String idNo,String idType,String mobileNo,String cvv2,String validThru);
+			String bankCardNo,String realName,String idNo,String idType,String mobileNo,String cvv2,String validThru,String outMemberId);
 	
 	@Modifying
 	@Query(value="update t_bank set status=1,agreement_no=?1 where request_no=?2", nativeQuery=true)

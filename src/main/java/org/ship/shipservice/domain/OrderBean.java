@@ -21,6 +21,9 @@ public class OrderBean {
 	private String createTime;
 	
 	private Long userId;
+	private String phone;
+	private String userName;
+    private String shipName;
 	private String merchantOrderNo;
 	private Long couponId;
 	private String amount;
@@ -144,5 +147,23 @@ public class OrderBean {
 	}
 	public void setBookAddr(String bookAddr) {
 		this.bookAddr = bookAddr;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getShipName() {
+		return shipName;
+	}
+	public void setShipName(String shipName) {
+		this.shipName = shipName;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 }

@@ -1,6 +1,7 @@
 package org.ship.shipservice.domain;
 
 import org.ship.shipservice.constants.ErrorConstants;
+import org.ship.shipservice.utils.CommonUtils;
 
 /**
  * 
@@ -12,6 +13,7 @@ public class ResResult<T> {
 	private String msg = ErrorConstants.getErrorMsg(ErrorConstants.SUCCESS);
 	private Integer page;
 	private Integer totalSize;
+	private Integer totalPages;
 	private T result;
 	
 	public String getCode() {
@@ -37,11 +39,18 @@ public class ResResult<T> {
 	}
 	public void setTotalSize(Integer totalSize) {
 		this.totalSize = totalSize;
+		this.totalPages = (this.totalSize/CommonUtils.S_PAGESIZE) + 1;
 	}
 	public T getResult() {
 		return result;
 	}
 	public void setResult(T result) {
 		this.result = result;
+	}
+	public Integer getTotalPages() {
+		return totalPages;
+	}
+	public void setTotalPages(Integer totalPages) {
+		this.totalPages = totalPages;
 	}
 }

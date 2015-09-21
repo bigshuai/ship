@@ -5,10 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -16,7 +14,6 @@ import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -29,13 +26,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.jna.platform.win32.Guid;
 
 /**
  * @author zhf 通用工具类
  */
 
 public class CommonUtils {
+	public static Integer S_PAGESIZE = 10;
+	
 	 static char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8','9', 'a', 'b', 'c', 'd', 'e', 'f' };
 	/**
 	 * 随机生成验证码
@@ -150,6 +148,7 @@ public class CommonUtils {
 		try {
 			page = Integer.valueOf(request.getParameter("page"));
 			pageSize = Integer.valueOf(request.getParameter("pageSize"));
+			S_PAGESIZE = pageSize;
 		} catch (NumberFormatException e) {
 		}
 		
