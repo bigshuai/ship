@@ -177,7 +177,7 @@ public class OrderRestController {
 	} 
 	
 	/**
-	 * 充值支付预校验
+	 * 账号余额支付预校验
 	 * @param body
 	 * @return
 	 */
@@ -206,7 +206,7 @@ public class OrderRestController {
 	}
 	
 	/**
-	 * 充值支付
+	 * 账号余额支付
 	 * @param body
 	 * @return
 	 */

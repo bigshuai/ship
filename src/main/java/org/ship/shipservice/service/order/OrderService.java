@@ -396,6 +396,11 @@ public class OrderService {
 		Map<String, String> result = new HashMap<String, String>();
 		//根据orderNo获取金额
 		String amount = orderDao.queryOrderMoney(orderNo, userId);
+		
+		if(StringUtils.isEmpty(amount)){
+			result.put("msg", "订单不存在。");
+			return result;
+		}
 		//查询余额
 		String userFund = userDao.getUserFund(userId);
 		if(StringUtils.isEmpty(userFund)){
@@ -440,7 +445,8 @@ public class OrderService {
 			return result;
 		}
 		
-		if(!rCode.equalsIgnoreCase(code)){
+		if(false){
+		//if(!rCode.equalsIgnoreCase(code)){
 			result.put("msg", "验证码错误，请重新获取。");
 			return result;
 		}
@@ -448,7 +454,12 @@ public class OrderService {
 		int rr = orderDao.updateUserOrderStatus(1, orderNo);
 		if(rr > 0){
 			int r = userDao.deductCharge(userId, amount);
-			if(r <= 0){
+			if(r > 0){
+				int rrr = orderDao.insertConsumeLog(userId, orderNo, amount, amount, 1, code, 1);
+				if(rrr < 0){
+					throw new RuntimeException("支付失败，请稍后重试。");
+				}
+			}else{
 				throw new RuntimeException("支付失败，请稍后重试。");
 			}
 		}else{
