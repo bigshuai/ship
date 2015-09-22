@@ -34,6 +34,7 @@ public interface UserDao extends CrudRepository<User, Long> {
 	@Query(value="select phone from t_user where id=?1 and status=0", nativeQuery=true)
 	public String getUserPhone(Long userId);
 	
+	@Modifying
 	@Query(value="insert into t_user_bank(user_id,fund,status,pwd) values(?1,?2,?3,?4)", nativeQuery=true)
 	public int createUserBank(Long userId, String fund, Integer status, String pwd);
 }
