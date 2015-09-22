@@ -6,5 +6,5 @@ import org.ship.shipservice.entity.Information;
 import org.springframework.data.repository.CrudRepository;
 
 public interface InformationDao extends CrudRepository<Information, Long> {
-	List<Information> findInfoByParam(String param);
+	List<Information> findInfoByParam(String param,Integer page,Integer pageSize);
 }

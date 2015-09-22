@@ -36,6 +36,7 @@ public class User extends IdEntity {
     private String token;
     private Integer couponCount;
     private Integer orderCount;
+    private Integer cardCount;
     private String code;
 	public User() {
 	}
@@ -186,6 +187,14 @@ public class User extends IdEntity {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+	@Transient
+	public Integer getCardCount() {
+		return cardCount;
+	}
+
+	public void setCardCount(Integer cardCount) {
+		this.cardCount = cardCount;
 	}
 
 	@Override

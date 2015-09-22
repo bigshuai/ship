@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ship.shipservice.domain.ResultList;
+import org.ship.shipservice.domain.UrlBean;
 import org.ship.shipservice.entity.City;
 import org.ship.shipservice.entity.InfoType;
 import org.ship.shipservice.entity.Information;
@@ -14,8 +15,6 @@ import org.ship.shipservice.service.information.InformationService;
 import org.ship.shipservice.service.oil.OilStationService;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,13 +31,12 @@ import org.springside.modules.mapper.JsonMapper;
 
 
 
+
 import com.alibaba.fastjson.JSON;
 
 @RestController
 @RequestMapping(value="/api/v1/info")
 public class InformationController {
-	private static Logger logger = LoggerFactory
-			.getLogger(LoginRestController.class);
 	private static JsonMapper mapper = JsonMapper.nonDefaultMapper();
 	@Autowired
 	private InformationService informationService;
@@ -71,7 +69,7 @@ public class InformationController {
 	 */
 	@RequestMapping(value = "/uploadPicture", method = RequestMethod.POST)
 	public String uploadImage(
-			@RequestParam("picture") MultipartFile picture,HttpServletRequest httpRequest) {
+			@RequestParam("file") MultipartFile picture,HttpServletRequest httpRequest) {
 		// 保存相对路径到数据库 图片写入服务器
 		if (picture != null && !picture.isEmpty()) {
 			// 获取图片的文件名
@@ -84,8 +82,9 @@ public class InformationController {
 					+ "." + extensionName;
 				try {
 					String url=CommonUtils.saveFile(newFileName, picture,httpRequest);
-					System.out.println(url);
-					return CommonUtils.printObjStr(url,200, "上传成功");
+					UrlBean urlBean = new UrlBean();
+					urlBean.setUrl(url);
+					return CommonUtils.printObjStr(urlBean,200, "上传成功");
 				} catch (Exception e) {
 					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_500, MyConstant.JSON_RETURN_MESSAGE_500);
 				}
@@ -116,35 +115,35 @@ public class InformationController {
 	 * @return
 	 */
 	@RequestMapping(value="getInfo",method=RequestMethod.POST)
-	public String queryInfomation(@RequestParam("info") String param,@RequestParam("pageNo") Integer pageno,@RequestParam("pageSize") Integer pagesize){
+	public String queryInfomation(@RequestParam("param") String param,@RequestParam("pageNo") Integer pageno,@RequestParam("pageSize") Integer pagesize){
 		Information infor = JSON.parseObject(param, Information.class);
 		String str =" ";
-		if(infor.getInfoType()!=null){
-			str+="info.infoType="+infor.getInfoType();
+		if(infor.getInfoType()!=null&&infor.getInfoType()!=0){
+			str+="info.infoType ="+infor.getInfoType();
+		}else{
+			str+="info.infoType =1 ";
 		}
-		if(infor.getInfoAction()!=null){
-			str+=" and info.infoAction="+infor.getInfoAction();
+		if(infor.getInfoAction()!=null&&infor.getInfoAction()!=0){
+			str+=" and info.infoAction ="+infor.getInfoAction();
 		}
-		if(infor.getInfoTypeOne()!=null){
-			str+=" and info.infoTypeOne="+infor.getInfoTypeOne();
+		if(infor.getInfoTypeOne()!=null&&infor.getInfoTypeOne()!=0){
+			str+=" and info.infoTypeOne like \'%"+infor.getInfoTypeOne()+"%\'";
 		}
-		if(infor.getInfoTypeTwo()!=null){
-			str+=" and info.infoTypeTwo="+infor.getInfoTypeTwo();
+		if(infor.getInfoTypeTwo()!=null&&infor.getInfoTypeTwo()!=0){
+			str+=" and info.infoTypeTwo like \'%"+infor.getInfoTypeTwo()+"%\'";
 		}
 		if(infor.getCity()!=null){
-			str+=" and info.city like %"+infor.getCity()+"%";
+			str+=" and info.city like \'%"+infor.getCity()+"%\'";
 		}
-		str +="order by info.createTime desc";
+		str +=" order by info.createTime desc";
 		if(infor.getPrice()!=null){
 			if(infor.getPrice().equals(1)){
 				str+=" , info.price asc";
 			}else if(infor.getPrice().equals(2)){
 				str+=" , info.price desc";
 			}
-			
 		}
-		str +=" limit "+ pageno +", "+pagesize;
-		List<Information> infoList=inforDaoImpl.findInfoByParam(str);
+		List<Information> infoList=inforDaoImpl.findInfoByParam(str,pageno,pagesize);
 		return CommonUtils.printListStr(infoList);
 	}
 }

@@ -421,10 +421,10 @@
 <pre>
 <code>#链接#  http://43.254.55.158/shipService/api/v1/info/saveInfo
 #参数#  
-	info={title:"",infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"}
-	有什么值传什么,传id不传名字,可以类别组合
+	info={title:"",infoType:"大宗商品",infoAction:"出售",infoTypeOne:"黄沙",infoTypeTwo:"细砂",price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"}
+	有什么值传什么,传名字,可以类别组合
 #返回值# 
-    {"code":"200","msg":"资讯详情","result":{title:"",infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"}}
+    {"code":"200","msg":"资讯详情","result":{title:"",infoType:"大宗商品",infoAction:"出售",infoTypeOne:"黄沙",infoTypeTwo:"细砂",price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"}}
 示例  略			
 											
 </code>
@@ -433,8 +433,9 @@
 <pre>
 <code>#链接#  http://43.254.55.158/shipService/api/v1/info/getInfo
 #参数#  
-	param={infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,city:"上海市",createTime:"1为正2为倒",tag:"黄沙",price:"1为正2为倒"}&pageNo=1&pageSize=10
-	有什么值传什么,传id不传名字,可以类别组合
+    page pageSize 必传，其他不传默认 时间倒序大宗商品的资讯
+	param={infoType:"大宗商品"}&page=1&pageSize=10
+	有什么值传什么,传名字,可以类别组合
 #返回值# 
      {"code":"200","msg":"资讯列表","result":[{title:"",infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"},{}]
 示例  			

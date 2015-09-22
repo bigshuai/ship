@@ -12,11 +12,11 @@ import org.ship.shipservice.entity.Information;
 public class InformationDaoImpl  {
 	 @PersistenceContext  
 	 private EntityManager em;  
-	 public List<Information> findInfoByParam(String param){
+	 public List<Information> findInfoByParam(String param,Integer page,Integer pageSize){
 		 String sql = "select info from Information info where " +param;
 		 Query q = em.createQuery(sql);
-//		 q.setFirstResult(0);  
-//	     q.setMaxResults(2);    
+		 q.setFirstResult((page-1)*pageSize);
+		 q.setMaxResults(pageSize);
 		 List<Information> infoList =(List<Information>) q.getResultList();
 		 return infoList;
 	 }

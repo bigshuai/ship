@@ -177,9 +177,11 @@ public class CommonUtils {
 	
 	public static String printListStr(ResultList list){
 		ResResult result = new ResResult();
-		result.setPage(list.getPage());
-		result.setTotalSize(list.getTotal());
-		result.setResult(list.getDataList());
+		if(list.getDataList()!=null){
+			result.setPage(list.getPage()==null?0:list.getPage());
+			result.setTotalSize(list.getTotal()==null?0:list.getTotal());
+			result.setResult(list.getDataList());
+		}
 		return JSON.toJSONString(result);
 	}
 	

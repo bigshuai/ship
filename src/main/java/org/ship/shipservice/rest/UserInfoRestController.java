@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.domain.UrlBean;
 import org.ship.shipservice.entity.ConsumeInfo;
 import org.ship.shipservice.entity.Favorite;
@@ -17,6 +18,7 @@ import org.ship.shipservice.entity.UserAdvice;
 import org.ship.shipservice.service.account.AccountService;
 import org.ship.shipservice.service.account.AdviceService;
 import org.ship.shipservice.service.account.ConsumeInfoService;
+import org.ship.shipservice.service.bank.BankService;
 import org.ship.shipservice.service.favorite.FavoriteService;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
@@ -52,7 +54,8 @@ public class UserInfoRestController {
 	private AdviceService adviceService;
 	@Autowired
 	private FavoriteService favoriteService;
-
+	@Autowired
+    private BankService bankService;
 	/**
 	 * 用户中心列表
 	 * 
@@ -75,6 +78,8 @@ public class UserInfoRestController {
 					}
 				}
 			}
+			ResultList rl = bankService.getUserBankList(user.getId());
+			user.setCardCount(rl.getTotal());
 			user.setCouponCount(couponCount);
 			user.setOrderCount(orderCount);
 			user.setPassword(null);
@@ -205,7 +210,7 @@ public class UserInfoRestController {
 	/*
 	 * 我的建议
 	 */
-	@RequestMapping(value = "/advice", params = { "userId", "advice", "email" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/advice", params = { "userId", "advice" }, method = RequestMethod.POST)
 	private String saveAdvice(@RequestParam("userId") Integer userId,
 			@RequestParam("advice") String advice,
 			@RequestParam("email") String email) {

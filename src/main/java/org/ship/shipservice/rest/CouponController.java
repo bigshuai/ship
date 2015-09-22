@@ -36,7 +36,7 @@ public class CouponController implements HybConstants{
 	 * @param phone
 	 * @return
 	 */
-	@RequestMapping(value="/list", method = RequestMethod.GET)
+	@RequestMapping(value="/list", method = RequestMethod.POST)
 	public String getCouponList() {
 		Long osId = null;
 		try {

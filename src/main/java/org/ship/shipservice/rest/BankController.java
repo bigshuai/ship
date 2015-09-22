@@ -73,7 +73,7 @@ public class BankController implements HybConstants{
 	 * 获取用户绑定银行卡列表
 	 * @return
 	 */
-	@RequestMapping(value="/list", method = RequestMethod.GET)
+	@RequestMapping(value="/list", method = RequestMethod.POST)
 	public String getUserBankList(@RequestParam("userId") Long userId) {
 		logger.debug("getUserBankList start。");
 		ResultList rl = bankService.getUserBankList(userId);

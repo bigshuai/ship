@@ -44,7 +44,7 @@ public class OrderRestController {
 	 * @param userId status
 	 * @return
 	 */
-	@RequestMapping(value="/list", method = RequestMethod.GET)
+	@RequestMapping(value="/list", method = RequestMethod.POST)
 	public String getOrderList(@RequestParam("userId") Long userId,@RequestParam("status") Integer status) {
 		if(userId==0){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
