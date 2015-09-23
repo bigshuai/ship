@@ -421,8 +421,8 @@
 <pre>
 <code>#链接#  http://43.254.55.158/shipService/api/v1/info/saveInfo
 #参数#  
-	info={title:"",infoType:"大宗商品",infoAction:"出售",infoTypeOne:"黄沙",infoTypeTwo:"细砂",price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"}
-	有什么值传什么,传名字,可以类别组合
+	info={title:"",infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:1,price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"}
+	有什么值传什么,传id,可以类别组合
 #返回值# 
     {"code":"200","msg":"资讯详情","result":{title:"",infoType:"大宗商品",infoAction:"出售",infoTypeOne:"黄沙",infoTypeTwo:"细砂",price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"}}
 示例  略			
@@ -437,7 +437,20 @@
 	param={infoType:"大宗商品"}&page=1&pageSize=10
 	有什么值传什么,传名字,可以类别组合
 #返回值# 
-     {"code":"200","msg":"资讯列表","result":[{title:"",infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"},{}]
+     {"code":"200","msg":"请求完成","result":[{"address":"不知道","city":"上海市","descri":"没有什么意思","id":7,"infoAction":1,"infoType":1,"infoTypeOne":2,"infoTypeTwo":4,"phone":"18516293301","photo":"","price":200,"tag":"水泥","title":"发个财"},{"address":"擦擦擦","city":"上海市","descri":"了了了了了了了","id":8,"infoAction":1,"infoType":1,"infoTypeOne":1,"infoTypeTwo":1,"phone":"18516293302","photo":"","price":123,"tag":"黄沙","title":"别提"},{"address":"详细","city":"南京市","descri":"真是干活","id":9,"infoAction":1,"infoType":1,"infoTypeOne":2,"infoTypeTwo":4,"phone":"18516293301","photo":"","price":369,"reviewCount":1,"tag":"水泥","title":"标题要好"}]}
+
+示例  			
+											
+</code>
+</pre>
+<h3>5 浏览资讯</h3>
+<pre>
+<code>#链接#  http://43.254.55.158/shipService/api/v1/info/review
+#参数#  
+    id=资讯id
+#返回值# 
+     {"code":"200","msg":"请求完成"}
+
 示例  			
 											
 </code>

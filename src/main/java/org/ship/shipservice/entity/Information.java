@@ -26,6 +26,8 @@ public class Information extends IdEntity {
 	private String tag;
 	private String city;
 	private Date createTime;
+	private Integer reviewCount;
+
 	public Information() {
 
 	}
@@ -161,6 +163,7 @@ public class Information extends IdEntity {
 	public void setCity(String city) {
 		this.city = city;
 	}
+
 	@Column(name = "create_time")
 	public Date getCreateTime() {
 		return createTime;
@@ -170,5 +173,13 @@ public class Information extends IdEntity {
 		this.createTime = createTime;
 	}
 
-	
+	@Column(name = "review_count")
+	public Integer getReviewCount() {
+		return reviewCount;
+	}
+
+	public void setReviewCount(Integer reviewCount) {
+		this.reviewCount = reviewCount;
+	}
+
 }

@@ -254,7 +254,7 @@ public class UserInfoRestController {
 			PageRequest pageRequest = new PageRequest(page-1, 10);
 			Page<Favorite> favorites = favoriteService.findFavorite(userId,
 					type, pageRequest);
-			return CommonUtils.printObjStr(favorites, 200, "我的收藏");
+			return CommonUtils.printObjStr(favorites.getContent(), 200, "我的收藏");
 		}
 	}
 

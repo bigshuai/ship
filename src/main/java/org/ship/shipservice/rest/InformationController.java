@@ -1,7 +1,9 @@
 package org.ship.shipservice.rest;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,7 +23,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springside.modules.mapper.JsonMapper;
+
+
+
+
+
 
 
 
@@ -58,6 +68,22 @@ public class InformationController {
 			ResultList r = oilStationService.queryCityList();
 			infoType.setCityList((ArrayList<City>)r.getDataList());
 			return CommonUtils.printObjStr(infoType, 200, "资讯类型");
+		}
+	}
+	@RequestMapping(value="/review",method=RequestMethod.POST)
+	public String reviewInfo(@RequestParam("infoId") long infoId){
+		if(infoId==0){
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+		}else{
+			Information info = informationService.getInfoDao().findOne(infoId);
+			if(info!=null){
+				int count = info.getReviewCount()==null?0:info.getReviewCount();
+				info.setReviewCount(count+1);
+				informationService.getInfoDao().save(info);
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_200, "请求成功");
+			}else{
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400,"资讯不存在");
+			}
 		}
 	}
 	/**
