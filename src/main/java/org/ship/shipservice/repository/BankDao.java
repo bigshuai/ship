@@ -2,6 +2,7 @@ package org.ship.shipservice.repository;
 
 import java.util.List;
 
+import org.ship.shipservice.entity.Bank;
 import org.ship.shipservice.entity.Coupon;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +13,7 @@ import org.springframework.data.repository.CrudRepository;
  * @author lyhc
  * 
  */
-public interface BankDao extends CrudRepository<Coupon, Long> {
+public interface BankDao extends CrudRepository<Bank, Long> {
 
 	@Modifying
 	@Query(value="select t.id, t.bank_code,t.bank_name, t.bank_cardtype, t.bank_cardno,agreement_no "

@@ -88,7 +88,7 @@ public class CommonUtils {
 			out.write(filedata.getBytes());
 			out.flush();
 			out.close();
-			return "43.254.55.158"+httpRequest.getContextPath()+"/headImage/"+newFileName;
+			return "43.254.55.158"+httpRequest.getContextPath()+"/picture/"+newFileName;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";		

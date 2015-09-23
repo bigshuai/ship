@@ -246,7 +246,7 @@ public class UserInfoRestController {
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400,
 					MyConstant.JSON_RETURN_MESSAGE_400);
 		} else {
-			PageRequest pageRequest = new PageRequest(page, 10);
+			PageRequest pageRequest = new PageRequest(page-1, 10);
 			Page<Favorite> favorites = favoriteService.findFavorite(userId,
 					type, pageRequest);
 			return CommonUtils.printObjStr(favorites, 200, "我的收藏");
