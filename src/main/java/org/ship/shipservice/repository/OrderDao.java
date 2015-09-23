@@ -52,7 +52,7 @@ public interface OrderDao extends CrudRepository<Order, Long>{
 	public String queryOrderMoney(String orderNo, Long userId);
 	
 	@Modifying
-	@Query(value="insert into t_user_consume_log(user_id,order_no,amount,trans_amount,type,code,status) values(?1,?2,?3,?4,?5,?6)", nativeQuery=true)
+	@Query(value="insert into t_user_consume_log(user_id,order_no,amount,trans_amount,type,code,status) values(?1,?2,?3,?4,?5,?6,?7)", nativeQuery=true)
 	public int insertConsumeLog(Long userId, String orderNo, String amount,String transAmount, int type, String code, int status);
 	
 	@Query(value="select user_id from t_user_consume_log o where o.order_no=?1", nativeQuery=true)

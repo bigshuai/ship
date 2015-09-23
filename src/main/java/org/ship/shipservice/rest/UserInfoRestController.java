@@ -2,10 +2,13 @@ package org.ship.shipservice.rest;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ship.shipservice.constants.ErrorConstants;
+import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.domain.UrlBean;
 import org.ship.shipservice.entity.ConsumeInfo;
@@ -22,11 +25,13 @@ import org.ship.shipservice.service.bank.BankService;
 import org.ship.shipservice.service.favorite.FavoriteService;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
+import org.ship.shipservice.utils.RequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -319,5 +324,29 @@ public class UserInfoRestController {
 			return "";
 		}
 	}
-
+	
+	@RequestMapping(value="/ybp", method = RequestMethod.POST)
+	public String yBalancePayment(@RequestBody String body){
+		logger.debug("getCoupon start.body=" + body);
+		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
+		Long userId = jo.getLong(HybConstants.USERID);
+		String orderNo = jo.getString("orderNo");
+		Map<String, String> res = accountService.orderVerify(userId, orderNo, true);
+		if(StringUtils.isEmpty(res.get("msg"))){
+			return CommonUtils.printStr();
+		}else{
+			return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, res.get("msg"));
+		}
+	}
+	
+	@RequestMapping(value="/bp", method = RequestMethod.POST)
+	public String balancePayment(@RequestBody String body){
+		logger.debug("getCoupon start.body=" + body);
+		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
+		Long userId = jo.getLong(HybConstants.USERID);
+		String orderNo = jo.getString("orderNo");
+		String code = jo.getString("code");
+		Map<String, String> res = accountService.balancePayment(userId, orderNo, code);
+		return null;
+	}
 }
