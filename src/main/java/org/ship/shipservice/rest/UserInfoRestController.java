@@ -15,6 +15,7 @@ import org.ship.shipservice.entity.ConsumeInfo;
 import org.ship.shipservice.entity.Favorite;
 import org.ship.shipservice.entity.Information;
 import org.ship.shipservice.entity.Oil;
+import org.ship.shipservice.entity.OilStation;
 import org.ship.shipservice.entity.Order;
 import org.ship.shipservice.entity.User;
 import org.ship.shipservice.entity.UserAdvice;
@@ -272,9 +273,9 @@ public class UserInfoRestController {
 			favorite.setUserId(userId);
 			favorite.setType(type);
 			if (type == 1) {
-				Oil oil = new Oil();
+				OilStation oil = new OilStation();
 				oil.setId(faId);
-				favorite.setOil(oil);
+				favorite.setOilStation(oil);
 			} else if (type == 2) {
 				Information info = new Information();
 				info.setId(faId);

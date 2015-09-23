@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "t_favorite")
 public class Favorite extends IdEntity {
-	private Oil oil;
+	private OilStation oil;
 	private Information info;
 	private Integer userId;
 	private Integer type;
@@ -25,11 +25,11 @@ public class Favorite extends IdEntity {
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "oil_id")
 	@OrderBy(value = "create_time desc")
-	public Oil getOil() {
+	public OilStation getOilStation() {
 		return oil;
 	}
 
-	public void setOil(Oil oil) {
+	public void setOilStation(OilStation oil) {
 		this.oil = oil;
 	}
 
