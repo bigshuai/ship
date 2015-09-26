@@ -130,6 +130,7 @@ public class LoginRestController {
 	 */
 	@RequestMapping(value="/register",method = RequestMethod.POST)
 	public String register(@RequestParam("param") String param){
+		logger.debug("register param=" + param);
 		User user = JSON.parseObject(param, User.class);
 		if(user.getPhone()==null||user.getPassword()==null){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);

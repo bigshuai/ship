@@ -153,16 +153,12 @@
 </code>
 </pre>
 
-<h3>5 创建充值(POST)</h3>
+<h3>5 创建充值订单(POST)</h3>
 <pre><code>#链接#  http://43.254.55.158/shipService/api/v1/order/prc
 #参数#
       userId
-      productId      商品ID(必填)
-      productName    商品名称（选填）
-      price          单价（选填）
-      num            数量（必填）
-      couponId       优惠券ID（选填）
-      osId           加油站ID（必填）
+      bankId
+      amount      金额(必填)
 #返回值# 
 1. 失败 {"code":"400","msg":"请求参数错误"}
 2. 成功 {"code":"200","msg":"请求完成","result":{"amount":"6444","orderCreateTime":"20150919145017","orderNo":"U201509191144264541722200034"}}
@@ -207,6 +203,29 @@
 1. 失败 {"code":"400","msg":"请求参数错误"}
 2. 成功 {"code":"200","msg":"请求完成"}
 </code>
+
+<h3>7 账号余额支付预校验(POST)</h3>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/order/crcp
+#参数#
+	userId
+	orderNo
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"请求完成"}
+</code>
+
+<h3>8 账号余额支付(POST)</h3>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/order/rcp
+#参数#
+	userId
+	orderNo
+	code
+#返回值# 
+1. 失败 {"code":"400","msg":"请求参数错误"}
+2. 成功 {"code":"200","msg":"请求完成"}
+</code>
+
+
 </pre>
           
 <p>===================================================
