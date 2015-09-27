@@ -92,7 +92,15 @@
 #参数#  无
 #返回值# 
 1. 失败 {"code":"400","msg":"请求参数错误"}
-2. 成功 {"code":"200","msg":"请求成功"}</code></pre>
+2. 成功 {"code":"200","msg":"关于航运宝","result":{"aboutUs":"关于我们","createTime":1443283200000,"id":1,"payProtocol":"支付协议","registProtocol":"注册协议"}}
+</code></pre>
+<h3>7 关于版本更新</h3>
+<pre><code>#链接#  http://43.254.55.158/shipService/api/v1/home/checkVersion
+#参数#  version="v1.0.0"&type=1&vercode="1" type (安卓 1 ios2) 安卓通过vercode判断 ios 通过 version
+#返回值# 
+1. 失败 {"code":"400","msg":"已是最新版本"}
+2. 成功 {"code":"200","msg":"版本需要升级","result":{"createTime":1443366303000,"id":1,"name":"v1.0.0","type":1,"url":"","vercode":1}}
+</code></pre>
 <p>==================================================
 
 </p>

@@ -58,13 +58,13 @@ public class HomeRestController {
 		} else {
 			Page<Version> versionPage = homeService.findVersion(type);
 			if(type==1){//android
-				if(versionPage.getContent().get(0).getVercode()==vercode){
+				if(versionPage.getContent().get(0).getVercode()!=vercode){
 					return CommonUtils.printObjStr(versionPage.getContent().get(0), 200, "版本需要升级");
 				}else{
 					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "已是最新版本");
 				}
 			}else if(type==2){//ios
-				if(versionPage.getContent().get(0).getName().equals(version)){
+				if(!versionPage.getContent().get(0).getName().equals(version)){
 					return CommonUtils.printObjStr(versionPage.getContent().get(0), 200, "版本需要升级");
 				}else{
 					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "已是最新版本");
