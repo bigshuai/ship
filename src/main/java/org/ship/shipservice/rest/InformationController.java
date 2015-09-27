@@ -24,6 +24,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springside.modules.mapper.JsonMapper;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springside.modules.mapper.JsonMapper;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import com.alibaba.fastjson.JSON;
 
 @RestController
@@ -54,7 +74,7 @@ public class InformationController {
 		}
 	}
 	@RequestMapping(value="/review",method=RequestMethod.POST)
-	public String reviewInfo(@RequestParam("id") long infoId){
+	public String reviewInfo(@RequestParam("infoId") long infoId){
 		logger.error("reviewInfo : infoId=" + infoId);
 		if(infoId==0){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
