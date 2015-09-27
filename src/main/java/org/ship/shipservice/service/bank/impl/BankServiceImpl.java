@@ -155,10 +155,10 @@ public class BankServiceImpl implements BankService {
 				PayResponse<SignRes> res= client.checkSign(HybConstants.MERCHANTNO, requestNo, code);
 				logger.error("sssssssss=" + com.alibaba.fastjson.JSON.toJSONString(res));
 				if(res.getHttpCode()==200 && res.isSignResult()){
-					if(HybConstants.TEST || HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
+					if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
 						//签约成功，发送短信，返回到验证码页面
 						//保存银行卡信息到t_bank
-						String agreementNo = HybConstants.TEST?"22222":res.getObj().getAgreementNo();
+						String agreementNo = res.getObj().getAgreementNo();
 						int rr = 0;
 						try {
 							rr = bankDao.updateSign(agreementNo, requestNo);
@@ -194,7 +194,7 @@ public class BankServiceImpl implements BankService {
 			if(r > 0){
 				PayResponse<SignRes> res= client.unSign(HybConstants.MERCHANTNO, agreementNo, HybConstants.PRINCIPALID);
 				if(res.getHttpCode()==200 && res.isSignResult()){
-					if(HybConstants.TEST || HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
+					if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
 						//签约成功，发送短信，返回到验证码页面
 						//保存银行卡信息到t_bank
 						return null;

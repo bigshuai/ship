@@ -148,8 +148,11 @@ public class OrderService {
 			order.setPrice(oil.getPrice()+"");
 			BigDecimal amount = this.calculateAmount(order.getUserId(), oil, Long.valueOf(order.getProductId()), 
 					order.getNum(), order.getOsId(), order.getCouponId());
-			amount = new BigDecimal("0.01");
-			order.setAmount(amount.toPlainString());
+			if(HybConstants.TEST){
+				order.setAmount("0.01");
+			}else{
+				order.setAmount(amount.toPlainString());
+			}
 			pOrder.setMerchantNo(HybConstants.MERCHANTNO);
 			pOrder.setMerchantOrderNo(CommonUtils.getMerchantOrderNo(order.getUserId()+""));
 			pOrder.setProductName(order.getProductName());
@@ -225,7 +228,11 @@ public class OrderService {
 		pOrder.setProductName("充值");
 		pOrder.setProductDesc("充值");
 		pOrder.setCurrency("CNY");
-		pOrder.setAmount(order.getAmount());
+		if(HybConstants.TEST){
+			pOrder.setAmount("0.01");
+		}else{
+			pOrder.setAmount(order.getAmount());
+		}
 		pOrder.setNotifyUrl(HybConstants.NOTIFYURL);
 		pOrder.setUserIP(CommonUtils.getIp());
 		//创建消费信息

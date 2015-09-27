@@ -14,7 +14,7 @@ public interface HybConstants {
 	
 	static final String PAY_SUCCESS = "";
 	
-	static final boolean TEST = false;
+	static final boolean TEST = true;
 	
 	static final String OUTMEMBERID = "outMemberId";
 	static final String OUTMEMBERREGISTTIME = "20110707112233";
