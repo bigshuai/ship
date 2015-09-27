@@ -120,6 +120,7 @@ public class OrderService {
 			ob.setSftOrderNo(o[11]+"");
 			ob.setBookTime(o[12]+"");
 			ob.setCreateTime(o[13]+"");
+			ob.setOsPicUrl(o[14]+"");
 			result.add(ob);
 		}
 		r.setDataList(result);

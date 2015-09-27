@@ -27,6 +27,7 @@ public class OrderBean {
 	private String merchantOrderNo;
 	private Long couponId;
 	private String amount;
+	private String osPicUrl;
 	
 	public Long getUserId() {
 		return userId;
@@ -165,5 +166,11 @@ public class OrderBean {
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	public String getOsPicUrl() {
+		return osPicUrl;
+	}
+	public void setOsPicUrl(String osPicUrl) {
+		this.osPicUrl = osPicUrl;
 	}
 }
