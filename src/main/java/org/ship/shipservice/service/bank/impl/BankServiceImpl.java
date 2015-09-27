@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
+import org.eclipse.jetty.util.ajax.JSON;
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.BankBean;
 import org.ship.shipservice.domain.BankInfo;
@@ -28,6 +30,8 @@ import com.sj.pay.constants.PayConstants;
 @Component
 @Transactional
 public class BankServiceImpl implements BankService {
+	Logger logger = Logger.getLogger(BankServiceImpl.class);
+	
 	@Autowired
 	private BankDao bankDao;
 	
@@ -146,8 +150,10 @@ public class BankServiceImpl implements BankService {
 		SjPayClient client = SjPayClient.getInstance();
 		try {
 			int r = bankDao.updateSign("", requestNo);
+			logger.error("eeeeeeeeeee=" + r);
 			if(r > 0){
 				PayResponse<SignRes> res= client.checkSign(HybConstants.MERCHANTNO, requestNo, code);
+				logger.error("sssssssss=" + com.alibaba.fastjson.JSON.toJSONString(res));
 				if(res.getHttpCode()==200 && res.isSignResult()){
 					if(HybConstants.TEST || HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
 						//签约成功，发送短信，返回到验证码页面
@@ -158,6 +164,7 @@ public class BankServiceImpl implements BankService {
 							rr = bankDao.updateSign(agreementNo, requestNo);
 						} catch (java.lang.Exception e) {
 						}
+						logger.error("qqqqqqqqq=" + rr);
 						if(rr > 0){
 							return null;
 						}else{
@@ -173,6 +180,7 @@ public class BankServiceImpl implements BankService {
 				return "签约失败，请稍后再试。";
 			}
 		} catch (IOException e) {
+			logger.error("sign error.", e);
 			return "签约失败，请稍后再试。";
 		}
 	}

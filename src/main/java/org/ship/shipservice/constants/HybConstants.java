@@ -25,7 +25,7 @@ public interface HybConstants {
 	/**支付常量结束-----------------------------------------------*/
 	
 	
-	static final String NOTIFYURL = "http://121.40.91.82/shipService/api/v1/order/notify";
+	static final String NOTIFYURL = "http://43.254.55.158/shipService/api/v1/order/notify";
 	
 	static final String MERCHANTMY = "abcdefg";
 	
