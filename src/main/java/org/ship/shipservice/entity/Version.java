@@ -14,6 +14,7 @@ public class Version extends IdEntity {
 	private String description;
 	private Integer type;
 	private Date createTime;
+	private Integer vercode;
 
 	public Version() {
 	}
@@ -61,6 +62,15 @@ public class Version extends IdEntity {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "vercode")
+	public Integer getVercode() {
+		return vercode;
+	}
+
+	public void setVercode(Integer vercode) {
+		this.vercode = vercode;
 	}
 
 }

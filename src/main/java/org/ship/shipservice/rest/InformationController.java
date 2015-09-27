@@ -71,13 +71,13 @@ public class InformationController {
 		}
 	}
 	@RequestMapping(value="/review",method=RequestMethod.POST)
-	public String reviewInfo(@RequestParam("infoId") long infoId){
+	public String reviewInfo(@RequestParam("id") long infoId){
 		if(infoId==0){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
 			Information info = informationService.getInfoDao().findOne(infoId);
 			if(info!=null){
-				int count = info.getReviewCount()==null?0:info.getReviewCount();
+				int count = info.getReviewCount();
 				info.setReviewCount(count+1);
 				informationService.getInfoDao().save(info);
 				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_200, "请求成功");
@@ -168,6 +168,8 @@ public class InformationController {
 			}else if(infor.getPrice().equals(2)){
 				str+=" , info.price desc";
 			}
+		}else{
+			str+=" , info.reviewCount desc";
 		}
 		List<Information> infoList=inforDaoImpl.findInfoByParam(str,pageno,pagesize);
 		return CommonUtils.printListStr(infoList);

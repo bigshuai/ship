@@ -52,15 +52,25 @@ public class HomeRestController {
 	 * 版本更新
 	 */
 	@RequestMapping(value="checkVersion")
-	public String checkVersion(@RequestParam("version") String version,@RequestParam("type") Integer type){
+	public String checkVersion(@RequestParam("version") String version,@RequestParam("vercode") Integer vercode,@RequestParam("type") Integer type){
 		if (StringUtils.isEmpty(version)) {
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		} else {
 			Page<Version> versionPage = homeService.findVersion(type);
-			if(!versionPage.getContent().get(0).getName().equals(version)){
-				return CommonUtils.printObjStr(versionPage.getContent().get(0), 200, "版本需要升级");
+			if(type==1){//android
+				if(versionPage.getContent().get(0).getVercode()==vercode){
+					return CommonUtils.printObjStr(versionPage.getContent().get(0), 200, "版本需要升级");
+				}else{
+					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "已是最新版本");
+				}
+			}else if(type==2){//ios
+				if(versionPage.getContent().get(0).getName().equals(version)){
+					return CommonUtils.printObjStr(versionPage.getContent().get(0), 200, "版本需要升级");
+				}else{
+					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "已是最新版本");
+				}
 			}else{
-				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_200, "已是最新版本");
+				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 			}
 		}
 	}

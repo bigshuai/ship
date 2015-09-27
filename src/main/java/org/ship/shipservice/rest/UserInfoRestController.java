@@ -24,6 +24,7 @@ import org.ship.shipservice.service.account.AdviceService;
 import org.ship.shipservice.service.account.ConsumeInfoService;
 import org.ship.shipservice.service.bank.BankService;
 import org.ship.shipservice.service.favorite.FavoriteService;
+import org.ship.shipservice.service.home.HomeService;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
 import org.ship.shipservice.utils.RequestUtil;
@@ -62,6 +63,8 @@ public class UserInfoRestController {
 	private FavoriteService favoriteService;
 	@Autowired
     private BankService bankService;
+	@Autowired
+	private HomeService homeService;
 	/**
 	 * 用户中心列表
 	 * 
@@ -299,8 +302,7 @@ public class UserInfoRestController {
 	 */
 	@RequestMapping(value="aboutUs")
 	public String aboutUs(){
-		return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_200,
-				"关于航运宝");
+		return CommonUtils.printObjStr(homeService.findAboutUs(), 200, "关于航运宝");
 	}
 	private String saveFile(String newFileName, MultipartFile filedata,
 			HttpServletRequest httpRequest) {
