@@ -1,9 +1,7 @@
 package org.ship.shipservice.rest;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,36 +15,21 @@ import org.ship.shipservice.service.information.InformationService;
 import org.ship.shipservice.service.oil.OilStationService;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springside.modules.mapper.JsonMapper;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import com.alibaba.fastjson.JSON;
 
 @RestController
 @RequestMapping(value="/api/v1/info")
 public class InformationController {
+	private static Logger logger = LoggerFactory.getLogger(InformationController.class);
 	private static JsonMapper mapper = JsonMapper.nonDefaultMapper();
 	@Autowired
 	private InformationService informationService;
@@ -72,6 +55,7 @@ public class InformationController {
 	}
 	@RequestMapping(value="/review",method=RequestMethod.POST)
 	public String reviewInfo(@RequestParam("id") long infoId){
+		logger.error("reviewInfo : infoId=" + infoId);
 		if(infoId==0){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{

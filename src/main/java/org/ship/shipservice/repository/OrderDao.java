@@ -21,6 +21,12 @@ public interface OrderDao extends CrudRepository<Order, Long>{
 			Integer num, Integer status,String orderNo, String sftOrderNo, String sessionToken, Date bookTime, String bookAddr);
 	
 	@Modifying
+	@Query(value="update t_order money=?1,price=?2,num=?3,`status`=?4,sft_order_no=?5,session_token=?6 "
+			+ " where order_no=?7", nativeQuery=true)
+	public int updateOrder(String money, String price,
+			Integer num, Integer status, String sftOrderNo, String sessionToken, String orderNo);
+	
+	@Modifying
 	@Query(value="update t_order set status=?1 where user_id=?2 and order_no=?3", nativeQuery=true)
 	public int updateOrderStatus(Integer status, Long userId, String orderNo);
 	

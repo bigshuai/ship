@@ -57,7 +57,7 @@ public class OrderRestController {
 	
 	@RequestMapping(value="/cmo", method = RequestMethod.POST)
 	public String createMakeOrder(@RequestBody String body) {
-		logger.debug("createOrder start.body=" + body);
+		logger.debug("createMakeOrder start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
 		OrderBean order = new OrderBean();
 		order.setUserId(jo.getLong("userId"));
@@ -94,6 +94,7 @@ public class OrderRestController {
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
 		OrderBean order = new OrderBean();
 		order.setUserId(jo.getLong("userId"));
+		order.setOrderNo(jo.getString("orderNo"));
 		order.setProductId(jo.getString("productId"));
 		order.setProductName(jo.getString("productName"));
 		order.setPrice(jo.getString("price"));
@@ -125,7 +126,7 @@ public class OrderRestController {
 	 */
 	@RequestMapping(value="/pfp", method = RequestMethod.POST)
 	public String precheckForPayment(@RequestBody String body) {
-		logger.debug("createOrder start.body=" + body);
+		logger.debug("precheckForPayment start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
 		//String sessionToken = jo.getString("sessionToken");
 		Long userId =  jo.getLong("userId");
@@ -183,7 +184,7 @@ public class OrderRestController {
 	 */
 	@RequestMapping(value="/crcp", method = RequestMethod.POST)
 	public String cRechargePay(@RequestBody String body) {
-		logger.debug("pay start.body=" + body);
+		logger.debug("cRechargePay start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
 		Long userId =  jo.getLong("userId");
 		String orderNo = jo.getString("orderNo");
@@ -212,7 +213,7 @@ public class OrderRestController {
 	 */
 	@RequestMapping(value="/rcp", method = RequestMethod.POST)
 	public String rechargePay(@RequestBody String body) {
-		logger.debug("pay start.body=" + body);
+		logger.debug("rechargePay start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
 		Long userId =  jo.getLong("userId");
 		String orderNo = jo.getString("orderNo");
@@ -242,7 +243,7 @@ public class OrderRestController {
 	 */
 	@RequestMapping(value="/prc", method = RequestMethod.POST)
 	public String recharge(@RequestBody String body) {
-		logger.debug("pay start.body=" + body);
+		logger.debug("recharge start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
 		String amount = jo.getString("amount");
 		Long userId = jo.getLong("userId");
@@ -293,9 +294,9 @@ public class OrderRestController {
 	 * @param body
 	 * @return
 	 */
-	@RequestMapping(value="/notify", method = RequestMethod.POST)
+	@RequestMapping(value="/notify", method = RequestMethod.GET)
 	public String notify(@RequestBody String body) {
-		logger.debug("createOrder start.body=" + body);
+		logger.debug("notify start.body=" + body);
 		try{
 			request.setCharacterEncoding("UTF-8");
 			String Name = request.getParameter("Name");
@@ -358,7 +359,6 @@ public class OrderRestController {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
 			}
 		}catch(Exception e){
 			e.printStackTrace();

@@ -45,8 +45,9 @@ public class AccountService {
 
 	public User registerUser(User user) {
 		//创建用户账号
+		User u = userDao.save(user);
 		userDao.createUserBank(user.getId(), "0", 1, "");
-		return  userDao.save(user);
+		return u;
 	}
 
 	public Map<String, String> orderVerify(Long userId, String orderNo, boolean sendSms){
