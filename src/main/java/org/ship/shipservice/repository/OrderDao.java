@@ -40,7 +40,7 @@ public interface OrderDao extends CrudRepository<Order, Long>{
 	
 	@Modifying
 	@Query(value="select o.id,o.os_id,s.name,o.product_id,o.product_name,o.type,o.money,o.price,o.num,"
-			+ "o.status,o.order_no,o.sft_order_no,o.book_time,o.create_time "
+			+ "o.status,o.order_no,o.sft_order_no,o.book_time,o.create_time,s.pic_url "
 			+ "from t_order o, t_oil_station s where o.os_id=s.id and o.user_id=?1 and o.status in (?2) "
 			+ "order by o.create_time desc limit ?3,?4", nativeQuery=true)
 	List<Object[]> queryOrderForUserId(Long userId,String status, Integer start, Integer size);

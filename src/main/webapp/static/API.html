@@ -495,40 +495,4 @@
   {"code":"200","msg":"请求完成","result":[{"picUrl":"http://pic.qiantucdn.com/images/slideshow/55dff1b9f0822.jpg","url":"http://www.jd.com"},{"picUrl":"http://pic.qiantucdn.com/images/slideshow/55dff1d0a50e0.png","url":"http://www.58pic.com/ "},{"picUrl":"http://pic.qiantucdn.com/images/slideshow/55dff1a9ee90c.jpg","url":"http://app.91jfyf.com"}]}
 </code>
 </pre>
-<h3>2 检查版本更新</h3>
-<pre>
-<code>#链接#  http://43.254.55.158/shipService/api/v1/home/checkVersion
-#参数#  
-	图片文件
-#返回值# 
-  {"code":"200","msg":"资讯类型","result":{http://43.254.55.158/shipService/picture/时间戳.jpg}}
-  和和用户头像区分开
-示例  略			
-											
-</code>
-</pre>
-<h3>3 保存或更新资讯</h3>
-<pre>
-<code>#链接#  http://43.254.55.158/shipService/api/v1/info/saveInfo
-#参数#  
-	info={title:"",infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"}
-	有什么值传什么,传id不传名字,可以类别组合
-#返回值# 
-    {"code":"200","msg":"资讯详情","result":{title:"",infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"}}
-示例  略			
-											
-</code>
-</pre>
-<h3>4 分类查询资讯</h3>
-<pre>
-<code>#链接#  http://43.254.55.158/shipService/api/v1/info/getInfo
-#参数#  
-	param={infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",createTime:"1为正2为倒",tag:"黄沙",price:"1为正2为倒"}&pageNo=1&pageSize=10
-	有什么值传什么,传id不传名字,可以类别组合
-#返回值# 
-     {"code":"200","msg":"资讯列表","result":[{title:"",infoType:1,infoAction:1,infoTypeOne:1,infoTypeTwo:2,price:100.00,city:"上海市",address:"上海市徐汇区",tag:"黄沙",photo:"url",phone:11111,linkMan:"陈总",descri:"描述"},{}]
-示例  			
-											
-</code>
-</pre>
 </body></html>
