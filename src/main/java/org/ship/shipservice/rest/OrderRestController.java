@@ -94,6 +94,7 @@ public class OrderRestController {
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
 		OrderBean order = new OrderBean();
 		order.setUserId(jo.getLong("userId"));
+		order.setOrderNo(jo.getString("orderNo"));
 		order.setProductId(jo.getString("productId"));
 		order.setProductName(jo.getString("productName"));
 		order.setPrice(jo.getString("price"));

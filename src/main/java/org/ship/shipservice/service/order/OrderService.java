@@ -154,7 +154,11 @@ public class OrderService {
 				order.setAmount(amount.toPlainString());
 			}
 			pOrder.setMerchantNo(HybConstants.MERCHANTNO);
-			pOrder.setMerchantOrderNo(CommonUtils.getMerchantOrderNo(order.getUserId()+""));
+			if(StringUtils.isEmpty(order.getOrderNo())){
+				pOrder.setMerchantOrderNo(CommonUtils.getMerchantOrderNo(order.getUserId()+""));
+			}else{
+				pOrder.setMerchantOrderNo(order.getOrderNo());
+			}
 			pOrder.setProductName(order.getProductName());
 			pOrder.setProductDesc(order.getProductDesc());
 			pOrder.setCurrency("CNY");
@@ -167,8 +171,14 @@ public class OrderService {
 				if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
 					String sftOrderNo = res.getObj().getSftOrderNo();
 					String sessionToken = res.getObj().getSessionToken();
-					int r = orderDao.addOrder(order.getUserId(), order.getOsId(), oil.getId(), oil.getName(), 1, pOrder.getAmount(),
-							order.getPrice(), order.getNum(), 0, orderNo, sftOrderNo, sessionToken, null, null);
+					int r = 0;
+					if(StringUtils.isEmpty(order.getOrderNo())){
+						r = orderDao.addOrder(order.getUserId(), order.getOsId(), oil.getId(), oil.getName(), 1, pOrder.getAmount(),
+								order.getPrice(), order.getNum(), 0, orderNo, sftOrderNo, sessionToken, null, null);
+					}else{
+						//更新订单
+						r =orderDao.updateOrder(pOrder.getAmount(), order.getPrice(), order.getNum(), 1, sftOrderNo, sessionToken, orderNo);
+					}
 					if(r > 0){
 						result.put("orderNo", orderNo);
 						result.put("orderCreateTime", res.getObj().getOrderCreateTime());
