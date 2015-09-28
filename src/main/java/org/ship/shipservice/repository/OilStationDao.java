@@ -53,16 +53,17 @@ public interface OilStationDao extends CrudRepository<OilStation, Long> {
 
 	@Modifying
 	@Query(value = "select t.id,t.name,t.desc,t.address,t.phone,t.credit,t.quality,t.service,t.coupon_flag,t.num,t.status, "
-			+ "case when t.derate_flag=1 then GROUP_CONCAT(d.info) ELSE '' END derate from "
+			+ "case when t.derate_flag=1 then GROUP_CONCAT(d.info) ELSE '' END derate,t.pic_url,t.latitude,t.longitude from "
 			+ "("
-			+ "select o.id,o.name,o.desc,o.address,o.phone,o.credit,o.quality,o.service,o.coupon_flag,o.derate_flag,o.status, count(*) num "
+			+ "select o.id,o.name,o.desc,o.address,o.phone,o.credit,o.quality,o.service,o.coupon_flag,o.derate_flag,o.status,"
+			+ "o.pic_url,o.latitude,o.longitude, count(*) num "
 			+ "from t_oil_station o,t_appraise a "
 			+ "where o.id=?1 and o.status=1 and o.id=a.os_id and a.status=1 "
-			+ "group by o.id,o.name,o.desc,o.address,o.phone,o.credit,o.quality,o.service,o.coupon_flag,o.derate_flag,o.status"
+			+ "group by o.id,o.name,o.desc,o.address,o.phone,o.credit,o.quality,o.service,o.coupon_flag,o.derate_flag,o.status,o.pic_url,o.latitude,o.longitude"
 			+ ") t "
 			+ "LEFT JOIN "
 			+ "t_derate d on (t.id=d.os_id or d.os_id=0) group by t.id,t.name,t.desc,t.address,t.phone,t.credit,t.quality,t.service,"
-			+ "t.coupon_flag,t.derate_flag,t.num,t.status", nativeQuery = true)
+			+ "t.coupon_flag,t.derate_flag,t.num,t.status,t.pic_url,t.latitude,t.longitude", nativeQuery = true)
 	List<Object[]> queryDetailById(Long id);
 
 	@Modifying

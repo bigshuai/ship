@@ -303,6 +303,7 @@ public class OrderService {
 	
 	public String precheckForPayment(Long userId, Long bankId, String orderNo){
 		try {
+			logger.error("ddddd =" + orderNo + "-" + bankId + "-" + userId);
 			//根据bankId获取 agreementNo（签约协议号）
 			//根据orderNo获取sessionToken（会话token）
 			SjPayClient client = SjPayClient.getInstance();
@@ -320,9 +321,10 @@ public class OrderService {
 			info.setIdType(bankInfo[4]+"");
 			info.setMobileNo(RSAUtil.decrypt(bankInfo[5]+""));
 			info.setUserIp(CommonUtils.getIp());
-			info.setUserIp(CommonUtils.getIp());
 			info.setRiskExtItems(this.getExt(info.getOutMemberId()));
+			logger.error("vvvvv =" + JSON.toJSONString(info));
 			PayResponse<String> res= client.precheckForPayment(info);
+			logger.error("ccccc =" + JSON.toJSONString(res));
 			if(res.getHttpCode()==200 && res.isSignResult()){
 				if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
 					return null;
