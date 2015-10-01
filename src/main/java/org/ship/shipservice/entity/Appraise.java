@@ -15,6 +15,7 @@ public class Appraise extends IdEntity{
 	private Integer quality;
 	private Integer service;
 	private Integer status;
+	private String content;
 	private Date create_time;
 	private Date update_time;
 	
@@ -67,5 +68,11 @@ public class Appraise extends IdEntity{
 	}
 	public void setUpdate_time(Date update_time) {
 		this.update_time = update_time;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
 	}
 }

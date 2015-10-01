@@ -88,6 +88,18 @@ public class OilStationController {
 		}
 	}
 	
+	@RequestMapping(value="/appraise" ,method=RequestMethod.POST)
+	public String getAppraise(@RequestParam("osId") String osId){
+		if(StringUtils.isEmpty(osId)){
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+		}else{
+			Integer[] pageInfo = CommonUtils.getPageInfo(request);
+			logger.debug("getCouponList start.osId="+osId + ",page=" + JSON.toJSONString(pageInfo));
+			ResultList list = appraiseService.getOilAppraise(osId, pageInfo[0], pageInfo[1]);
+			return CommonUtils.printListStr(list);
+		}
+	}
+	
 	/**
 	 * 获取加油站列表
 	 * @param phone
