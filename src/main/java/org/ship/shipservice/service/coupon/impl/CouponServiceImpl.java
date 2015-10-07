@@ -117,6 +117,10 @@ public class CouponServiceImpl implements CouponService{
 		}
 		return result;
 	}
+	
+	public int updateOverTimeCoupon(Integer status, Integer id){
+		return couponDao.updateOverTimeCoupon(status, id);
+	}
 
 	public CouponDao getCouponDao() {
 		return couponDao;

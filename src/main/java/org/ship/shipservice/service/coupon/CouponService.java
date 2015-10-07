@@ -9,4 +9,6 @@ public interface CouponService {
 	public ResultList queryUserCouponList(Long userId, Integer status, Integer page, Integer pageSize);
  	
 	public  ResResult<String> getCoupon(Long userId, Long couponId);
+	
+	public int updateOverTimeCoupon(Integer status, Integer id);
 }

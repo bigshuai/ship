@@ -65,6 +65,11 @@ public interface OilStationDao extends CrudRepository<OilStation, Long> {
 			+ "t_derate d on (t.id=d.os_id or d.os_id=0) group by t.id,t.name,t.desc,t.address,t.phone,t.credit,t.quality,t.service,"
 			+ "t.coupon_flag,t.derate_flag,t.num,t.status,t.pic_url,t.latitude,t.longitude", nativeQuery = true)
 	List<Object[]> queryDetailById(Long id);
+	
+	@Modifying
+	@Query(value="select sum(a.credit)/count(1) credit,sum(a.service)/count(1) service, sum(a.quality)/count(1) quality "
+			+ "from t_appraise a where a.`status`=1 and a.os_id=?1 ", nativeQuery=true)
+	List<Object[]> quertCreditForOsId(Long id);
 
 	@Modifying
 	@Query("select o from City o  where o.status=1")

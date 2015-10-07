@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.OrderBean;
 import org.ship.shipservice.domain.ResultList;
-import org.ship.shipservice.entity.Coupon;
 import org.ship.shipservice.entity.Oil;
 import org.ship.shipservice.entity.Order;
 import org.ship.shipservice.repository.BankDao;
@@ -25,14 +24,12 @@ import org.ship.shipservice.repository.OrderDao;
 import org.ship.shipservice.repository.UserDao;
 import org.ship.shipservice.rest.BankController;
 import org.ship.shipservice.utils.CommonUtils;
-import org.ship.shipservice.utils.MyConstant;
 import org.ship.shipservice.utils.rsa.RSAUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -572,6 +569,9 @@ public class OrderService {
 			Object[] o = list.get(0);
 			String info = o[11]+"";
 			totalPtice = this.calculateDerate(totalPtice, info);
+		}
+		if(totalPtice.compareTo(BigDecimal.ZERO) == -1){
+			totalPtice = BigDecimal.ZERO;
 		}
 		return totalPtice;
 	}

@@ -55,6 +55,15 @@ public interface CouponDao extends CrudRepository<Coupon, Long> {
 			+ "order by t.create_time desc limit ?3,?4", nativeQuery=true)
 	List<Object[]> queryUserCouponList(Long userId, Integer status, Integer start, Integer size);
 	
+	
+	@Modifying
+	@Query(value="SELECT t.id FROM t_coupon_list t where t.status =?1 order by t.create_time desc limit ?2,?3", nativeQuery=true)
+	List<Integer> queryAllCouponList(Integer status, Integer start, Integer size);
+	
+	@Modifying
+	@Query(value="update t_coupon_list t set t.status=9 where t.status=?1 and t.id=?2", nativeQuery=true)
+	public int updateOverTimeCoupon(Integer status, Integer id);
+	
 	@Query(value="SELECT count(1) FROM t_coupon_list t where t.user_id=?1 and t.status =?2", nativeQuery=true)
 	public int queryUserCouponSTotal(Long userId, Integer status);
 	

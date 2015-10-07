@@ -59,15 +59,26 @@ public class OilStationServiceImpl implements OilStationService {
 		List<Object[]> obs = oilStationDao.queryDetailById(osId);
 		OilStationBean os = new OilStationBean();
 		//t.id,t.name,t.desc,t.address,t.credit,t.quality,t.service,num,t.coupon_flag, derate
+		//获取加油站信用信息
+		List<Object[]> cs = oilStationDao.quertCreditForOsId(osId);
+		Float credit = 5.0f;
+		Float quality = 5.0f;
+		Float service = 5.0f;
+		if(cs != null && cs.size() > 0){
+			Object[] c = cs.get(0);
+			credit = Float.valueOf(c[0]+"");
+			service = Float.valueOf(c[1]+"");
+			quality = Float.valueOf(c[2]+"");
+		}
 		Object[] o = obs.get(0);
 		os.setId(Integer.valueOf(o[0]+""));
 		os.setName(o[1]+"");
 		os.setDesc(o[2]+"");
 		os.setAddress(o[3]+"");
 		os.setPhone(o[4]+"");
-		os.setCredit(Float.valueOf(o[5]+""));
-		os.setQuality(Float.valueOf(o[6]+""));
-		os.setService(Float.valueOf(o[7]+""));
+		os.setCredit(credit);
+		os.setQuality(quality);
+		os.setService(service);
 		os.setCouponFlag(Integer.valueOf(o[8]+""));
 		os.setAppraiseNum(Integer.valueOf(o[9]+""));
 		os.setStatus(Integer.valueOf(o[10]+""));
