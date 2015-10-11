@@ -505,9 +505,12 @@ public class OrderService {
 			int rr = orderDao.updateBankOrderStatus(status, orderNo);
 			if(rr > 0){
 				//更新优惠券信息 根据订单查询优惠券ID 更新优惠券信息
-				
-				
-				return 1;
+				Long getCouponid = orderDao.queryCouponIdForLog(orderNo);
+				int rrr = couponDao.updateCouponStatus(1,0, getCouponid);
+				if(rrr <= 0){
+					throw new RuntimeException("异常");
+				}
+				return rrr;
 			}else{
 				throw new RuntimeException("异常");
 			}

@@ -64,6 +64,11 @@ public interface CouponDao extends CrudRepository<Coupon, Long> {
 	@Query(value="update t_coupon_list t set t.status=9 where t.status=?1 and t.id=?2", nativeQuery=true)
 	public int updateOverTimeCoupon(Integer status, Integer id);
 	
+	@Modifying
+	@Query(value="update t_coupon_list t set t.status=?1 where t.status=?2 and t.id=?3", nativeQuery=true)
+	public int updateCouponStatus(Integer status, Integer oldStatus, Long id);
+
+	
 	@Query(value="SELECT count(1) FROM t_coupon_list t where t.user_id=?1 and t.status =?2", nativeQuery=true)
 	public int queryUserCouponSTotal(Long userId, Integer status);
 	
