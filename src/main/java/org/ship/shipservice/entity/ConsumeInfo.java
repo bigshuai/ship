@@ -4,11 +4,17 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="t_consumeInfo")
+@Table(name="t_user_consume_log")
 public class ConsumeInfo extends IdEntity{
 	private Integer userId;
-	private String describe;
-	private Double money;
+	private String orderNo;
+	private String amount;
+	private String transAmount;
+	private Integer type;
+	private Integer code;
+	private Integer status;
+	private String createTime;
+	
 	public ConsumeInfo(){
 		
 	}
@@ -22,17 +28,46 @@ public class ConsumeInfo extends IdEntity{
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
-	public String getDescribe() {
-		return describe;
+	public String getOrderNo() {
+		return orderNo;
 	}
-	public void setDescribe(String describe) {
-		this.describe = describe;
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
-	public Double getMoney() {
-		return money;
+	public String getAmount() {
+		return amount;
 	}
-	public void setMoney(Double money) {
-		this.money = money;
+	public void setAmount(String amount) {
+		this.amount = amount;
 	}
-	
+	public String getTransAmount() {
+		return transAmount;
+	}
+	public void setTransAmount(String transAmount) {
+		this.transAmount = transAmount;
+	}
+	public Integer getType() {
+		return type;
+	}
+	public void setType(Integer type) {
+		this.type = type;
+	}
+	public Integer getCode() {
+		return code;
+	}
+	public void setCode(Integer code) {
+		this.code = code;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	public String getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
 }

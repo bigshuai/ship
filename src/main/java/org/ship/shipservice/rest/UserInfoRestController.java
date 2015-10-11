@@ -2,6 +2,8 @@ package org.ship.shipservice.rest;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,10 +13,10 @@ import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.domain.UrlBean;
+import org.ship.shipservice.entity.ConsumeBean;
 import org.ship.shipservice.entity.ConsumeInfo;
 import org.ship.shipservice.entity.Favorite;
 import org.ship.shipservice.entity.Information;
-import org.ship.shipservice.entity.Oil;
 import org.ship.shipservice.entity.OilStation;
 import org.ship.shipservice.entity.Order;
 import org.ship.shipservice.entity.User;
@@ -113,9 +115,22 @@ public class UserInfoRestController {
 					MyConstant.JSON_RETURN_MESSAGE_400);
 		} else {
 			PageRequest pageRequest = new PageRequest(page-1, 10);
-			Page<ConsumeInfo> cList = consumeInfoService.findByAccountId(
-					userId, pageRequest);
-			return CommonUtils.printObjStr(cList, 200, "消费详情");
+			Page<ConsumeInfo> cList = consumeInfoService.findByAccountId(userId, pageRequest);
+			ResultList list = new ResultList();
+			List<ConsumeBean> cbs = new ArrayList<ConsumeBean>();
+			List<ConsumeInfo> dd = cList.getContent();
+			for(ConsumeInfo info : dd){
+				ConsumeBean bean = new ConsumeBean();
+				bean.setId(info.getId());
+				bean.setMoney(info.getOrderNo().startsWith("U") ? "+"+info.getAmount(): "-"+info.getAmount());
+				bean.setDescribe(info.getOrderNo().startsWith("U") ? "充值": "加油");
+				bean.setTime(info.getCreateTime());
+				cbs.add(bean);
+			}
+			list.setDataList(cbs);
+			list.setPage(page);
+			list.setTotal(Integer.valueOf(cList.getTotalElements()+""));
+			return CommonUtils.printListStr(list);
 		}
 	}
 

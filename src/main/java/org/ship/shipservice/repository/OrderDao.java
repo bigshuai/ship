@@ -64,6 +64,9 @@ public interface OrderDao extends CrudRepository<Order, Long>{
 	@Query(value="select user_id from t_user_consume_log o where o.order_no=?1", nativeQuery=true)
 	public String queryUserIdForLog(String orderNo);
 	
+	@Query(value="select get_coupon_id from t_user_consume_log o where o.order_no=?1", nativeQuery=true)
+	public Long queryCouponIdForLog(String orderNo);
+	
 	@Modifying
 	@Query(value="select order_no,os_id from t_order o where o.user_id=?1 and o.id=?2", nativeQuery=true)
 	List<Object[]> findOrderByOrderId(Integer userId,Integer orderId);

@@ -13,6 +13,7 @@ import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -296,6 +297,16 @@ public class CommonUtils {
 	}
 	
 	/**
+	 * 获取订单号
+	 * @param userId
+	 * @return
+	 */
+	public static synchronized String getConsumeCode(){
+		Calendar calendar = Calendar.getInstance();
+		return (calendar.getTime().getTime()+"").substring(2, 11)+String.format("%03d", new Random().nextInt(1000));
+	}
+	
+	/**
 	 * 获取充值订单号
 	 * @param userId
 	 * @return
@@ -328,59 +339,9 @@ public class CommonUtils {
 		return "";
 	}
 
-	public static void main(String[] args) throws UnsupportedEncodingException {
-		//发送内容
-				String content = "尊敬的航运宝用户，你的验证码为 123456"; 
-				String sign="航运宝";
-				
-				// 创建StringBuffer对象用来操作字符串
-				StringBuffer sb = new StringBuffer("http://web.1xinxi.cn/asmx/smsservice.aspx?");
-
-				// 向StringBuffer追加用户名
-				sb.append("name=chenminmin008@126.com");
-
-				// 向StringBuffer追加密码（登陆网页版，在管理中心--基本资料--接口密码，是28位的）
-				sb.append("&pwd=B57C526FC74B32DEA9A9FBE7ED7A");
-
-				// 向StringBuffer追加手机号码
-				sb.append("&mobile=18516293301");
-
-				// 向StringBuffer追加消息内容转URL标准码
-				sb.append("&content="+URLEncoder.encode(content));
-				
-				//追加发送时间，可为空，为空为及时发送
-				sb.append("&stime=");
-				
-				//加签名
-				sb.append("&sign="+URLEncoder.encode(sign));
-				
-				//type为固定值pt  extno为扩展码，必须为数字 可为空
-				sb.append("&type=pt&extno=");
-				// 创建url对象
-				URL url;
-				try {
-					url = new URL(sb.toString());
-					// 打开url连接
-					HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-					// 设置url请求方式 ‘get’ 或者 ‘post’
-					connection.setRequestMethod("POST");
-
-					// 发送
-					BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-
-					// 返回发送结果
-					String inputline = in.readLine();
-					System.out.println(inputline);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				
-
-				// 返回结果为‘0，20140009090990,1，提交成功’ 发送成功   具体见说明文档
-				
-
+	public static void main(String[] args) {
+		for(int i =0; i < 10; i++){
+			System.out.println(getConsumeCode());
+		}
 	}
 }
