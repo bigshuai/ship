@@ -15,6 +15,7 @@ public class ErrorConstants {
 	public static final String COUPON_GET_OVERTIME_ERROR = "10020003";
 	
 	public static final String BANK_GET_INFO_ERROR = "10030001";
+	
 	public static final String PRECHECK_FOR_SIGN_ERROR = "10030002";
 	
 	public static String getErrorMsg(String code){

@@ -15,16 +15,16 @@ public interface OrderDao extends CrudRepository<Order, Long>{
 	
 	@Modifying
 	@Query(value="insert INTO t_order(user_id,os_id,product_id,product_name,type,money,price,num,`status`,order_no,"
-			+ "sft_order_no,session_token,book_time,book_addr,create_time) "
-			+ "VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,now())", nativeQuery=true)
+			+ "sft_order_no,session_token,book_time,book_addr,create_time,get_coupon_id) "
+			+ "VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,now(),?15)", nativeQuery=true)
 	public int addOrder(Long userId, Long osId,Long proId, String proName,Integer type, String money, String price,
-			Integer num, Integer status,String orderNo, String sftOrderNo, String sessionToken, Date bookTime, String bookAddr);
+			Integer num, Integer status,String orderNo, String sftOrderNo, String sessionToken, Date bookTime, String bookAddr,Long getCouponId);
 	
 	@Modifying
-	@Query(value="update t_order money=?1,price=?2,num=?3,`status`=?4,sft_order_no=?5,session_token=?6 "
+	@Query(value="update t_order set money=?1,price=?2,num=?3,`status`=?4,sft_order_no=?5,session_token=?6,get_coupon_id=?8 "
 			+ " where order_no=?7", nativeQuery=true)
 	public int updateOrder(String money, String price,
-			Integer num, Integer status, String sftOrderNo, String sessionToken, String orderNo);
+			Integer num, Integer status, String sftOrderNo, String sessionToken, String orderNo, Long getCouponId);
 	
 	@Modifying
 	@Query(value="update t_order set status=?1 where user_id=?2 and order_no=?3", nativeQuery=true)
@@ -58,9 +58,13 @@ public interface OrderDao extends CrudRepository<Order, Long>{
 	public String queryOrderMoney(String orderNo, Long userId);
 	
 	@Modifying
-	@Query(value="insert into t_user_consume_log(user_id,order_no,amount,trans_amount,type,code,status) values(?1,?2,?3,?4,?5,?6,?7)", nativeQuery=true)
+	@Query(value="insert into t_user_consume_log(user_id,order_no,amount,trans_amount,type,code,status,create_time) values(?1,?2,?3,?4,?5,?6,?7,now())", nativeQuery=true)
 	public int insertConsumeLog(Long userId, String orderNo, String amount,String transAmount, int type, String code, int status);
 	
 	@Query(value="select user_id from t_user_consume_log o where o.order_no=?1", nativeQuery=true)
 	public String queryUserIdForLog(String orderNo);
+	
+	@Modifying
+	@Query(value="select order_no,os_id from t_order o where o.user_id=?1 and o.id=?2", nativeQuery=true)
+	List<Object[]> findOrderByOrderId(Integer userId,Integer orderId);
 }

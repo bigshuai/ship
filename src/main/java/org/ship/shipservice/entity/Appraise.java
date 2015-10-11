@@ -11,6 +11,7 @@ import javax.persistence.Table;
 public class Appraise extends IdEntity{
 	private Integer userId;
 	private Integer  osId;
+	private Integer orderId;
 	private Integer credit;
 	private Integer quality;
 	private Integer service;
@@ -74,5 +75,11 @@ public class Appraise extends IdEntity{
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public Integer getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
 	}
 }

@@ -21,30 +21,13 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface OilStationDao extends CrudRepository<OilStation, Long> {
 	@Modifying
-	@Query(value = "select t.id,t.name,t.credit,t.coupon_flag,t.num,t.status, "
-			+ "case when t.derate_flag=1 then GROUP_CONCAT(d.info) ELSE '' END derate,t.pic_url,t.latitude,t.longitude from "
-			+ "("
-			+ "select o.id,o.name,o.credit,o.coupon_flag,o.derate_flag,o.status,o.pic_url,o.latitude,o.longitude, count(*) num "
-			+ "from t_oil_station o,t_appraise a "
-			+ "where o.city_id=?1 and o.status=1 and o.id=a.os_id and a.status=1 "
-			+ "group by o.id,o.name,o.credit,o.coupon_flag,o.derate_flag,o.status,o.pic_url,o.latitude,o.longitude"
-			+ ") t "
-			+ "LEFT JOIN "
-			+ "t_derate d on (t.id=d.os_id or d.os_id=0) group by t.id,t.name,t.credit,"
-			+ "t.coupon_flag,t.derate_flag,t.num,t.status,t.pic_url,t.latitude,t.longitude order by id desc limit ?2,?3", nativeQuery = true)
+	@Query(value = "select o.id,o.name,o.credit,"
+			+ "o.coupon_flag,(SELECT count(1) FROM t_appraise a where a.status=1 and a.os_id=?1) num,"
+			+ "o.status,(SELECT info FROM t_derate d where (d.os_id=?1 or d.os_id=0) and d.`status`=1) derate,o.pic_url,o.latitude,o.longitude"
+			+ " from t_oil_station o where o.city_id=?1 and o.`status`=1 order by id desc limit ?2,?3", nativeQuery = true)
 	List<Object[]> findByCityId(Integer cityId, Integer start, Integer end);
 	
-	@Query(value = "select count(1) from (select t.id,t.name,t.credit,t.coupon_flag,t.num,t.status, "
-			+ "case when t.derate_flag=1 then GROUP_CONCAT(d.info) ELSE '' END derate from "
-			+ "("
-			+ "select o.id,o.name,o.credit,o.coupon_flag,o.derate_flag,o.status, count(*) num "
-			+ "from t_oil_station o,t_appraise a "
-			+ "where o.city_id=?1 and o.status=1 and o.id=a.os_id and a.status=1 "
-			+ "group by o.id,o.name,o.credit,o.coupon_flag,o.derate_flag,o.status"
-			+ ") t "
-			+ "LEFT JOIN "
-			+ "t_derate d on (t.id=d.os_id or d.os_id=0) group by t.id,t.name,t.credit,"
-			+ "t.coupon_flag,t.derate_flag,t.num,t.status) e", nativeQuery = true)
+	@Query(value = "select count(1) from t_oil_station o where o.city_id=?1 and o.`status`=1", nativeQuery = true)
 	int findCountByCityId(Integer cityId);
 
 	@Modifying
@@ -52,18 +35,11 @@ public interface OilStationDao extends CrudRepository<OilStation, Long> {
 	List<OilStation> findOsAll();
 
 	@Modifying
-	@Query(value = "select t.id,t.name,t.desc,t.address,t.phone,t.credit,t.quality,t.service,t.coupon_flag,t.num,t.status, "
-			+ "case when t.derate_flag=1 then GROUP_CONCAT(d.info) ELSE '' END derate,t.pic_url,t.latitude,t.longitude from "
-			+ "("
-			+ "select o.id,o.name,o.desc,o.address,o.phone,o.credit,o.quality,o.service,o.coupon_flag,o.derate_flag,o.status,"
-			+ "o.pic_url,o.latitude,o.longitude, count(*) num "
-			+ "from t_oil_station o,t_appraise a "
-			+ "where o.id=?1 and o.status=1 and o.id=a.os_id and a.status=1 "
-			+ "group by o.id,o.name,o.desc,o.address,o.phone,o.credit,o.quality,o.service,o.coupon_flag,o.derate_flag,o.status,o.pic_url,o.latitude,o.longitude"
-			+ ") t "
-			+ "LEFT JOIN "
-			+ "t_derate d on (t.id=d.os_id or d.os_id=0) group by t.id,t.name,t.desc,t.address,t.phone,t.credit,t.quality,t.service,"
-			+ "t.coupon_flag,t.derate_flag,t.num,t.status,t.pic_url,t.latitude,t.longitude", nativeQuery = true)
+	@Query(value = "select o.id,o.name,o.desc,o.address,o.phone,o.credit,o.quality,o.service,o.coupon_flag,"
+			+ "o.derate_flag,o.status,o.pic_url,o.latitude,o.longitude,"
+			+ "(SELECT count(1) FROM t_appraise a where a.status=1 and a.os_id=?1) num,"
+			+ "(SELECT info FROM t_derate d where (d.os_id=?1 or d.os_id=0) and d.`status`=1) derate"
+			+ " from t_oil_station o where o.id=?1 and o.`status`=1", nativeQuery = true)
 	List<Object[]> queryDetailById(Long id);
 	
 	@Modifying
@@ -76,7 +52,7 @@ public interface OilStationDao extends CrudRepository<OilStation, Long> {
 	public List<City> queryCityList();
 	
 	@Modifying
-	@Query("select o from Oil o where o.osId=?1")
+	@Query("select o from Oil o where (o.osId=?1 or o.osId=0) and status=1")
 	public List<Oil> queryOils(Integer osId);
 	
 	@Modifying

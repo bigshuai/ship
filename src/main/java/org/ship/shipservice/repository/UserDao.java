@@ -21,6 +21,7 @@ public interface UserDao extends CrudRepository<User, Long> {
 	int updateName(String phone, String username);
 	User save(User user);
 	
+	@Modifying
 	@Query(value="UPDATE t_user_bank set fund=fund+?2 where user_id=?1", nativeQuery=true)
 	public int recharge(Long userId, String amount);
 	

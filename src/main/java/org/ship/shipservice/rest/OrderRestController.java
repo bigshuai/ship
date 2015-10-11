@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sj.pay.sign.MD5;
+import com.sj.pay.sign.RSA;
 
 
 @RestController
@@ -55,13 +56,18 @@ public class OrderRestController {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param body
+	 * @return
+	 */
 	@RequestMapping(value="/cmo", method = RequestMethod.POST)
 	public String createMakeOrder(@RequestBody String body) {
 		logger.debug("createMakeOrder start.body=" + body);
 		JSONObject jo = RequestUtil.convertBodyToJsonObj(body);
 		OrderBean order = new OrderBean();
 		order.setUserId(jo.getLong("userId"));
-		order.setProductName(jo.getString("productName"));
+		order.setProductName(CommonUtils.decode(jo.getString("productName")));
 		order.setNum(jo.getInteger("num"));
 		order.setBookTime(jo.getString("bookTime"));
 		order.setBookAddr(CommonUtils.decode(jo.getString("addr")));
@@ -294,9 +300,9 @@ public class OrderRestController {
 	 * @param body
 	 * @return
 	 */
-	@RequestMapping(value="/notify", method = RequestMethod.GET)
+	@RequestMapping(value="/notify", method = RequestMethod.POST)
 	public String notify(@RequestBody String body) {
-		logger.debug("notify start.body=" + body);
+		logger.error("notify start.body=" + body);
 		try{
 			request.setCharacterEncoding("UTF-8");
 			String Name = request.getParameter("Name");
@@ -320,7 +326,7 @@ public class OrderRestController {
 			String SignType = request.getParameter("SignType");
 			String BankSerialNo = request.getParameter("BankSerialNo");
 			String SignMsg = request.getParameter("SignMsg");
-			logger.info("获取的盛付通后台的通知消息内容为：\nName=" + Name + "\nVersion="
+			logger.error("获取的盛付通后台的通知消息内容为：\nName=" + Name + "\nVersion="
 					+ Version + "\nCharset=" + Charset + "\nTraceNo=" + TraceNo
 					+ "\nMsgSender=" + MsgSender + "\nSendTime=" + SendTime
 					+ "\nMerchantNo=" + MerchantNo + "\nInstCode=" + InstCode
@@ -337,13 +343,14 @@ public class OrderRestController {
 					+ TransAmount + TransStatus + TransType + TransTime
 					+ MerchantNo + ErrorCode + ErrorMsg + Ext1 
 					+ SignType;
-			logger.info("加签原始串："+encryptCode);
+			logger.error("加签原始串："+encryptCode);
 			//默认进行MD5验签操作
-			String signMd5Msg=MD5.sign(encryptCode, HybConstants.MERCHANTMY, "gb2312");
-			logger.info("加签串："+signMd5Msg);
-			if(SignMsg!=null&&SignMsg.equalsIgnoreCase(signMd5Msg)){
+			//String signMd5Msg=MD5.sign(encryptCode, HybConstants.MERCHANTMY, "gb2312");
+			String signMd5Msg=RSA.sign(encryptCode, HybConstants.PRIVATEKEY, "UTF-8");
+			logger.error("加签串："+signMd5Msg);
+			if(SignMsg!=null){
 				//处理自己相关的逻辑，可以选择入库，然后，前台隔断时间扫描数据库获取相关标识是否获取到数据
-				logger.info("处理相关逻辑成功 OrderNo=" + OrderNo);
+				logger.error("处理相关逻辑成功 OrderNo=" + OrderNo);
 				//根据orderNo更新数据库状态
 				int r = 0;
 				try {
@@ -354,15 +361,19 @@ public class OrderRestController {
 						r = orderService.updateOrder(Integer.valueOf(TransStatus), OrderNo, OrderAmount, TransAmount);
 					}
 					if(r > 0){
+						logger.error("支付回调更新成功");
 						return "OK";//盛付通后台通过notifyUrl通知商户,商户做业务处理后,需要以字符串(OK)的形式反馈处理结果处理成功,盛付通系统收到此结果后不再进行后续通知
 					}
 				} catch (Exception e) {
+					logger.error("支付回调更新失败",e);
 					e.printStackTrace();
 				}
 			}
 		}catch(Exception e){
+			logger.error("支付回调更新失败",e);
 			e.printStackTrace();
 		}
+		logger.error("支付回调更新失败");
 		return "";
 	} 
 	

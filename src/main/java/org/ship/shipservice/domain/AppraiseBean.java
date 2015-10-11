@@ -5,6 +5,7 @@ import java.util.Date;
 public class AppraiseBean {
 	private Long  osId;
 	private Long userId;
+	private String userPic;
 	private String userName;
 	private Integer credit;
 	private Integer quality;
@@ -59,5 +60,11 @@ public class AppraiseBean {
 	}
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
+	}
+	public String getUserPic() {
+		return userPic;
+	}
+	public void setUserPic(String userPic) {
+		this.userPic = userPic;
 	}
 }

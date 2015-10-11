@@ -85,13 +85,13 @@ public class OrderService {
 	public ResultList queryOrderUserList(Long userId, Integer status, int page, int pageSize){
 		//订单状态  0-新建 1-已付款  2-配送中 3-已收货 4-已完成 11-预订未付款 12预订已付款    99-删除
 		ResultList r = new ResultList();
-		String statusStr = "4";
+		String statusStr = "9";
 		switch (status) {
 			case 1:
-				statusStr = "0,1,2,3,11,12";
+				statusStr = "0,1,2,3,4,5,6,7,8,11,12";
 				break;
 			case 9:
-				statusStr = "4";
+				statusStr = "9";
 				break;
 			default:
 				return r;
@@ -144,8 +144,9 @@ public class OrderService {
 			order.setProductName(oil.getName());
 			order.setProductDesc(oil.getName());
 			order.setPrice(oil.getPrice()+"");
+			StringBuffer getCouponStr = new StringBuffer();
 			BigDecimal amount = this.calculateAmount(order.getUserId(), oil, Long.valueOf(order.getProductId()), 
-					order.getNum(), order.getOsId(), order.getCouponId());
+					order.getNum(), order.getOsId(), order.getCouponId(), getCouponStr);
 			if(HybConstants.TEST){
 				order.setAmount("0.01");
 			}else{
@@ -170,12 +171,13 @@ public class OrderService {
 					String sftOrderNo = res.getObj().getSftOrderNo();
 					String sessionToken = res.getObj().getSessionToken();
 					int r = 0;
+					Long getCouponId = StringUtils.isEmpty(getCouponStr.toString()) ? 0L : Long.valueOf(getCouponStr.toString());
 					if(StringUtils.isEmpty(order.getOrderNo())){
 						r = orderDao.addOrder(order.getUserId(), order.getOsId(), oil.getId(), oil.getName(), 1, pOrder.getAmount(),
-								order.getPrice(), order.getNum(), 0, orderNo, sftOrderNo, sessionToken, null, null);
+								order.getPrice(), order.getNum(), 0, orderNo, sftOrderNo, sessionToken, null, null, getCouponId);
 					}else{
 						//更新订单
-						r =orderDao.updateOrder(pOrder.getAmount(), order.getPrice(), order.getNum(), 1, sftOrderNo, sessionToken, orderNo);
+						r =orderDao.updateOrder(pOrder.getAmount(), order.getPrice(), order.getNum(), 0, sftOrderNo, sessionToken, orderNo, getCouponId);
 					}
 					if(r > 0){
 						result.put("orderNo", orderNo);
@@ -194,6 +196,7 @@ public class OrderService {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			result.put("msg", "订单创建失败，请稍后再试。");
 		}
 		return result;
 	}
@@ -213,7 +216,7 @@ public class OrderService {
 		}
 		String orderNo = CommonUtils.getMerchantOrderNo(order.getUserId()+"");
 		int r = orderDao.addOrder(order.getUserId(), null, null, order.getProductName(), 3, null,
-				null, order.getNum(), 11, orderNo, null, null, bt, order.getBookAddr());
+				null, order.getNum(), 11, orderNo, null, null, bt, order.getBookAddr(),null);
 		if(r <= 0){
 			result.put("msg", "预约失败，请稍后再试。");
 		}
@@ -249,8 +252,8 @@ public class OrderService {
 			if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
 				String sftOrderNo = res.getObj().getSftOrderNo();
 				String sessionToken = res.getObj().getSessionToken();
-				int r = orderDao.addOrder(order.getUserId(), null, null, null, 2, pOrder.getAmount(),
-						pOrder.getAmount(), 1, 0, pOrder.getMerchantOrderNo(), sftOrderNo, sessionToken, null, null);
+				int r = orderDao.addOrder(order.getUserId(), null, null, pOrder.getProductName(), 2, pOrder.getAmount(),
+						pOrder.getAmount(), 1, 0, pOrder.getMerchantOrderNo(), sftOrderNo, sessionToken, null, null,null);
 				if(r > 0){
 					result.put("orderNo", pOrder.getMerchantOrderNo());
 					result.put("orderCreateTime", res.getObj().getOrderCreateTime());
@@ -455,18 +458,18 @@ public class OrderService {
 			result.put("msg", "账户余额不足。");
 			return result;
 		}
-		String phone = userDao.getUserPhone(userId);
-		String rCode = redisTemplate.opsForValue().get(phone);
-		if(StringUtils.isEmpty(rCode)){
-			result.put("msg", "验证码错误，请重新获取。");
-			return result;
-		}
-		
-		if(false){
-		//if(!rCode.equalsIgnoreCase(code)){
-			result.put("msg", "验证码错误，请重新获取。");
-			return result;
-		}
+//		String phone = userDao.getUserPhone(userId);
+//		String rCode = redisTemplate.opsForValue().get(phone);
+//		if(StringUtils.isEmpty(rCode)){
+//			result.put("msg", "验证码错误，请重新获取。");
+//			return result;
+//		}
+//		
+//		if(false){
+//		if(!rCode.equalsIgnoreCase(code)){
+//			result.put("msg", "验证码错误，请重新获取。");
+//			return result;
+//		}
 		
 		int rr = orderDao.updateUserOrderStatus(1, orderNo);
 		if(rr > 0){
@@ -501,6 +504,9 @@ public class OrderService {
 		if(r > 0){
 			int rr = orderDao.updateBankOrderStatus(status, orderNo);
 			if(rr > 0){
+				//更新优惠券信息 根据订单查询优惠券ID 更新优惠券信息
+				
+				
 				return 1;
 			}else{
 				throw new RuntimeException("异常");
@@ -559,15 +565,15 @@ public class OrderService {
 		return JSON.toJSONString(exts);
 	}
 	
-	private BigDecimal calculateAmount(Long userId, Oil oil, Long productId,Integer num, Long osId, Long couponId){
+	private BigDecimal calculateAmount(Long userId, Oil oil, Long productId,Integer num, Long osId, Long couponId, StringBuffer getCouponId){
 		BigDecimal totalPtice = oil.getPrice().multiply(new BigDecimal(num));
 		//计算优惠券扣除后金额
-		totalPtice = calculateCoupon(userId, totalPtice, couponId);
+		totalPtice = calculateCoupon(userId, totalPtice, couponId, getCouponId);
 		//计算减免后金额
 		List<Object[]> list = oilStationDao.queryDetailById(osId);
 		if(list != null && list.size() > 0){
 			Object[] o = list.get(0);
-			String info = o[11]+"";
+			String info = o[15]+"";
 			totalPtice = this.calculateDerate(totalPtice, info);
 		}
 		if(totalPtice.compareTo(BigDecimal.ZERO) == -1){
@@ -605,7 +611,7 @@ public class OrderService {
 	 * @param couponId
 	 * @return
 	 */
-	private BigDecimal calculateCoupon(Long userId, BigDecimal totalPtice,Long couponId){
+	private BigDecimal calculateCoupon(Long userId, BigDecimal totalPtice,Long couponId, StringBuffer getCouponId){
 		if(StringUtils.isEmpty(couponId)){
 			return totalPtice;
 		}
@@ -615,6 +621,7 @@ public class OrderService {
 		}
 		Object[] coupon = (Object[]) cou[0];
 		if(coupon[2] == null || Integer.valueOf(coupon[2]+"") <= 0 || totalPtice.floatValue() > Integer.valueOf(coupon[2]+"")){
+			getCouponId.append(coupon[3]+"");
 			totalPtice = totalPtice.subtract(new BigDecimal(coupon[1]+""));
 		}
 		return totalPtice;

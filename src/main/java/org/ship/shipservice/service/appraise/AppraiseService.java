@@ -8,6 +8,7 @@ import org.ship.shipservice.domain.CouponBean;
 import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.entity.Appraise;
 import org.ship.shipservice.repository.AppraiseDao;
+import org.ship.shipservice.repository.OrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +22,18 @@ import org.springframework.util.StringUtils;
 @Transactional
 public class AppraiseService {
 	private AppraiseDao appraiseDao;
+	@Autowired
+	private OrderDao orderDao;
 
 	public void saveOilAppraise(Appraise appraise) {
+		List<Object[]> list = orderDao.findOrderByOrderId(appraise.getUserId(), appraise.getOrderId());
+		String orderNo = list.get(0)[0]+"";
+		Integer osId = Integer.valueOf(list.get(0)[1]+"");
+		
+		appraise.setStatus(1);
+		appraise.setOsId(osId);
+		//¸üÐÂ¶©µ¥×´Ì¬
+		orderDao.updateBankOrderStatus(9, orderNo);
 		appraiseDao.save(appraise);
 	}
 
@@ -52,6 +63,7 @@ public class AppraiseService {
 			bean.setCredit(Integer.valueOf(o[5] + ""));
 			bean.setContent(o[6] + "");
 			bean.setCreateTime(o[7] + "");
+			bean.setUserPic(o[8] + "");
 			result.add(bean);
 		}
 		rl.setDataList(result);
