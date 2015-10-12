@@ -86,18 +86,22 @@ public class OrderService {
 		//订单状态  0-新建 1-已付款  2-配送中 3-已收货 4-已完成 11-预订未付款 12预订已付款    99-删除
 		ResultList r = new ResultList();
 		String statusStr = "9";
+		Integer[] ss = new Integer[11];
 		switch (status) {
 			case 1:
-				statusStr = "0,1,2,3,4,5,6,7,8,11,12";
+				ss[0] = 0;ss[1] = 1;ss[2] = 2;ss[3] = 3;ss[4] = 4;ss[5] = 6;
+				ss[6] = 6;ss[7] = 7;ss[8] = 8;ss[9] = 11;ss[10] = 12;
 				break;
 			case 9:
-				statusStr = "9";
+				ss[0] = 9;ss[1] = 100;ss[2] = 200;ss[3] = 300;ss[4] = 400;ss[5] = 600;
+				ss[6] = 600;ss[7] = 700;ss[8] = 800;ss[9] = 110;ss[10] = 120;
 				break;
 			default:
 				return r;
 		}
 		int start = (page - 1)*pageSize;
-		List<Object[]> list = orderDao.queryOrderForUserId(userId, statusStr, start, pageSize);
+		List<Object[]> list = orderDao.queryOrderForUserId(userId, ss[0],ss[1],ss[2],ss[3],ss[4],ss[5],
+		                         ss[6],ss[7] ,ss[8] ,ss[9],ss[10], start, pageSize);
 		List<OrderBean> result = new ArrayList<OrderBean>();
 		//o.id,o.os_id,s.name,o.product_id,o.product_name,o.type,o.money,o.price,o.num,o.status,o.order_no,
 		//o.sft_order_no,o.book_time,o.create_time
@@ -122,7 +126,8 @@ public class OrderService {
 		}
 		r.setDataList(result);
 		r.setPage(page);
-		r.setTotal(orderDao.queryOrderForUserIdTotal(userId, statusStr));
+		r.setTotal(orderDao.queryOrderForUserIdTotal(userId, ss[0],ss[1],ss[2],ss[3],ss[4],ss[5],
+                ss[6],ss[7] ,ss[8] ,ss[9],ss[10]));
 		return r;
 	}
 	
@@ -387,6 +392,7 @@ public class OrderService {
 			info.setExts("{}");
 			PayResponse<PayConfirmRes> res= client.payment(info);
 			if(res.getHttpCode()==200 && res.isSignResult()){
+				logger.error("cccccccccccccccccccccccccccccccc" + res.getObj().getPaymentStatus() + "-"+res.getReturnCode());
 				if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode()) 
 						&& HybConstants.PAY_SUCCESS.equalsIgnoreCase(res.getObj().getPaymentStatus())){
 					result.put("orderNo", res.getObj().getMerchantOrderNo());
@@ -506,11 +512,13 @@ public class OrderService {
 			if(rr > 0){
 				//更新优惠券信息 根据订单查询优惠券ID 更新优惠券信息
 				Long getCouponid = orderDao.queryCouponIdForLog(orderNo);
-				int rrr = couponDao.updateCouponStatus(1,0, getCouponid);
-				if(rrr <= 0){
-					throw new RuntimeException("异常");
+				if(getCouponid > 0){
+					int rrr = couponDao.updateCouponStatus(1,0, getCouponid);
+					if(rrr <= 0){
+						throw new RuntimeException("异常");
+					}
 				}
-				return rrr;
+				return 1;
 			}else{
 				throw new RuntimeException("异常");
 			}

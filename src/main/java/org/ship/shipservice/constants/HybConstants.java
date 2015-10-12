@@ -12,7 +12,7 @@ public interface HybConstants {
 	static final String PRINCIPALID = "103100000000000111637220";
 	static final String SUCCESS = "SUCCESS";
 	
-	static final String PAY_SUCCESS = "1";
+	static final String PAY_SUCCESS = "01";
 	
 	static final boolean TEST = true;
 	

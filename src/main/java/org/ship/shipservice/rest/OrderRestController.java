@@ -373,7 +373,7 @@ public class OrderRestController {
 			logger.error("支付回调更新失败",e);
 			e.printStackTrace();
 		}
-		logger.error("支付回调更新失败");
+		logger.error("支付回调更新完成");
 		return "";
 	} 
 	

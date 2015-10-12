@@ -41,12 +41,18 @@ public interface OrderDao extends CrudRepository<Order, Long>{
 	@Modifying
 	@Query(value="select o.id,o.os_id,s.name,o.product_id,o.product_name,o.type,o.money,o.price,o.num,"
 			+ "o.status,o.order_no,o.sft_order_no,o.book_time,o.create_time,s.pic_url "
-			+ "from t_order o, t_oil_station s where o.os_id=s.id and o.user_id=?1 and o.status in (?2) "
-			+ "order by o.create_time desc limit ?3,?4", nativeQuery=true)
-	List<Object[]> queryOrderForUserId(Long userId,String status, Integer start, Integer size);
+			+ "from t_order o, t_oil_station s where o.os_id=s.id and o.user_id=?1 and (o.status=?2 or o.status=?3"
+			+ " or o.status=?4 or o.status=?5 or o.status=?6 or o.status=?7 or o.status=?8 or o.status=?9 or o.status=?10"
+			+ " or o.status=?11 or o.status=?12) "
+			+ "order by o.create_time desc limit ?13,?14", nativeQuery=true)
+	List<Object[]> queryOrderForUserId(Long userId,Integer s1,Integer s2,Integer s3,Integer s4,Integer s5,Integer s6
+			,Integer s7,Integer s8,Integer s9,Integer s10,Integer s11, Integer start, Integer size);
 	
-	@Query(value="select count(1) from t_order o where o.user_id=?1 and o.status in (?2)", nativeQuery=true)
-	public int queryOrderForUserIdTotal(Long userId,String status);
+	@Query(value="select count(1) from t_order o where o.user_id=?1 and(o.status=?2 or o.status=?3"
+			+ " or o.status=?4 or o.status=?5 or o.status=?6 or o.status=?7 or o.status=?8 or o.status=?9 or o.status=?10"
+			+ " or o.status=?11 or o.status=?12)", nativeQuery=true)
+	public int queryOrderForUserIdTotal(Long userId,Integer s1,Integer s2,Integer s3,Integer s4,Integer s5,Integer s6
+			,Integer s7,Integer s8,Integer s9,Integer s10,Integer s11);
 	
 	@Query(value="select session_token from t_order o where o.order_no=?1 and o.user_id=?2", nativeQuery=true)
 	public String querySessionToken(String orderNo, Long userId);
@@ -64,7 +70,7 @@ public interface OrderDao extends CrudRepository<Order, Long>{
 	@Query(value="select user_id from t_user_consume_log o where o.order_no=?1", nativeQuery=true)
 	public String queryUserIdForLog(String orderNo);
 	
-	@Query(value="select get_coupon_id from t_user_consume_log o where o.order_no=?1", nativeQuery=true)
+	@Query(value="select get_coupon_id from t_order o where o.order_no=?1", nativeQuery=true)
 	public Long queryCouponIdForLog(String orderNo);
 	
 	@Modifying
