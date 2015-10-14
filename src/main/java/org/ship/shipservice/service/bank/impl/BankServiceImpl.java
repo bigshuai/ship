@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.util.ajax.JSON;
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.BankBean;
 import org.ship.shipservice.domain.BankInfo;
@@ -20,12 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.sj.pay.client.PayResponse;
 import com.sj.pay.client.SjPayClient;
 import com.sj.pay.client.domain.Inst;
 import com.sj.pay.client.domain.PrecheckSign;
 import com.sj.pay.client.domain.SignRes;
-import com.sj.pay.constants.PayConstants;
 
 @Component
 @Transactional
@@ -193,16 +192,19 @@ public class BankServiceImpl implements BankService {
 			int r = bankDao.deleteBank(bankId);
 			if(r > 0){
 				PayResponse<SignRes> res= client.unSign(HybConstants.MERCHANTNO, agreementNo, HybConstants.PRINCIPALID);
+				logger.error("unsign =" + JSON.toJSONString(res));
 				if(res.getHttpCode()==200 && res.isSignResult()){
 					if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
 						//签约成功，发送短信，返回到验证码页面
 						//保存银行卡信息到t_bank
 						return null;
 					}else{
-						throw new RuntimeException(res.getReturnMsg());
+						return null;
+						//throw new RuntimeException(res.getReturnMsg());
 					}
 				}else{
-					throw new RuntimeException("解约失败，请稍后再试。");
+					return null;
+					//throw new RuntimeException("解约失败，请稍后再试。");
 				}
 			}else{
 				return "解约失败，请稍后再试。";
