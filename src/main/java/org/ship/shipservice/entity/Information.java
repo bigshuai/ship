@@ -25,7 +25,7 @@ public class Information extends IdEntity {
 	private Long userId;
 	private String tag;
 	private String city;
-	private Date createTime;
+	private String createTime;
 	private Integer reviewCount;
 
 	public Information() {
@@ -165,11 +165,11 @@ public class Information extends IdEntity {
 	}
 
 	@Column(name = "create_time")
-	public Date getCreateTime() {
+	public String getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 

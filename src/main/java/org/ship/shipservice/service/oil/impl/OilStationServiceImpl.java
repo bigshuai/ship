@@ -2,12 +2,14 @@ package org.ship.shipservice.service.oil.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.ship.shipservice.domain.OilBean;
 import org.ship.shipservice.domain.OilStationBean;
 import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.entity.City;
 import org.ship.shipservice.entity.Oil;
+import org.ship.shipservice.entity.OilStation;
 import org.ship.shipservice.repository.OilStationDao;
 import org.ship.shipservice.service.oil.OilStationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +23,19 @@ public class OilStationServiceImpl implements OilStationService {
 	@Autowired
 	private OilStationDao oilStationDao;
 	
-	public ResultList queryOilList(Integer cityId, int page, int pageSize){
+	public ResultList queryOilList(String param, int page, int pageSize){
 		ResultList r = new ResultList();
 		int start = (page - 1)*pageSize;
-		List<Object[]> list = oilStationDao.findByCityId(cityId, start, pageSize);
+		List<Object[]> list = new ArrayList<Object[]>();
+		Pattern pattern = Pattern.compile("[0-9]*"); 
+		if(pattern.matcher(param).matches()){
+			list = oilStationDao.findByCityId(Integer.parseInt(param), start, pageSize);
+			r.setTotal(oilStationDao.findCountByCityId(Integer.parseInt(param)));
+		}else{
+			list = oilStationDao.findByOilName(param, start, pageSize);
+			r.setTotal(oilStationDao.findCountByOilName(param));
+		}
+		
 		List<OilStationBean> result = new ArrayList<OilStationBean>();
 		for(Object[] o : list){
 			OilStationBean os = new OilStationBean();
@@ -42,10 +53,11 @@ public class OilStationServiceImpl implements OilStationService {
 		}
 		r.setDataList(result);
 		r.setPage(page);
-		r.setTotal(oilStationDao.findCountByCityId(cityId));
 		return r;
 	}
-	
+	public OilStation queryOilStation(String name){
+		return oilStationDao.findByName(name);
+	}
 	public ResultList queryCityList(){
 		ResultList r = new ResultList();
 		List<City> list = oilStationDao.queryCityList();
@@ -58,7 +70,7 @@ public class OilStationServiceImpl implements OilStationService {
 		List<Object[]> obs = oilStationDao.queryDetailById(osId);
 		OilStationBean os = new OilStationBean();
 		//t.id,t.name,t.desc,t.address,t.credit,t.quality,t.service,num,t.coupon_flag, derate
-		//»ñÈ¡¼ÓÓÍÕ¾ÐÅÓÃÐÅÏ¢
+		//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 		List<Object[]> cs = oilStationDao.quertCreditForOsId(osId);
 		Float credit = 5.0f;
 		Float quality = 5.0f;

@@ -1,16 +1,21 @@
 package org.ship.shipservice.rest;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ship.shipservice.domain.BankInfo;
+import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.entity.Order;
 import org.ship.shipservice.entity.User;
 import org.ship.shipservice.service.account.AccountService;
+import org.ship.shipservice.service.bank.BankService;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
 import org.slf4j.Logger;
@@ -43,6 +48,8 @@ public class LoginRestController {
     private AccountService accountService;
 	@Autowired  
     private RedisTemplate<String, String> redisTemplate;  
+	@Autowired
+    private BankService bankService;
 	/**
 	 * 用户登陆
 	 * @param phone
@@ -56,7 +63,6 @@ public class LoginRestController {
 		}else{
 			User user = accountService.findUserByPhoneAndPassword(phone,password);
 			if(user!=null){
-				user.setPassword(null);
 				String token = CommonUtils.getMD5(deviceToken+System.currentTimeMillis()+"");
 				servletContext.setAttribute(user.getId()+"", token);
 				user.setToken(token);
@@ -69,10 +75,16 @@ public class LoginRestController {
 						}
 					}
 				}
+				ResultList rl = bankService.getUserBankList(user.getId());
+				List<BankInfo> dataList  = (ArrayList<BankInfo>) rl.getDataList();
+				String fund = accountService.getUserDao().getUserFund(user.getId());
+				user.setBalance(fund==null?new BigDecimal("0.00"):new BigDecimal(fund));
+				user.setCardCount(dataList.size());
 				user.setCouponCount(couponCount);
 				user.setOrderCount(orderCount);
 				user.setCouponList(null);
 				user.setOrderList(null);
+				user.setPassword(null);
 				logger.info("用户:"+user.getPhone()+"登陆");
 				return CommonUtils.printObjStr(user, 200, "用户登陆成功");
 			}else{

@@ -2,6 +2,8 @@ package org.ship.shipservice.rest;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.constants.HybConstants;
+import org.ship.shipservice.domain.BankInfo;
 import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.domain.UrlBean;
 import org.ship.shipservice.entity.ConsumeBean;
@@ -21,6 +24,7 @@ import org.ship.shipservice.entity.OilStation;
 import org.ship.shipservice.entity.Order;
 import org.ship.shipservice.entity.User;
 import org.ship.shipservice.entity.UserAdvice;
+import org.ship.shipservice.repository.UserDao;
 import org.ship.shipservice.service.account.AccountService;
 import org.ship.shipservice.service.account.AdviceService;
 import org.ship.shipservice.service.account.ConsumeInfoService;
@@ -90,7 +94,10 @@ public class UserInfoRestController {
 				}
 			}
 			ResultList rl = bankService.getUserBankList(user.getId());
-			user.setCardCount(rl.getTotal());
+			List<BankInfo> dataList  = (ArrayList<BankInfo>) rl.getDataList();
+			String fund = accountService.getUserDao().getUserFund(user.getId());
+			user.setBalance(fund==null?new BigDecimal("0.00"):new BigDecimal(fund));
+			user.setCardCount(dataList.size());
 			user.setCouponCount(couponCount);
 			user.setOrderCount(orderCount);
 			user.setPassword(null);
@@ -214,10 +221,15 @@ public class UserInfoRestController {
 				}
 				user.setCouponCount(couponCount);
 				user.setOrderCount(orderCount);
-				user.setPassword(null);
-				user.setCouponList(null);
-				user.setOrderList(null);
 				if (user.getId() != 0) {
+					ResultList rl = bankService.getUserBankList(user.getId());
+					List<BankInfo> dataList  = (ArrayList<BankInfo>) rl.getDataList();
+					String fund = accountService.getUserDao().getUserFund(user.getId());
+					user.setBalance(new BigDecimal(fund));
+					user.setCardCount(dataList.size());
+					user.setPassword(null);
+					user.setCouponList(null);
+					user.setOrderList(null);
 					return CommonUtils.printObjStr(user, 200, "更新成功");
 				} else {
 					return CommonUtils.printStr(
@@ -287,26 +299,33 @@ public class UserInfoRestController {
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400,
 					MyConstant.JSON_RETURN_MESSAGE_400);
 		} else {
-			Favorite favorite = new Favorite();
-			favorite.setUserId(userId);
-			favorite.setType(type);
-			if (type == 1) {
-				OilStation oil = new OilStation();
-				oil.setId(faId);
-				favorite.setOilStation(oil);
-			} else if (type == 2) {
-				Information info = new Information();
-				info.setId(faId);
-				favorite.setInfo(info);
-			}
-			favorite = favoriteService.save(favorite);
-			if (favorite.getId() != 0) {
-				return CommonUtils.printStr("200", "收藏成功");
-			} else {
+			BigInteger count = favoriteService.findFavorite(userId,
+					type, faId);
+			if(count.bitCount()==0){
+				Favorite favorite = new Favorite();
+				favorite.setUserId(userId);
+				favorite.setType(type);
+				if (type == 1) {
+					OilStation oil = new OilStation();
+					oil.setId(faId);
+					favorite.setOilStation(oil);
+				} else if (type == 2) {
+					Information info = new Information();
+					info.setId(faId);
+					favorite.setInfo(info);
+				}
+				favorite = favoriteService.save(favorite);
+				if (favorite.getId() != 0) {
+					return CommonUtils.printStr("200", "收藏成功");
+				} else {
+					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400,
+							"收藏失败");
+				}
+			}else{
 				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400,
-						"收藏失败");
-
+						"已收藏过了");
 			}
+			
 		}
 	}
 

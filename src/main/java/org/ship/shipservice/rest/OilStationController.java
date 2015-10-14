@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.ship.shipservice.domain.OilStationBean;
 import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.entity.Appraise;
+import org.ship.shipservice.entity.OilStation;
 import org.ship.shipservice.service.appraise.AppraiseService;
 import org.ship.shipservice.service.oil.OilStationService;
 import org.ship.shipservice.utils.CommonUtils;
@@ -51,18 +52,38 @@ public class OilStationController {
 		ResultList r = oilStationService.queryCityList();
 		return CommonUtils.printListStr(r.getDataList());
 	}
-	
+	/**
+	 * 获取加油站详情
+	 */
+	@RequestMapping(value="/query",method = RequestMethod.POST)
+	public String getOilStation(@RequestParam("oilname")String oilname){
+		OilStation os = oilStationService.queryOilStation(oilname);
+		if(os==null){
+			return CommonUtils.printStr("400", "加油站不存在");
+		}else{
+			return CommonUtils.printObjStr(os, 200, "请求成功");
+		}
+	}
 	/**
 	 * 获取加油站列表
 	 * @param phone
 	 * @return
 	 */
-	@RequestMapping(value="/station", method = RequestMethod.GET)
-	public String getStation(@RequestParam("cityid") Integer cityId) {
+	@RequestMapping(value="/station", method = RequestMethod.POST)
+	public String getStation(@RequestParam("cityid") String cityId,@RequestParam("oilname")String oilname) {
 		logger.debug("getStation start.cityId=" + cityId);
 		Integer[] pageInfo = CommonUtils.getPageInfo(request);
-		ResultList list = oilStationService.queryOilList(cityId, pageInfo[0], pageInfo[1]);
-		return CommonUtils.printListStr(list);
+		if(cityId!=null&&!cityId.equals("0")){
+			ResultList list = oilStationService.queryOilList(cityId, pageInfo[0], pageInfo[1]);
+			return CommonUtils.printListStr(list);
+		}else if(oilname!=null&&!oilname.equals("")){
+			ResultList list = oilStationService.queryOilList(oilname, pageInfo[0], pageInfo[1]);
+			return CommonUtils.printListStr(list);
+		}else{
+			ResultList list  = new ResultList();
+			return CommonUtils.printListStr(list);
+		}
+		
 	}
 	
 	/**

@@ -1,5 +1,6 @@
 package org.ship.shipservice.rest;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,26 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springside.modules.mapper.JsonMapper;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springside.modules.mapper.JsonMapper;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 import com.alibaba.fastjson.JSON;
 
@@ -132,6 +113,8 @@ public class InformationController {
 	@RequestMapping(value="saveInfo",method=RequestMethod.POST)
 	public String saveInformation(@RequestParam("info") String info){
 		Information infor = JSON.parseObject(info, Information.class);
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+		infor.setCreateTime(sf.format(new java.util.Date()));
 		infor=informationService.getInfoDao().save(infor);
 		if(infor.getId()!=null){
 			return CommonUtils.printObjStr(infor, 200, "资讯详情");
@@ -154,7 +137,7 @@ public class InformationController {
 		}else{
 			str+="info.infoType =1 ";
 		}
-		if(infor.getInfoAction()!=null&&infor.getInfoAction()!=0){
+		if(infor.getInfoAction()!=null&&infor.getInfoAction()!=0&&infor.getInfoAction()<3){
 			str+=" and info.infoAction ="+infor.getInfoAction();
 		}
 		if(infor.getInfoTypeOne()!=null&&infor.getInfoTypeOne()!=0){
