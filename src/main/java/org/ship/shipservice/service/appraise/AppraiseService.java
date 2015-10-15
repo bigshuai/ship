@@ -32,7 +32,7 @@ public class AppraiseService {
 		
 		appraise.setStatus(1);
 		appraise.setOsId(osId);
-		//¸üĞÂ¶©µ¥×´Ì¬
+		//æ›´æ–°è®¢å•çŠ¶æ€
 		orderDao.updateBankOrderStatus(9, orderNo);
 		appraiseDao.save(appraise);
 	}

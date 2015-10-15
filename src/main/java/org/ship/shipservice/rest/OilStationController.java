@@ -82,8 +82,7 @@ public class OilStationController {
 		}else{
 			ResultList list  = new ResultList();
 			return CommonUtils.printListStr(list);
-		}
-		
+		}	
 	}
 	
 	/**
