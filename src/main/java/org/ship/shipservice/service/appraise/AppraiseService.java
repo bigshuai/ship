@@ -1,6 +1,7 @@
 package org.ship.shipservice.service.appraise;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.ship.shipservice.domain.AppraiseBean;
@@ -29,9 +30,9 @@ public class AppraiseService {
 		List<Object[]> list = orderDao.findOrderByOrderId(appraise.getUserId(), appraise.getOrderId());
 		String orderNo = list.get(0)[0]+"";
 		Integer osId = Integer.valueOf(list.get(0)[1]+"");
-		
 		appraise.setStatus(1);
 		appraise.setOsId(osId);
+		appraise.setCreate_time(new Date());
 		//更新订单状态
 		orderDao.updateBankOrderStatus(9, orderNo);
 		appraiseDao.save(appraise);

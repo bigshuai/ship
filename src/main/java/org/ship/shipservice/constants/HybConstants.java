@@ -30,4 +30,6 @@ public interface HybConstants {
 	static final String MERCHANTMY = "abcdefg";
 	
 	static final String USERID = "userId";
+	static final String JIA_OIL_TIPS = "尊敬的航运宝用户，您好！您于20xx.xx.xx成功加油x升，金额为x元整。如有任何问题，请咨询客服。谢谢您的惠顾！";
+	static final String CHONGZHI_TIPS = "尊敬的航运宝用户，您好！您于20xx.xx.xx成功充值x元整。如有任何问题，请咨询客服。谢谢您的惠顾！";
 }
