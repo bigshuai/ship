@@ -1,6 +1,5 @@
 package org.ship.shipservice.domain;
 
-import java.util.Date;
 
 public class AppraiseBean {
 	private Long  osId;

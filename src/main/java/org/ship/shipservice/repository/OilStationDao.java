@@ -29,22 +29,24 @@ public interface OilStationDao extends CrudRepository<OilStation, Long> {
 	
 	@Modifying
 	@Query(value = "select o.id,o.name,o.credit,"
-			+ "o.coupon_flag,(SELECT count(1) FROM t_appraise a where a.status=1 and a.os_id=?1) num,"
-			+ "o.status,(SELECT info FROM t_derate d where (d.os_id=?1 or d.os_id=0) and d.`status`=1) derate,o.pic_url,o.latitude,o.longitude"
-			+ " from t_oil_station o where o.name like ?1 and o.`status`=1 order by id desc limit ?2,?3", nativeQuery = true)
+			+ "o.coupon_flag,"
+			+ "o.status,o.pic_url,o.latitude,o.longitude"
+			+ " from t_oil_station o where o.name like %?1% and o.`status`=1 order by id desc limit ?2,?3", nativeQuery = true)
 	List<Object[]> findByOilName(String oilname, Integer start, Integer end);
-	
+	@Query(value = "SELECT count(1) FROM t_appraise a where a.status=1 and a.os_id=?1", nativeQuery = true)
+	int findAppraise(Integer oid);
+	@Query(value = "SELECT info FROM t_derate d where (d.os_id=?1 or d.os_id=0) and d.`status`=1", nativeQuery = true)
+	String findInfo(Integer oid);
 	@Query(value = "select count(1) from t_oil_station o where o.city_id=?1 and o.`status`=1", nativeQuery = true)
 	int findCountByCityId(Integer cityId);
 	
-	@Query(value = "select count(1) from t_oil_station o where o.name like ?1 and o.`status`=1", nativeQuery = true)
+	@Query(value = "select count(1) from t_oil_station o where o.name like %?1% and o.`status`=1", nativeQuery = true)
 	int findCountByOilName(String oilname);
 
 	@Modifying
 	@Query("select o.name,o.desc,o.address,o.credit,o.quality,o.service, count(*) from OilStation o,Appraise a where o.status=1 and o.id=a.osId and a.status=1 group by o.name,o.desc,o.address,o.credit,o.quality,o.service")
 	List<OilStation> findOsAll();
-	@Query("select o from OilStation o where o.name like ?1")
-	OilStation findByName(String name);
+	
 	@Modifying
 	@Query(value = "select o.id,o.name,o.desc,o.address,o.phone,o.credit,o.quality,o.service,o.coupon_flag,"
 			+ "o.derate_flag,o.status,o.pic_url,o.latitude,o.longitude,"

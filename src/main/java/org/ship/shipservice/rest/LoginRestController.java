@@ -163,7 +163,7 @@ public class LoginRestController {
 						return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 					}
 				}else{
-					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "用户已存在");
 				}
 			}else{
 				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "验证码失效");

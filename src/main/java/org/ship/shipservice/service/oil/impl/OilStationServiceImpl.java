@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.mockito.internal.debugging.FindingsListener;
 import org.ship.shipservice.domain.OilBean;
 import org.ship.shipservice.domain.OilStationBean;
 import org.ship.shipservice.domain.ResultList;
@@ -23,18 +24,12 @@ public class OilStationServiceImpl implements OilStationService {
 	@Autowired
 	private OilStationDao oilStationDao;
 	
-	public ResultList queryOilList(String param, int page, int pageSize){
+	public ResultList queryOilList(Integer param, int page, int pageSize){
 		ResultList r = new ResultList();
 		int start = (page - 1)*pageSize;
 		List<Object[]> list = new ArrayList<Object[]>();
-		Pattern pattern = Pattern.compile("[0-9]*"); 
-		if(pattern.matcher(param).matches()){
-			list = oilStationDao.findByCityId(Integer.parseInt(param), start, pageSize);
-			r.setTotal(oilStationDao.findCountByCityId(Integer.parseInt(param)));
-		}else{
-			list = oilStationDao.findByOilName(param, start, pageSize);
-			r.setTotal(oilStationDao.findCountByOilName(param));
-		}
+			list = oilStationDao.findByCityId(param, start, pageSize);
+			r.setTotal(oilStationDao.findCountByCityId(param));
 		
 		List<OilStationBean> result = new ArrayList<OilStationBean>();
 		for(Object[] o : list){
@@ -55,8 +50,31 @@ public class OilStationServiceImpl implements OilStationService {
 		r.setPage(page);
 		return r;
 	}
-	public OilStation queryOilStation(String name){
-		return oilStationDao.findByName(name);
+	
+	public ResultList queryOilList(String param, int page, int pageSize){
+		ResultList r = new ResultList();
+		int start = (page - 1)*pageSize;
+		List<Object[]> list = new ArrayList<Object[]>();
+			list = oilStationDao.findByOilName(param, start, pageSize);
+			r.setTotal(oilStationDao.findCountByOilName(param));
+		List<OilStationBean> result = new ArrayList<OilStationBean>();
+		for(Object[] o : list){
+			OilStationBean os = new OilStationBean();
+			os.setId(Integer.valueOf(o[0]+""));
+			os.setName(o[1]+"");
+			os.setCredit(Float.valueOf(o[2]+""));
+			os.setCouponFlag(Integer.valueOf(o[3]+""));
+			os.setAppraiseNum(oilStationDao.findAppraise(Integer.valueOf(o[0]+"")));
+			os.setStatus(Integer.valueOf(o[4]+""));
+			os.setDerate(oilStationDao.findInfo(Integer.valueOf(o[0]+""))+"");
+			os.setPicUrl(o[5]+"");
+			os.setLatitude(o[6]+"");
+			os.setLongitude(o[7]+"");
+			result.add(os);
+		}
+		r.setDataList(result);
+		r.setPage(page);
+		return r;
 	}
 	public ResultList queryCityList(){
 		ResultList r = new ResultList();

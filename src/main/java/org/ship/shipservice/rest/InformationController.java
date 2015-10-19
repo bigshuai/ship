@@ -137,7 +137,7 @@ public class InformationController {
 		}else{
 			str+="info.infoType =1 ";
 		}
-		if(infor.getInfoAction()!=null&&infor.getInfoAction()!=0&&infor.getInfoAction()<3){
+		if(infor.getInfoAction()!=null&&infor.getInfoAction()!=0&&infor.getInfoAction()>1){
 			str+=" and info.infoAction ="+infor.getInfoAction();
 		}
 		if(infor.getInfoTypeOne()!=null&&infor.getInfoTypeOne()!=0){

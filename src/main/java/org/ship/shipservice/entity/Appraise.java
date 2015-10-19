@@ -17,7 +17,7 @@ public class Appraise extends IdEntity{
 	private Integer service;
 	private Integer status;
 	private String content;
-	private Date create_time;
+	private String create_time;
 	private Date update_time;
 	
 	@Column(name="user_id")
@@ -58,10 +58,11 @@ public class Appraise extends IdEntity{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	public Date getCreate_time() {
+	
+	public String getCreate_time() {
 		return create_time;
 	}
-	public void setCreate_time(Date create_time) {
+	public void setCreate_time(String create_time) {
 		this.create_time = create_time;
 	}
 	public Date getUpdate_time() {

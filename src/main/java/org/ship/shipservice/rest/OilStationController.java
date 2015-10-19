@@ -53,18 +53,6 @@ public class OilStationController {
 		return CommonUtils.printListStr(r.getDataList());
 	}
 	/**
-	 * 获取加油站详情
-	 */
-	@RequestMapping(value="/query",method = RequestMethod.POST)
-	public String getOilStation(@RequestParam("oilname")String oilname){
-		OilStation os = oilStationService.queryOilStation(oilname);
-		if(os==null){
-			return CommonUtils.printStr("400", "加油站不存在");
-		}else{
-			return CommonUtils.printObjStr(os, 200, "请求成功");
-		}
-	}
-	/**
 	 * 获取加油站列表
 	 * @param phone
 	 * @return
@@ -73,10 +61,10 @@ public class OilStationController {
 	public String getStation(@RequestParam("cityid") String cityId,@RequestParam("oilname")String oilname) {
 		logger.debug("getStation start.cityId=" + cityId);
 		Integer[] pageInfo = CommonUtils.getPageInfo(request);
-		if(cityId!=null&&!cityId.equals("0")){
-			ResultList list = oilStationService.queryOilList(cityId, pageInfo[0], pageInfo[1]);
+		if(cityId!=null&&!cityId.equals("0")&&oilname.equals("")){
+			ResultList list = oilStationService.queryOilList(Integer.parseInt(cityId), pageInfo[0], pageInfo[1]);
 			return CommonUtils.printListStr(list);
-		}else if(oilname!=null&&!oilname.equals("")){
+		}else if(oilname!=null&&!oilname.equals("")&&cityId.equals("0")){
 			ResultList list = oilStationService.queryOilList(oilname, pageInfo[0], pageInfo[1]);
 			return CommonUtils.printListStr(list);
 		}else{

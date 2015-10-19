@@ -1,6 +1,8 @@
 package org.ship.shipservice.service.appraise;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.ship.shipservice.domain.AppraiseBean;
@@ -32,8 +34,10 @@ public class AppraiseService {
 		
 		appraise.setStatus(1);
 		appraise.setOsId(osId);
-		//¸üÐÂ¶©µ¥×´Ì¬
+		//ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ï¿½×´Ì¬
 		orderDao.updateBankOrderStatus(9, orderNo);
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+		appraise.setCreate_time(sf.format(new java.util.Date()));
 		appraiseDao.save(appraise);
 	}
 

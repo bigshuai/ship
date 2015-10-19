@@ -12,8 +12,8 @@ public interface OilStationService {
 	 * @param cityId
 	 * @return
 	 */
+	public ResultList queryOilList(Integer cityId, int page, int pageSize);
 	public ResultList queryOilList(String cityId, int page, int pageSize);
-	
 	/**
 	 * 
 	 * @param osId
@@ -27,5 +27,4 @@ public interface OilStationService {
 	 */
 	public ResultList queryCityList();
 	
-	public OilStation queryOilStation(String name);
 }
