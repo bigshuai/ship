@@ -188,10 +188,12 @@ public class BankServiceImpl implements BankService {
 	public String unsign(Long userId, Long bankId) throws Exception {
 		SjPayClient client = SjPayClient.getInstance();
 		try {
-			String agreementNo = bankDao.getAgreementNo(bankId, userId);
+			Object[] bi = bankDao.getAgreementNo(bankId, userId);
 			int r = bankDao.deleteBank(bankId);
 			if(r > 0){
-				PayResponse<SignRes> res= client.unSign(HybConstants.MERCHANTNO, agreementNo, HybConstants.PRINCIPALID);
+				Object[] bankInfo = (Object[]) bi[0];
+				PayResponse<SignRes> res= client.unSign(HybConstants.MERCHANTNO, String.valueOf(bankInfo[1]), 
+						String.valueOf(bankInfo[0]));
 				logger.error("unsign =" + JSON.toJSONString(res));
 				if(res.getHttpCode()==200 && res.isSignResult()){
 					if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
@@ -199,12 +201,10 @@ public class BankServiceImpl implements BankService {
 						//保存银行卡信息到t_bank
 						return null;
 					}else{
-						return null;
-						//throw new RuntimeException(res.getReturnMsg());
+						throw new RuntimeException(res.getReturnMsg());
 					}
 				}else{
-					return null;
-					//throw new RuntimeException("解约失败，请稍后再试。");
+					throw new RuntimeException("解约失败，请稍后再试。");
 				}
 			}else{
 				return "解约失败，请稍后再试。";

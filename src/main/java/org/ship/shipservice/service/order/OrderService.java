@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -395,6 +396,21 @@ public class OrderService {
 				logger.error("cccccccccccccccccccccccccccccccc" + res.getObj().getPaymentStatus() + "-"+res.getReturnCode());
 				if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode()) 
 						&& HybConstants.PAY_SUCCESS.equalsIgnoreCase(res.getObj().getPaymentStatus())){
+					try {
+						String phone = userDao.getUserPhone(userId);
+						Calendar calendar = Calendar.getInstance();
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						String time = format.format(calendar.getTime());
+						List<Object[]> list = orderDao.findOrderByOrderNo(userId, orderNo);
+						String msg = "";
+						if(orderNo.startsWith("H")){
+							msg = "尊敬的航运宝用户，您好！您于"+time+"成功加油"+list.get(0)[0]+""+"升，金额为"+list.get(0)[1]+"元整。如有任何问题，请咨询客服。谢谢您的惠顾！";
+						}else{
+							msg = "尊敬的航运宝用户，您好！您于"+time+"成功充值"+list.get(0)[1]+"元整。如有任何问题，请咨询客服。谢谢您的惠顾！";
+						}
+						CommonUtils.sendTipMessage(phone, msg);
+					} catch (Exception e) {
+					}
 					result.put("orderNo", res.getObj().getMerchantOrderNo());
 					result.put("status", res.getObj().getPaymentStatus());
 					result.put("orderAmount", res.getObj().getOrderAmount());

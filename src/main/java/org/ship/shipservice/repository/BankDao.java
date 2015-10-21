@@ -46,8 +46,9 @@ public interface BankDao extends CrudRepository<Bank, Long> {
 	@Query(value="update t_bank set status=1,agreement_no=?1 where request_no=?2", nativeQuery=true)
 	public int updateSign(String agreementNo, String requestNo);
 	
-	@Query(value="select agreement_no from t_bank where id=?1 and user_id=?2", nativeQuery=true)
-	public String getAgreementNo(Long bankId, Long userId);
+	@Modifying
+	@Query(value="select out_member_id,agreement_no from t_bank where id=?1 and user_id=?2", nativeQuery=true)
+	public Object[] getAgreementNo(Long bankId, Long userId);
 	
 	@Modifying
 	@Query(value="update t_bank set status=?1 where id=?2", nativeQuery=true)

@@ -76,4 +76,8 @@ public interface OrderDao extends CrudRepository<Order, Long>{
 	@Modifying
 	@Query(value="select order_no,os_id from t_order o where o.user_id=?1 and o.id=?2", nativeQuery=true)
 	List<Object[]> findOrderByOrderId(Integer userId,Integer orderId);
+	
+	@Modifying
+	@Query(value="select num,money from t_order o where o.user_id=?1 and o.order_no=?2", nativeQuery=true)
+	List<Object[]> findOrderByOrderNo(Long userId,String orderNo);
 }
