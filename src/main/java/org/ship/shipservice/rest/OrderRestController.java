@@ -9,6 +9,7 @@ import org.ship.shipservice.constants.ErrorConstants;
 import org.ship.shipservice.constants.HybConstants;
 import org.ship.shipservice.domain.OrderBean;
 import org.ship.shipservice.domain.ResultList;
+import org.ship.shipservice.service.account.AccountService;
 import org.ship.shipservice.service.order.OrderService;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sj.pay.sign.MD5;
 import com.sj.pay.sign.RSA;
 
 
@@ -36,7 +36,8 @@ public class OrderRestController {
 	private HttpServletRequest request;
 	@Autowired
 	private HttpServletResponse response;
-	
+	@Autowired
+    private AccountService accountService;
 	@Autowired
     private OrderService orderService;
 	

@@ -24,7 +24,6 @@ import org.ship.shipservice.entity.OilStation;
 import org.ship.shipservice.entity.Order;
 import org.ship.shipservice.entity.User;
 import org.ship.shipservice.entity.UserAdvice;
-import org.ship.shipservice.repository.UserDao;
 import org.ship.shipservice.service.account.AccountService;
 import org.ship.shipservice.service.account.AdviceService;
 import org.ship.shipservice.service.account.ConsumeInfoService;
@@ -288,7 +287,24 @@ public class UserInfoRestController {
 			return CommonUtils.printObjStr(favorites.getContent(), 200, "我的收藏");
 		}
 	}
-
+/**
+ * 
+ * @param userId
+ * @param type
+ * @param faId
+ * @return
+ */
+	@RequestMapping(value = "deleteFavorite")
+	public String deleteFavorite(@RequestParam("id") long id){
+		Favorite favorite = favoriteService.getFavoriteDao().findOne(id);
+		if(favorite==null){
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400,
+					MyConstant.JSON_RETURN_MESSAGE_400);
+		}else{
+			favoriteService.getFavoriteDao().delete(favorite);
+			return CommonUtils.printStr("200", "删除成功");
+		}
+	}
 	/*
 	 * 保存我的收藏
 	 */

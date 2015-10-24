@@ -9,6 +9,7 @@ public class AppraiseBean {
 	private Integer credit;
 	private Integer quality;
 	private Integer service;
+	private Integer totalAppraise;
 	private String content;
 	private String createTime;
 	
@@ -66,4 +67,11 @@ public class AppraiseBean {
 	public void setUserPic(String userPic) {
 		this.userPic = userPic;
 	}
+	public Integer getTotalAppraise() {
+		return totalAppraise;
+	}
+	public void setTotalAppraise(Integer totalAppraise) {
+		this.totalAppraise = totalAppraise;
+	}
+	
 }

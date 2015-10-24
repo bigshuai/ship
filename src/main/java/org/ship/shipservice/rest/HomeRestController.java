@@ -8,6 +8,7 @@ import javax.management.loading.PrivateClassLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.ship.shipservice.entity.Advert;
 import org.ship.shipservice.entity.Version;
+import org.ship.shipservice.repository.AdvertDao;
 import org.ship.shipservice.service.home.HomeService;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
@@ -26,24 +27,14 @@ public class HomeRestController {
 			.getLogger(HomeRestController.class);
 	@Autowired
 	private HomeService homeService;
+	@Autowired
+	private AdvertDao advertDao;
 	/**
 	 * 首页图片
 	 */
 	@RequestMapping(value="getAdvert")
 	public String getAdvert(){
-		List<Advert> adList = new ArrayList<Advert>();
-		Advert ad1 = new Advert();
-		ad1.setPicUrl("http://pic.qiantucdn.com/images/slideshow/55dff1b9f0822.jpg");
-		ad1.setUrl("http://www.jd.com");
-		Advert ad2 = new Advert();
-		ad2.setPicUrl("http://pic.qiantucdn.com/images/slideshow/55dff1d0a50e0.png");
-		ad2.setUrl("http://www.58pic.com/ ");
-		Advert ad3 = new Advert();
-		ad3.setPicUrl("http://pic.qiantucdn.com/images/slideshow/55dff1a9ee90c.jpg");
-		ad3.setUrl("http://app.91jfyf.com");
-		adList.add(ad1);
-		adList.add(ad2);
-		adList.add(ad3);
+		List<Advert> adList = (ArrayList<Advert>) advertDao.findAll();
 		logger.info(CommonUtils.printListStr(adList));
 		return CommonUtils.printListStr(adList);
 	}

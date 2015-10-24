@@ -142,7 +142,124 @@ public class CommonUtils {
 		}
 		return inputline;
 	}
-	
+	public static String sMessage(String phone,String content) {
+		String inputline = "";
+		// 发送内容
+		String sign = "航运宝";
+		// 创建StringBuffer对象用来操作字符串
+		StringBuffer sb = new StringBuffer(
+				"http://web.1xinxi.cn/asmx/smsservice.aspx?");
+		// 向StringBuffer追加用户名
+		sb.append("name=chenminmin008@126.com");
+		// 向StringBuffer追加密码（登陆网页版，在管理中心--基本资料--接口密码，是28位的）
+		sb.append("&pwd=B57C526FC74B32DEA9A9FBE7ED7A");
+		// 向StringBuffer追加手机号码
+		sb.append("&mobile="+phone);
+		// 向StringBuffer追加消息内容转URL标准码
+		sb.append("&content=" + URLEncoder.encode("尊敬的航运宝用户,您使用账号余额支付的验证码为"+content+",1分钟有效,如不是本人操作,请咨询客服。谢谢!"));
+		// 追加发送时间，可为空，为空为及时发送
+		sb.append("&stime=");
+		// 加签名
+		sb.append("&sign=" + URLEncoder.encode(sign));
+		// type为固定值pt extno为扩展码，必须为数字 可为空
+		sb.append("&type=pt&extno=");
+		// 创建url对象
+		try {
+			URL url = new URL(sb.toString());
+			// 打开url连接
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			// 设置url请求方式 ‘get’ 或者 ‘post’
+			connection.setRequestMethod("POST");
+			// 发送
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					url.openStream()));
+			// 返回发送结果
+			inputline = in.readLine();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return inputline;
+	}
+	public static String sendMessage(String phone,String time,String content) {
+		String inputline = "";
+		// 发送内容
+		String sign = "航运宝";
+		// 创建StringBuffer对象用来操作字符串
+		StringBuffer sb = new StringBuffer(
+				"http://web.1xinxi.cn/asmx/smsservice.aspx?");
+		// 向StringBuffer追加用户名
+		sb.append("name=chenminmin008@126.com");
+		// 向StringBuffer追加密码（登陆网页版，在管理中心--基本资料--接口密码，是28位的）
+		sb.append("&pwd=B57C526FC74B32DEA9A9FBE7ED7A");
+		// 向StringBuffer追加手机号码
+		sb.append("&mobile="+phone);
+		// 向StringBuffer追加消息内容转URL标准码
+		sb.append("&content=" + URLEncoder.encode("尊敬的航运宝用户，您好！您于"+time+"成功充值"+content+"元整。如有任何问题，请咨询客服。谢谢您的惠顾！"));
+		// 追加发送时间，可为空，为空为及时发送
+		sb.append("&stime=");
+		// 加签名
+		sb.append("&sign=" + URLEncoder.encode(sign));
+		// type为固定值pt extno为扩展码，必须为数字 可为空
+		sb.append("&type=pt&extno=");
+		// 创建url对象
+		try {
+			URL url = new URL(sb.toString());
+			// 打开url连接
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			// 设置url请求方式 ‘get’ 或者 ‘post’
+			connection.setRequestMethod("POST");
+			// 发送
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					url.openStream()));
+			// 返回发送结果
+			inputline = in.readLine();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return inputline;
+	}
+	public static String sendMessage(String phone,String time,String content,String money) {
+		String inputline = "";
+		// 发送内容
+		String sign = "航运宝";
+		// 创建StringBuffer对象用来操作字符串
+		StringBuffer sb = new StringBuffer(
+				"http://web.1xinxi.cn/asmx/smsservice.aspx?");
+		// 向StringBuffer追加用户名
+		sb.append("name=chenminmin008@126.com");
+		// 向StringBuffer追加密码（登陆网页版，在管理中心--基本资料--接口密码，是28位的）
+		sb.append("&pwd=B57C526FC74B32DEA9A9FBE7ED7A");
+		// 向StringBuffer追加手机号码
+		sb.append("&mobile="+phone);
+		// 向StringBuffer追加消息内容转URL标准码
+		sb.append("&content=" + URLEncoder.encode("尊敬的航运宝用户，您好！您于"+time+"成功加油"+content+"升，金额为"
+				+money+"整。如有任何问题，请咨询客服。谢谢您的惠顾！"));
+		// 追加发送时间，可为空，为空为及时发送
+		sb.append("&stime=");
+		// 加签名
+		sb.append("&sign=" + URLEncoder.encode(sign));
+		// type为固定值pt extno为扩展码，必须为数字 可为空
+		sb.append("&type=pt&extno=");
+		// 创建url对象
+		try {
+			URL url = new URL(sb.toString());
+			// 打开url连接
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+			// 设置url请求方式 ‘get’ 或者 ‘post’
+			connection.setRequestMethod("POST");
+			// 发送
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					url.openStream()));
+			// 返回发送结果
+			inputline = in.readLine();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return inputline;
+	}
 	/**
 	 * HTTP接口 发送短信
 	 * http://sms.1xinxi.cn/asmx/smsservice.aspx?name=登录名&pwd=接口密码&mobile

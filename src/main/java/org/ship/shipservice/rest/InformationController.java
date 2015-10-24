@@ -113,7 +113,7 @@ public class InformationController {
 	@RequestMapping(value="saveInfo",method=RequestMethod.POST)
 	public String saveInformation(@RequestParam("info") String info){
 		Information infor = JSON.parseObject(info, Information.class);
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		infor.setCreateTime(sf.format(new java.util.Date()));
 		infor=informationService.getInfoDao().save(infor);
 		if(infor.getId()!=null){
@@ -162,4 +162,14 @@ public class InformationController {
 		List<Information> infoList=inforDaoImpl.findInfoByParam(str,pageno,pagesize);
 		return CommonUtils.printListStr(infoList);
 	}
+	@RequestMapping(value="infoDetail")
+	public String infoDetail(@RequestParam("id") long id){
+		if(id!=0){
+			Information info = informationService.getInfoDao().findOne(id);
+			return CommonUtils.printObjStr(info, 200, "资讯详情");
+		}else{
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+		}
+	}
+	
 }

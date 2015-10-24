@@ -16,6 +16,7 @@ public class Appraise extends IdEntity{
 	private Integer quality;
 	private Integer service;
 	private Integer status;
+	private Integer totalAppraise;
 	private String content;
 	private String create_time;
 	private Date update_time;
@@ -83,4 +84,12 @@ public class Appraise extends IdEntity{
 	public void setOrderId(Integer orderId) {
 		this.orderId = orderId;
 	}
+	@Column(name="total_appraise")
+	public Integer getTotalAppraise() {
+		return totalAppraise;
+	}
+	public void setTotalAppraise(Integer totalAppraise) {
+		this.totalAppraise = totalAppraise;
+	}
+	
 }

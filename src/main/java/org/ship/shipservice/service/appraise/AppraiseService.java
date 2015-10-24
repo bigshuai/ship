@@ -33,7 +33,7 @@ public class AppraiseService {
 		appraise.setOsId(osId);
 		//更新订单状态
 		orderDao.updateBankOrderStatus(9, orderNo);
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		appraise.setCreate_time(sf.format(new java.util.Date()));
 		appraiseDao.save(appraise);
 	}
@@ -65,6 +65,7 @@ public class AppraiseService {
 			bean.setContent(o[6] + "");
 			bean.setCreateTime(o[7] + "");
 			bean.setUserPic(o[8] + "");
+			bean.setTotalAppraise(Integer.valueOf(o[9] + ""));
 			result.add(bean);
 		}
 		rl.setDataList(result);

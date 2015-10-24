@@ -109,12 +109,12 @@ public class OilStationServiceImpl implements OilStationService {
 		os.setQuality(quality);
 		os.setService(service);
 		os.setCouponFlag(Integer.valueOf(o[8]+""));
-		os.setAppraiseNum(Integer.valueOf(o[9]+""));
+		os.setAppraiseNum(Integer.valueOf(o[14]+""));
 		os.setStatus(Integer.valueOf(o[10]+""));
-		os.setDerate(o[11]+"");
-		os.setPicUrl(o[12]+"");
-		os.setLatitude(o[13]+"");
-		os.setLongitude(o[14]+"");
+		os.setDerate(o[15]+"");
+		os.setPicUrl(o[11]+"");
+		os.setLatitude(o[12]+"");
+		os.setLongitude(o[13]+"");
 		List<Oil> oils = oilStationDao.queryOils(os.getId());
 		for(Oil oil : oils){
 			OilBean ob = new OilBean();
