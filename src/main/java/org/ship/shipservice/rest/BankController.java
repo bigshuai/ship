@@ -181,7 +181,8 @@ public class BankController implements HybConstants{
 	
 	
 	private String checkPrecheckForSign(BankBean bank){
-		return null;
+		BankInfo bInfo =bankService.getBankInfo(bank.getBankCardNo());
+		return bInfo==null?null:bInfo.getBankCardTypeName();
 	}
 	
 	private String checkSign(String userId, String requestNo, String code){

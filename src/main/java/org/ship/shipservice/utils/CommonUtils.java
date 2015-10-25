@@ -142,7 +142,7 @@ public class CommonUtils {
 		}
 		return inputline;
 	}
-	public static String sMessage(String phone,String content) {
+	public static String sMessage(String phone,String order,String money,String content) {
 		String inputline = "";
 		// 发送内容
 		String sign = "航运宝";
@@ -156,7 +156,7 @@ public class CommonUtils {
 		// 向StringBuffer追加手机号码
 		sb.append("&mobile="+phone);
 		// 向StringBuffer追加消息内容转URL标准码
-		sb.append("&content=" + URLEncoder.encode("尊敬的航运宝用户,您使用账号余额支付的验证码为"+content+",1分钟有效,如不是本人操作,请咨询客服。谢谢!"));
+		sb.append("&content=" + URLEncoder.encode("尊敬的航运宝用户,您末位"+order+"的订单,支付金额"+money+"元,，验证码"+content+",请即时输入，切勿泄露，任何索取均为欺诈。  [航运宝]"));
 		// 追加发送时间，可为空，为空为及时发送
 		sb.append("&stime=");
 		// 加签名

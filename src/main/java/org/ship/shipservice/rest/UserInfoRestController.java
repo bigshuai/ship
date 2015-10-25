@@ -350,10 +350,10 @@ public class UserInfoRestController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value="aboutUs")
-	public String aboutUs(){
-		return CommonUtils.printObjStr(homeService.findAboutUs(), 200, "关于航运宝");
-	}
+//	@RequestMapping(value="aboutUs")
+//	public String aboutUs(){
+//		return CommonUtils.printObjStr(homeService.findAboutUs(), 200, "关于航运宝");
+//	}
 	private String saveFile(String newFileName, MultipartFile filedata,
 			HttpServletRequest httpRequest) {
 		// 根据配置文件获取服务器图片存放路径

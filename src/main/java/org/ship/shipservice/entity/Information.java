@@ -15,7 +15,7 @@ public class Information extends IdEntity {
 	private Integer infoTypeOne;
 	private Integer infoTypeTwo;
 	private Integer infoAction;
-	private BigDecimal price;
+	private String price;
 	private String address;
 	private String phone;
 	private String linkMan;
@@ -77,18 +77,17 @@ public class Information extends IdEntity {
 		this.infoAction = infoAction;
 	}
 
-	@Column(name = "price")
-	public BigDecimal getPrice() {
-		return price;
-	}
-
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-
 	@Column(name = "address")
 	public String getAddress() {
 		return address;
+	}
+	@Column(name = "price")
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
 	}
 
 	public void setAddress(String address) {

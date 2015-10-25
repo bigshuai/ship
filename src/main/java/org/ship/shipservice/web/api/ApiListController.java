@@ -20,4 +20,16 @@ public class ApiListController {
 		model.addAttribute("type", type);
 		return "api/list";
 	}
+	@RequestMapping(value="aboutUs")
+	public String aboutUs() {
+		return "api/aboutUs";
+	}
+	@RequestMapping(value = "servProtocol")
+	public String servProtocol() {
+		return "api/servProtocol";
+	}
+	@RequestMapping(value = "payProtocol")
+	public String payProtocol() {
+		return "api/payProtocol";
+	}
 }

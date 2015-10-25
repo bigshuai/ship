@@ -1,5 +1,6 @@
 package org.ship.shipservice.rest;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +63,9 @@ public class InformationController {
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
 			Information info = informationService.getInfoDao().findOne(infoId);
+			int count=0;
 			if(info!=null){
-				int count = info.getReviewCount();
+				count = info.getReviewCount();
 				info.setReviewCount(count+1);
 				informationService.getInfoDao().save(info);
 				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_200, "请求成功");
@@ -113,7 +115,7 @@ public class InformationController {
 	@RequestMapping(value="saveInfo",method=RequestMethod.POST)
 	public String saveInformation(@RequestParam("info") String info){
 		Information infor = JSON.parseObject(info, Information.class);
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		infor.setCreateTime(sf.format(new java.util.Date()));
 		infor=informationService.getInfoDao().save(infor);
 		if(infor.getId()!=null){
@@ -149,15 +151,14 @@ public class InformationController {
 		if(infor.getCity()!=null){
 			str+=" and info.city like \'%"+infor.getCity()+"%\'";
 		}
-		str +=" order by info.createTime desc";
 		if(infor.getPrice()!=null){
-			if(infor.getPrice().equals(1)){
-				str+=" , info.price asc";
-			}else if(infor.getPrice().equals(2)){
-				str+=" , info.price desc";
+			if(infor.getPrice().equals("1")){
+				str+=" order by  info.price asc";
+			}else if(infor.getPrice().equals("2")){
+				str+=" order by  info.price desc";
 			}
 		}else{
-			str+=" , info.reviewCount desc";
+			str+=" order by info.createTime desc , info.reviewCount desc";
 		}
 		List<Information> infoList=inforDaoImpl.findInfoByParam(str,pageno,pagesize);
 		return CommonUtils.printListStr(infoList);

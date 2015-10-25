@@ -458,7 +458,7 @@ public class OrderService {
 		String phone = userDao.getUserPhone(userId);
 		String code = CommonUtils.createRandom(true, 6);
 		redisTemplate.opsForValue().set(phone, code,30l,TimeUnit.MINUTES);//验证码30分钟失效
-		String message=CommonUtils.sMessage(phone, code);
+		String message=CommonUtils.sMessage(phone,orderNo.subSequence(orderNo.length()-4, orderNo.length()+1).toString(), amount,code);
 		if(!message.split(",")[0].equals("0")){
 			result.put("msg", "短信验证码发送失败，请稍后再试。");
 		}
