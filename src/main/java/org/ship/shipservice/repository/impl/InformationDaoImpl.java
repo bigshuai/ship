@@ -20,4 +20,12 @@ public class InformationDaoImpl  {
 		 List<Information> infoList =(List<Information>) q.getResultList();
 		 return infoList;
 	 }
+	 public List<Information> findInfoByUserId(String userId,Integer page,Integer pageSize){
+		 String sql = "select info from Information info where info.userId=" +userId;
+		 Query q = em.createQuery(sql);
+		 q.setFirstResult((page-1)*pageSize);
+		 q.setMaxResults(pageSize);
+		 List<Information> infoList =(List<Information>) q.getResultList();
+		 return infoList;
+	 }
 }

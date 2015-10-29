@@ -172,5 +172,23 @@ public class InformationController {
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}
 	}
+	@RequestMapping(value="myInfo")
+	public String myInfo(@RequestParam("userId") String userId,@RequestParam("pageNo") Integer pageno,@RequestParam("pageSize") Integer pagesize){
+		if(userId!=null){
+			List<Information> infoList = inforDaoImpl.findInfoByUserId(userId,pageno,pagesize);
+			return CommonUtils.printListStr(infoList);
+		}else{
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+		}
+	}
+	@RequestMapping(value="deleteInfo")
+	public String deleteInfo(@RequestParam("id") long id){
+		if(id!=0){
+			informationService.getInfoDao().delete(id);
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_200, "删除成功");
+		}else{
+			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+		}
+	}
 	
 }

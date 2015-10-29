@@ -70,7 +70,10 @@ public class BankServiceImpl implements BankService {
 		info.setBankCardTypeName("储蓄卡");
 		return info;
 	}
-	
+	@Override
+	public int getBankInfo(long userId,String bankCardNo) {
+		return bankDao.queryUserBank(userId, bankCardNo);
+	}
 	public ResultList getUserBankList(Long userId){
 		ResultList rl = new ResultList();
 		List<BankInfo> result = new ArrayList<BankInfo>();
@@ -213,4 +216,14 @@ public class BankServiceImpl implements BankService {
 			return "解约失败，请稍后再试。";
 		}
 	}
+
+	public BankDao getBankDao() {
+		return bankDao;
+	}
+
+	public void setBankDao(BankDao bankDao) {
+		this.bankDao = bankDao;
+	}
+	
+	
 }

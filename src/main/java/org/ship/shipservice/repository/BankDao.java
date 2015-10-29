@@ -2,6 +2,7 @@ package org.ship.shipservice.repository;
 
 import java.util.List;
 
+import org.ship.shipservice.domain.BankBean;
 import org.ship.shipservice.entity.Bank;
 import org.ship.shipservice.entity.Coupon;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,6 +21,12 @@ public interface BankDao extends CrudRepository<Bank, Long> {
 			+ "from t_bank t "
 			+ "where t.user_id=?1 and t.`status`=1 ORDER BY t.create_time desc", nativeQuery=true)
 	public List<Object[]> queryUserBankList(Long userId);
+	
+	@Modifying
+	@Query(value="select t.id  "
+			+ "from t_bank t "
+			+ "where t.user_id=?1 and t.`status`=1 and t.id_no =?2 ", nativeQuery=true)
+	public int queryUserBank(Long userId,String bankCarNo);
 	
 	@Modifying
 	@Query(value="select t.bank_code, t.bank_cardtype, t.bank_cardno,t.real_name,t.id_no, t.id_type"

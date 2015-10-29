@@ -95,9 +95,9 @@ public class OilStationServiceImpl implements OilStationService {
 		Float service = 5.0f;
 		if(cs != null && cs.size() > 0){
 			Object[] c = cs.get(0);
-			credit = c[0]==null?5.0f:Float.valueOf(c[0]+"");
-			service = c[1]==null?5.0f:Float.valueOf(c[1]+"");
-			quality = c[2]==null?5.0f:Float.valueOf(c[2]+"");
+			credit = c[0]==null?5.0f:Math.round(Float.valueOf(c[0]+"")*100)/100;
+			service = c[1]==null?5.0f:Math.round(Float.valueOf(c[1]+"")*100)/100;
+			quality = c[2]==null?5.0f:Math.round(Float.valueOf(c[2]+"")*100)/100;
 		}
 		Object[] o = obs.get(0);
 		os.setId(Integer.valueOf(o[0]+""));

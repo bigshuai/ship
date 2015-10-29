@@ -8,7 +8,7 @@ import org.ship.shipservice.domain.ResultList;
 
 public interface BankService {
 	public BankInfo getBankInfo(String bankCardNo);
-	
+	public int getBankInfo(long userId,String bankCardNo);
 	public ResultList getUserBankList(Long userId); 
 	
 	public String precheckForSign(BankBean bank) throws Exception;

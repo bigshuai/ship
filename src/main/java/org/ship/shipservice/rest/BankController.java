@@ -102,8 +102,6 @@ public class BankController implements HybConstants{
 		bank.setIdType(jo.getString("idType"));
 		bank.setMobileNo(jo.getString("mobileNo"));
 		
-		String r = this.checkPrecheckForSign(bank);
-		if(StringUtils.isEmpty(r)){
 			try {
 				String res = bankService.precheckForSign(bank);
 				if(StringUtils.isEmpty(res)){
@@ -116,9 +114,6 @@ public class BankController implements HybConstants{
 			} catch (Exception e) {
 				return CommonUtils.printStr(ErrorConstants.PRECHECK_FOR_SIGN_ERROR, e.getMessage());
 			}
-		}else{
-			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "参数异常");
-		}
 	}
 	
 	/**
@@ -180,9 +175,8 @@ public class BankController implements HybConstants{
 	}
 	
 	
-	private String checkPrecheckForSign(BankBean bank){
-		BankInfo bInfo =bankService.getBankInfo(bank.getBankCardNo());
-		return bInfo==null?null:bInfo.getBankCardTypeName();
+	private int checkPrecheckForSign(BankBean bank){
+		return bankService.getBankInfo(bank.getUserId(), bank.getIdNo()+"");
 	}
 	
 	private String checkSign(String userId, String requestNo, String code){

@@ -18,6 +18,7 @@ import org.ship.shipservice.domain.OrderBean;
 import org.ship.shipservice.domain.ResultList;
 import org.ship.shipservice.entity.Oil;
 import org.ship.shipservice.entity.Order;
+import org.ship.shipservice.entity.User;
 import org.ship.shipservice.repository.BankDao;
 import org.ship.shipservice.repository.CouponDao;
 import org.ship.shipservice.repository.OilStationDao;
@@ -457,8 +458,8 @@ public class OrderService {
 		//发送短信
 		String phone = userDao.getUserPhone(userId);
 		String code = CommonUtils.createRandom(true, 6);
-		redisTemplate.opsForValue().set(phone, code,30l,TimeUnit.MINUTES);//验证码30分钟失效
-		String message=CommonUtils.sMessage(phone,orderNo.subSequence(orderNo.length()-4, orderNo.length()+1).toString(), amount,code);
+		redisTemplate.opsForValue().set(userId+"", code,10l,TimeUnit.MINUTES);//验证码30分钟失效
+		String message=CommonUtils.sMessage(phone,orderNo.subSequence(orderNo.length()-4, orderNo.length()).toString(), amount,code);
 		if(!message.split(",")[0].equals("0")){
 			result.put("msg", "短信验证码发送失败，请稍后再试。");
 		}
@@ -497,6 +498,13 @@ public class OrderService {
 		if(rr > 0){
 			int r = userDao.deductCharge(userId, amount);
 			if(r > 0){
+				User user = userDao.findOne(userId);
+				Calendar calendar = Calendar.getInstance();
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String time = format.format(calendar.getTime());
+				String msg = "";
+				msg = "尊敬的航运宝用户，您好！您于"+time+"成功加油"+"升，金额为"+amount+"元整。如有任何问题，请咨询客服。谢谢您的惠顾！";
+				CommonUtils.sendTipMessage(user.getPhone(), msg);
 				int rrr = orderDao.insertConsumeLog(userId, orderNo, amount, amount, 1, code, 1);
 				if(rrr < 0){
 					throw new RuntimeException("支付失败，请稍后重试。");

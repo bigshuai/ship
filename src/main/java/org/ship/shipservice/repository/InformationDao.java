@@ -7,4 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface InformationDao extends CrudRepository<Information, Long> {
 	List<Information> findInfoByParam(String param,Integer page,Integer pageSize);
+	List<Information> findInfoByUserId(String userId,Integer page,Integer pageSize);
 }

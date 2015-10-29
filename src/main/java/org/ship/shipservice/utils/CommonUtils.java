@@ -117,7 +117,7 @@ public class CommonUtils {
 		// 向StringBuffer追加手机号码
 		sb.append("&mobile="+phone);
 		// 向StringBuffer追加消息内容转URL标准码
-		sb.append("&content=" + URLEncoder.encode("欢迎注册为航运宝会员，您的验证码是"+content+",1分钟有效,如不是本人操作,请忽略。谢谢!"));
+		sb.append("&content=" + URLEncoder.encode("欢迎注册为航运宝会员，您的验证码是"+content+",10分钟有效,如不是本人操作,请忽略。谢谢!"));
 		// 追加发送时间，可为空，为空为及时发送
 		sb.append("&stime=");
 		// 加签名
@@ -156,7 +156,7 @@ public class CommonUtils {
 		// 向StringBuffer追加手机号码
 		sb.append("&mobile="+phone);
 		// 向StringBuffer追加消息内容转URL标准码
-		sb.append("&content=" + URLEncoder.encode("尊敬的航运宝用户,您末位"+order+"的订单,支付金额"+money+"元,，验证码"+content+",请即时输入，切勿泄露，任何索取均为欺诈。  [航运宝]"));
+		sb.append("&content=" + URLEncoder.encode("尊敬的航运宝用户,您末位"+order+"的订单,支付金额"+money+"元,，验证码"+content+",请即时输入，切勿泄露，任何索取均为欺诈。"));
 		// 追加发送时间，可为空，为空为及时发送
 		sb.append("&stime=");
 		// 加签名
@@ -458,7 +458,7 @@ public class CommonUtils {
 	public static synchronized String getMerchantOrderNo(String userId){
 		//格式  H20150908userIdSystem.currentTimeMillis()5位随机数
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-		return "H"+format.format(new Date())+ userId +System.currentTimeMillis() + String.format("%05d", new Random().nextInt(10000));
+		return "H"+format.format(new Date())+ userId + String.format("%05d", new Random().nextInt(10000));
 	}
 	
 	/**

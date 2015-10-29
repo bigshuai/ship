@@ -81,6 +81,7 @@ public class Information extends IdEntity {
 	public String getAddress() {
 		return address;
 	}
+
 	@Column(name = "price")
 	public String getPrice() {
 		return price;
@@ -139,6 +140,7 @@ public class Information extends IdEntity {
 		this.isDelete = isDelete;
 	}
 
+	@Column(name = "user_id")
 	public Long getUserId() {
 		return userId;
 	}

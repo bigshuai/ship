@@ -103,7 +103,7 @@ public class LoginRestController {
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
 			String code = CommonUtils.createRandom(true, 6);
-			redisTemplate.opsForValue().set(phone, code,30l,TimeUnit.MINUTES);//验证码30分钟失效
+			redisTemplate.opsForValue().set(phone, code,10l,TimeUnit.MINUTES);//验证码10分钟失效
 			String message=CommonUtils.sendMessage(phone, code);
 			if(message.split(",")[0].equals("0")){
 				return CommonUtils.printObjStr(code, 200, "验证码");
@@ -123,12 +123,16 @@ public class LoginRestController {
 		if(StringUtils.isEmpty(phone)||StringUtils.isEmpty(password)){
 			return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
 		}else{
-			if(code.equals(redisTemplate.boundValueOps(phone).get())){
-				int count = accountService.updateUser(phone,password);
-				if(count!=0){
-					return CommonUtils.printStr( "200", "密码更新成功");
+			if(redisTemplate.boundValueOps(phone).get()!=null){
+				if(code.equals(redisTemplate.boundValueOps(phone).get())){
+					int count = accountService.updateUser(phone,password);
+					if(count!=0){
+						return CommonUtils.printStr( "200", "密码更新成功");
+					}else{
+						return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+					}
 				}else{
-					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "验证码不正确");
 				}
 			}else{
 				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "验证码已失效");
@@ -151,20 +155,25 @@ public class LoginRestController {
 			user.setBalance(new BigDecimal(0.00d));
 			String code = redisTemplate.boundValueOps(user.getPhone()).get();
 			if(code!=null&&!code.equals("")){
-				if(accountService.findByPhone(user.getPhone())==null&&code.equals(user.getCode())){
-					user = accountService.registerUser(user);
-					if(user.getId()!=0){
-						user.setPassword("");
-						String token = CommonUtils.getMD5(user.getId()+System.currentTimeMillis()+"");
-						servletContext.setAttribute(user.getId()+"", token);
-						user.setToken(token);
-						return CommonUtils.printStr("200", "用户注册成功");
+				if(code.equals(user.getCode())){
+					if(accountService.findByPhone(user.getPhone())==null){
+						user = accountService.registerUser(user);
+						if(user.getId()!=0){
+							user.setPassword("");
+							String token = CommonUtils.getMD5(user.getId()+System.currentTimeMillis()+"");
+							servletContext.setAttribute(user.getId()+"", token);
+							user.setToken(token);
+							return CommonUtils.printStr("200", "用户注册成功");
+						}else{
+							return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "用户注册失败");
+						}
 					}else{
-						return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, MyConstant.JSON_RETURN_MESSAGE_400);
+						return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "用户已存在");
 					}
 				}else{
-					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "用户已存在");
+					return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "验证码错误");
 				}
+				
 			}else{
 				return CommonUtils.printStr(MyConstant.JSON_RETURN_CODE_400, "验证码失效");
 			}
