@@ -88,22 +88,22 @@ public class OrderService {
 		//订单状态  0-新建 1-已付款  2-配送中 3-已收货 4-已完成 11-预订未付款 12预订已付款    99-删除
 		ResultList r = new ResultList();
 		String statusStr = "9";
-		Integer[] ss = new Integer[11];
+		Integer[] ss = new Integer[12];
 		switch (status) {
 			case 1:
 				ss[0] = 0;ss[1] = 1;ss[2] = 2;ss[3] = 3;ss[4] = 4;ss[5] = 6;
-				ss[6] = 6;ss[7] = 7;ss[8] = 8;ss[9] = 11;ss[10] = 12;
+				ss[6] = 6;ss[7] = 7;ss[8] = 8;ss[9] = 11;ss[10] = 12;ss[11] = 13;
 				break;
 			case 9:
 				ss[0] = 9;ss[1] = 100;ss[2] = 200;ss[3] = 300;ss[4] = 400;ss[5] = 600;
-				ss[6] = 600;ss[7] = 700;ss[8] = 800;ss[9] = 110;ss[10] = 120;
+				ss[6] = 600;ss[7] = 700;ss[8] = 800;ss[9] = 110;ss[10] = 120;ss[11] = 130;
 				break;
 			default:
 				return r;
 		}
 		int start = (page - 1)*pageSize;
 		List<Object[]> list = orderDao.queryOrderForUserId(userId, ss[0],ss[1],ss[2],ss[3],ss[4],ss[5],
-		                         ss[6],ss[7] ,ss[8] ,ss[9],ss[10], start, pageSize);
+		                         ss[6],ss[7] ,ss[8] ,ss[9],ss[10],ss[11], start, pageSize);
 		List<OrderBean> result = new ArrayList<OrderBean>();
 		//o.id,o.os_id,s.name,o.product_id,o.product_name,o.type,o.money,o.price,o.num,o.status,o.order_no,
 		//o.sft_order_no,o.book_time,o.create_time
@@ -121,15 +121,16 @@ public class OrderService {
 			ob.setStatus(Integer.valueOf(o[9]+""));
 			ob.setOrderNo(o[10]+"");
 			ob.setSftOrderNo(o[11]+"");
-			ob.setBookTime(o[12]+"");
-			ob.setCreateTime(o[13]+"");
+			ob.setBookTime((o[12]+""));
+			ob.setCreateTime((o[13]+""));
 			ob.setOsPicUrl(o[14]+"");
+			ob.setConsumeCode(o[15]+"");
 			result.add(ob);
 		}
 		r.setDataList(result);
 		r.setPage(page);
 		r.setTotal(orderDao.queryOrderForUserIdTotal(userId, ss[0],ss[1],ss[2],ss[3],ss[4],ss[5],
-                ss[6],ss[7] ,ss[8] ,ss[9],ss[10]));
+                ss[6],ss[7] ,ss[8] ,ss[9],ss[10],ss[11]));
 		return r;
 	}
 	
@@ -154,9 +155,7 @@ public class OrderService {
 			StringBuffer getCouponStr = new StringBuffer();
 			BigDecimal amount = this.calculateAmount(order.getUserId(), oil, Long.valueOf(order.getProductId()), 
 					order.getNum(), order.getOsId(), order.getCouponId(), getCouponStr);
-			if(HybConstants.TEST){
-				order.setAmount("0.01");
-			}else{
+			if(amount.toPlainString()!=null){
 				order.setAmount(amount.toPlainString());
 			}
 			pOrder.setMerchantNo(HybConstants.MERCHANTNO);
@@ -181,7 +180,14 @@ public class OrderService {
 					Long getCouponId = StringUtils.isEmpty(getCouponStr.toString()) ? 0L : Long.valueOf(getCouponStr.toString());
 					if(StringUtils.isEmpty(order.getOrderNo())){
 						r = orderDao.addOrder(order.getUserId(), order.getOsId(), oil.getId(), oil.getName(), 1, pOrder.getAmount(),
-								order.getPrice(), order.getNum(), 0, orderNo, sftOrderNo, sessionToken, null, null, getCouponId);
+								order.getPrice(), order.getNum(), 0, orderNo, sftOrderNo, sessionToken, null, null, order.getCouponId());
+						Long getCouponid = orderDao.queryCouponIdForLog(orderNo);
+						if(getCouponid > 0){
+							int rrr = couponDao.updateCouponStatus(1,0, getCouponid);
+							if(rrr <= 0){
+								throw new RuntimeException("异常");
+							}
+						}
 					}else{
 						//更新订单
 						r =orderDao.updateOrder(pOrder.getAmount(), order.getPrice(), order.getNum(), 0, sftOrderNo, sessionToken, orderNo, getCouponId);
@@ -246,9 +252,7 @@ public class OrderService {
 		pOrder.setProductName("充值");
 		pOrder.setProductDesc("充值");
 		pOrder.setCurrency("CNY");
-		if(HybConstants.TEST){
-			pOrder.setAmount("0.01");
-		}else{
+		if(order.getAmount()!=null){
 			pOrder.setAmount(order.getAmount());
 		}
 		pOrder.setNotifyUrl(HybConstants.NOTIFYURL);
@@ -309,6 +313,7 @@ public class OrderService {
 //	}
 	
 	public String precheckForPayment(Long userId, Long bankId, String orderNo){
+		PayResponse<String> res =null;
 		try {
 			logger.error("ddddd =" + orderNo + "-" + bankId + "-" + userId);
 			//根据bankId获取 agreementNo（签约协议号）
@@ -330,7 +335,7 @@ public class OrderService {
 			info.setUserIp(CommonUtils.getIp());
 			info.setRiskExtItems(this.getExt(info.getOutMemberId()));
 			logger.error("vvvvv =" + JSON.toJSONString(info));
-			PayResponse<String> res= client.precheckForPayment(info);
+			 res= client.precheckForPayment(info);
 			logger.error("ccccc =" + JSON.toJSONString(res));
 			if(res.getHttpCode()==200 && res.isSignResult()){
 				if(HybConstants.SUCCESS.equalsIgnoreCase(res.getReturnCode())){
@@ -339,12 +344,12 @@ public class OrderService {
 					return res.getReturnMsg();
 				}
 			}else{
-				 return  "结算失败，请稍后再试。";
+				res.setReturnMsg("您的余额不足");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return res.getReturnMsg();
 	}
 	
 	public String precheckForPayment(String sessionToken, String orderNo,String agreementNo){
@@ -418,10 +423,10 @@ public class OrderService {
 					result.put("payableAmount", res.getObj().getPayableAmount());
 					return result;
 				}else{
-					throw new RuntimeException(res.getReturnMsg());
+					result.put("msg", "结算失败，请稍后再试");
 				}
 			}else{
-				throw new RuntimeException("结算失败，请稍后再试。");
+				result.put("msg", "结算失败，请稍后再试。");
 			}
 		} catch (IOException e) {
 			logger.error("接口调用失败 orderNo=" + orderNo,e);
@@ -459,7 +464,9 @@ public class OrderService {
 		String phone = userDao.getUserPhone(userId);
 		String code = CommonUtils.createRandom(true, 6);
 		redisTemplate.opsForValue().set(userId+"", code,10l,TimeUnit.MINUTES);//验证码30分钟失效
+		System.out.println("phone"+phone+"userId"+userId);
 		String message=CommonUtils.sMessage(phone,orderNo.subSequence(orderNo.length()-4, orderNo.length()).toString(), amount,code);
+		System.out.println(message);
 		if(!message.split(",")[0].equals("0")){
 			result.put("msg", "短信验证码发送失败，请稍后再试。");
 		}
@@ -611,6 +618,7 @@ public class OrderService {
 			String info = o[15]+"";
 			totalPtice = this.calculateDerate(totalPtice, info);
 		}
+		System.out.println("实际金额："+totalPtice);
 		if(totalPtice.compareTo(BigDecimal.ZERO) == -1){
 			totalPtice = BigDecimal.ZERO;
 		}
@@ -635,7 +643,10 @@ public class OrderService {
 					deratePrice = Integer.valueOf(pp[1]);
 				}
 			}
-			totalPtice = totalPtice.subtract(new BigDecimal(deratePrice));
+			if(totalPtice.intValue()>=max){
+				totalPtice = totalPtice.subtract(new BigDecimal(deratePrice));
+			}
+			
 		}
 		return totalPtice;
 	}
@@ -647,7 +658,7 @@ public class OrderService {
 	 * @return
 	 */
 	private BigDecimal calculateCoupon(Long userId, BigDecimal totalPtice,Long couponId, StringBuffer getCouponId){
-		if(StringUtils.isEmpty(couponId)){
+		if(StringUtils.isEmpty(couponId)||0==couponId){
 			return totalPtice;
 		}
 		Object[] cou = couponDao.queryCouponInfo(userId, couponId);

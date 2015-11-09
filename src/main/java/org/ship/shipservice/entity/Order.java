@@ -29,6 +29,7 @@ public class Order extends IdEntity {
 	private String orderNo;
 	private String sftOrderNo;
 	private String sessionToken;
+	private String consumeCode;
 	private Date bookTime;
 	private Date createTime;
 	//private OilStation oilStation;
@@ -174,4 +175,13 @@ public class Order extends IdEntity {
 	public void setSessionToken(String sessionToken) {
 		this.sessionToken = sessionToken;
 	}
+
+	public String getConsumeCode() {
+		return consumeCode;
+	}
+
+	public void setConsumeCode(String consumeCode) {
+		this.consumeCode = consumeCode;
+	}
+	
 }

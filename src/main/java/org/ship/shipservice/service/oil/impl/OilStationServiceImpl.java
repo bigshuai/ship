@@ -38,12 +38,12 @@ public class OilStationServiceImpl implements OilStationService {
 			os.setName(o[1]+"");
 			os.setCredit(Float.valueOf(o[2]+""));
 			os.setCouponFlag(Integer.valueOf(o[3]+""));
-			os.setAppraiseNum(Integer.valueOf(o[4]+""));
-			os.setStatus(Integer.valueOf(o[5]+""));
-			os.setDerate(o[6]+"");
-			os.setPicUrl(o[7]+"");
-			os.setLatitude(o[8]+"");
-			os.setLongitude(o[9]+"");
+			os.setAppraiseNum(oilStationDao.findAppraise(Integer.valueOf(o[0]+"")));
+			os.setStatus(Integer.valueOf(o[4]+""));
+			os.setDerate(oilStationDao.findInfo(Integer.valueOf(o[0]+"")));
+			os.setPicUrl(o[5]+"");
+			os.setLatitude(o[6]+"");
+			os.setLongitude(o[7]+"");
 			result.add(os);
 		}
 		r.setDataList(result);

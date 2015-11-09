@@ -118,7 +118,7 @@ public class OrderRestController {
 		order.setProductName(jo.getString("productName"));
 		order.setPrice(jo.getString("price"));
 		order.setNum(jo.getInteger("num"));
-		order.setCouponId(jo.getLong("couponId"));
+		order.setCouponId(jo.getLong("couponId")==null?0:jo.getLong("couponId"));
 		order.setOsId(jo.getLong("osId"));
 		// 订单类型 1-正常加油订单
 		String r = this.checkOrderParam(order);
@@ -185,8 +185,6 @@ public class OrderRestController {
 		Long userId = jo.getLong("userId");
 		String orderNo = jo.getString("orderNo");
 		String code = jo.getString("code");
-		if (redisTemplate.boundValueOps(userId + "").get() != null) {
-			if (code.equals(redisTemplate.boundValueOps(userId + "").get())) {
 				String r = null;
 				if (StringUtils.isEmpty(r)) {
 					try {
@@ -197,25 +195,18 @@ public class OrderRestController {
 						} else {
 							return CommonUtils.printStr(
 									ErrorConstants.PRECHECK_FOR_SIGN_ERROR,
-									res.get("msg"));
+									"结算异常，请检查您的余额与验证码");
 						}
 					} catch (Exception e) {
 						return CommonUtils.printStr(
 								ErrorConstants.PRECHECK_FOR_SIGN_ERROR,
-								e.getMessage());
+								"结算异常，请检查您的余额与验证码");
 					}
 
 				} else {
 					return CommonUtils.printStr(ErrorConstants.PARAM_ERRO,
 							"参数异常");
 				}
-			} else {
-				return CommonUtils
-						.printStr(ErrorConstants.PARAM_ERRO, "验证码不正确");
-			}
-		} else {
-			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "验证码已失效");
-		}
 
 	}
 
@@ -241,7 +232,7 @@ public class OrderRestController {
 				} else {
 					return CommonUtils.printStr(
 							ErrorConstants.PRECHECK_FOR_SIGN_ERROR,
-							res.get("msg"));
+							"验证码错误");
 				}
 			} catch (Exception e) {
 				return CommonUtils.printStr(
@@ -284,7 +275,7 @@ public class OrderRestController {
 					} catch (Exception e) {
 						return CommonUtils.printStr(
 								ErrorConstants.PRECHECK_FOR_SIGN_ERROR,
-								e.getMessage());
+								"结算异常，请检查您的余额与验证码");
 					}
 
 				} else {
@@ -293,7 +284,7 @@ public class OrderRestController {
 				}
 			} else {
 				return CommonUtils
-						.printStr(ErrorConstants.PARAM_ERRO, "验证码不正确");
+						.printStr(ErrorConstants.PARAM_ERRO, "结算异常，请检查您的余额与验证码");
 			}
 		} else {
 			return CommonUtils.printStr(ErrorConstants.PARAM_ERRO, "验证码已失效");
@@ -428,9 +419,11 @@ public class OrderRestController {
 								Integer.valueOf(TransStatus), OrderNo,
 								OrderAmount, TransAmount);
 					} else {
+						System.out.println("看这里。。。。。。。。。。。。。。。。。。。。");
 						r = orderService.updateOrder(
 								Integer.valueOf(TransStatus), OrderNo,
 								OrderAmount, TransAmount);
+						System.out.println("看见了。。。。。。。。。。。。。。。。。。。。。");
 					}
 					if (r > 0) {
 						logger.error("支付回调更新成功");

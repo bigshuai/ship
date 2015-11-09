@@ -28,6 +28,8 @@ import org.ship.shipservice.service.account.AccountService;
 import org.ship.shipservice.service.account.AdviceService;
 import org.ship.shipservice.service.account.ConsumeInfoService;
 import org.ship.shipservice.service.bank.BankService;
+import org.ship.shipservice.service.coupon.CouponService;
+import org.ship.shipservice.service.coupon.impl.CouponServiceImpl;
 import org.ship.shipservice.service.favorite.FavoriteService;
 import org.ship.shipservice.service.home.HomeService;
 import org.ship.shipservice.utils.CommonUtils;
@@ -70,6 +72,8 @@ public class UserInfoRestController {
     private BankService bankService;
 	@Autowired
 	private HomeService homeService;
+	@Autowired
+    private CouponServiceImpl couponService;
 	/**
 	 * 用户中心列表
 	 * 
@@ -83,7 +87,8 @@ public class UserInfoRestController {
 					MyConstant.JSON_RETURN_MESSAGE_400);
 		} else {
 			User user = accountService.findByPhone(phone);
-			int couponCount = user.getCouponList().size();
+			int couponCount = couponService.getCouponDao().queryUserCouponTotal(user.getId());
+			
 			int orderCount = 0;
 			if (user.getOrderList().size() != 0) {
 				for (Order order : user.getOrderList()) {
@@ -130,7 +135,7 @@ public class UserInfoRestController {
 				bean.setId(info.getId());
 				bean.setMoney(info.getOrderNo().startsWith("U") ? "+"+info.getAmount(): "-"+info.getAmount());
 				bean.setDescribe(info.getOrderNo().startsWith("U") ? "充值": "加油");
-				bean.setTime(info.getCreateTime());
+				bean.setTime(info.getCreatetime());
 				cbs.add(bean);
 			}
 			list.setDataList(cbs);

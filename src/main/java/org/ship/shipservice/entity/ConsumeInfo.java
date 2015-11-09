@@ -1,5 +1,6 @@
 package org.ship.shipservice.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -13,7 +14,7 @@ public class ConsumeInfo extends IdEntity{
 	private Integer type;
 	private Integer code;
 	private Integer status;
-	private String createTime;
+	private String createtime;
 	
 	public ConsumeInfo(){
 		
@@ -64,10 +65,13 @@ public class ConsumeInfo extends IdEntity{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	public String getCreateTime() {
-		return createTime;
+	@Column(name="create_time")
+	public String getCreatetime() {
+		return createtime;
 	}
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
+	public void setCreatetime(String createtime) {
+		this.createtime = createtime;
 	}
+	
+	
 }

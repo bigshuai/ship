@@ -16,6 +16,7 @@ import org.ship.shipservice.entity.Order;
 import org.ship.shipservice.entity.User;
 import org.ship.shipservice.service.account.AccountService;
 import org.ship.shipservice.service.bank.BankService;
+import org.ship.shipservice.service.coupon.impl.CouponServiceImpl;
 import org.ship.shipservice.utils.CommonUtils;
 import org.ship.shipservice.utils.MyConstant;
 import org.slf4j.Logger;
@@ -50,6 +51,8 @@ public class LoginRestController {
     private RedisTemplate<String, String> redisTemplate;  
 	@Autowired
     private BankService bankService;
+	@Autowired
+    private CouponServiceImpl couponService;
 	/**
 	 * 用户登陆
 	 * @param phone
@@ -66,7 +69,7 @@ public class LoginRestController {
 				String token = CommonUtils.getMD5(deviceToken+System.currentTimeMillis()+"");
 				servletContext.setAttribute(user.getId()+"", token);
 				user.setToken(token);
-				int couponCount = user.getCouponList().size();
+				int couponCount = couponService.getCouponDao().queryUserCouponTotal(user.getId());
 				int orderCount = 0;
 				if (user.getOrderList().size() != 0) {
 					for (Order order : user.getOrderList()) {

@@ -28,6 +28,7 @@ public class OrderBean {
 	private Long couponId;
 	private String amount;
 	private String osPicUrl;
+	private String consumeCode;
 	
 	public Long getUserId() {
 		return userId;
@@ -173,4 +174,11 @@ public class OrderBean {
 	public void setOsPicUrl(String osPicUrl) {
 		this.osPicUrl = osPicUrl;
 	}
+	public String getConsumeCode() {
+		return consumeCode;
+	}
+	public void setConsumeCode(String consumeCode) {
+		this.consumeCode = consumeCode;
+	}
+	
 }

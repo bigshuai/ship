@@ -79,8 +79,8 @@ public class CouponServiceImpl implements CouponService{
 			os.setName(o[2]+"");
 			os.setFaceValue((Integer.valueOf(o[3]+"")));
 			os.setLimitValue((Integer.valueOf(o[4]+"")));
-			os.setStartTime(null);
-			os.setEndTime(null);
+			os.setStartTime(o[5].toString());
+			os.setEndTime(o[6].toString());
 			os.setCreateTime(null);
 			result.add(os);
 		}
@@ -99,10 +99,15 @@ public class CouponServiceImpl implements CouponService{
 			result.setCode(ErrorConstants.COUPON_GET_EXIST_DAY_ERROR);
 			result.setMsg(ErrorConstants.getErrorMsg(ErrorConstants.COUPON_GET_EXIST_DAY_ERROR));
 		}else{
+			//在有效期内且没分发完
 			int n = couponDao.checkCouponTime(couponId);
 			if(n > 0){
-				//在有效期内
 				int r = couponDao.saveCoupon(userId, couponId);
+				//优惠券总数减少1
+				int limit = couponDao.getCouponLimit(couponId);
+				int c =limit-1;
+				System.out.println("个数。。。。"+limit+"优惠"+couponId);
+				couponDao.updateCouponLimit( c,couponId);
 				if(r > 0){
 					result.setCode(ErrorConstants.SUCCESS);
 					result.setMsg(ErrorConstants.getErrorMsg(ErrorConstants.SUCCESS));

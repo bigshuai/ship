@@ -89,7 +89,7 @@ public class CommonUtils {
 			out.write(filedata.getBytes());
 			out.flush();
 			out.close();
-			return "http://43.254.55.158"+httpRequest.getContextPath()+"/picture/"+newFileName;
+			return "http://www.hyb158.com:8080"+httpRequest.getContextPath()+"/picture/"+newFileName;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";		
@@ -457,8 +457,14 @@ public class CommonUtils {
 	 */
 	public static synchronized String getMerchantOrderNo(String userId){
 		//格式  H20150908userIdSystem.currentTimeMillis()5位随机数
-		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-		return "H"+format.format(new Date())+ userId + String.format("%05d", new Random().nextInt(10000));
+		Random rand = new Random();
+		long l = 0;
+		double n = 100000000000D - 100000000D;
+		for (int i = 0; i < 10; i++) {
+			l = (long)(rand.nextDouble() * n + 100000000D);
+		}
+		String s = "H" + l;
+		return s;
 	}
 	
 	/**
@@ -505,8 +511,7 @@ public class CommonUtils {
 	}
 
 	public static void main(String[] args) {
-		for(int i =0; i < 10; i++){
-			System.out.println(getConsumeCode());
-		}
+		System.out.println(CommonUtils.sendMessage("18516293301", "hah "));
+		System.out.println(CommonUtils.sMessage("18516293301", "1", "1", "hah"));
 	}
 }

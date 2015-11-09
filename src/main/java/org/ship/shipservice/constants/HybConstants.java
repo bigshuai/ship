@@ -8,7 +8,7 @@ public interface HybConstants {
 	static Integer MINAMOUNT  = 100;
 	
 	/**支付常量 开始----------------------------------------------*/
-	static final String MERCHANTNO = "245888";
+	static final String MERCHANTNO = "508581";
 	static final String PRINCIPALID = "103100000000000111637220";
 	static final String SUCCESS = "SUCCESS";
 	
@@ -25,9 +25,9 @@ public interface HybConstants {
 	/**支付常量结束-----------------------------------------------*/
 	
 	
-	static final String NOTIFYURL = "http://43.254.55.158/shipService/api/v1/order/notify";
+	static final String NOTIFYURL = "http://139.196.51.164:8080/shipService/api/v1/order/notify";
 	
-	static final String MERCHANTMY = "abcdefg";
+	static final String MERCHANTMY = "Peter1234554321Peter";
 	
 	static final String USERID = "userId";
 	static final String JIA_OIL_TIPS = "尊敬的航运宝用户，您好！您于20xx.xx.xx成功加油x升，金额为x元整。如有任何问题，请咨询客服。谢谢您的惠顾！";

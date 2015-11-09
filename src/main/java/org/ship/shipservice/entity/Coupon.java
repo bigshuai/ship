@@ -2,6 +2,7 @@ package org.ship.shipservice.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -62,6 +63,7 @@ public class Coupon extends IdEntity {
 		this.faceValue = faceValue;
 	}
 
+	@Column(name = "limit_value")
 	public Integer getLimitValue() {
 		return limitValue;
 	}

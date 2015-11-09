@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ConsumeInfoDao extends CrudRepository<ConsumeInfo,Long>{
-	Page<ConsumeInfo> findByUserId(Integer accountId,Pageable pageable);
+	Page<ConsumeInfo> findByUserIdOrderByIdDesc(Integer accountId,Pageable pageable);
 }

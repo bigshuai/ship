@@ -14,7 +14,7 @@ public class ConsumeInfoService {
 	private ConsumeInfoDao consumeInfoDao;
 
 	public Page<ConsumeInfo> findByAccountId(Integer userId, PageRequest page) {
-		return consumeInfoDao.findByUserId(userId,page);
+		return consumeInfoDao.findByUserIdOrderByIdDesc(userId,page);
 	}
 
 	public ConsumeInfoDao getConsumeInfoDao() {

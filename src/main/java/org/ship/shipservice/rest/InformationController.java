@@ -148,14 +148,14 @@ public class InformationController {
 		if(infor.getInfoTypeTwo()!=null&&infor.getInfoTypeTwo()!=0){
 			str+=" and info.infoTypeTwo like \'%"+infor.getInfoTypeTwo()+"%\'";
 		}
-		if(infor.getCity()!=null){
+		if(infor.getCity()!=null&&!"".equals(infor.getCity())){
 			str+=" and info.city like \'%"+infor.getCity()+"%\'";
 		}
-		if(infor.getPrice()!=null){
-			if(infor.getPrice().equals("1")){
-				str+=" order by  info.price asc";
-			}else if(infor.getPrice().equals("2")){
-				str+=" order by  info.price desc";
+		if(infor.getPrice()!=null&&!"".equals(infor.getPrice())){
+			if(infor.getPrice().equals("2")){
+				str+=" order by   CAST(info.price AS big_decimal)  asc";
+			}else if(infor.getPrice().equals("1")){
+				str+=" order by   CAST(info.price AS big_decimal) desc";
 			}
 		}else{
 			str+=" order by info.createTime desc , info.reviewCount desc";
