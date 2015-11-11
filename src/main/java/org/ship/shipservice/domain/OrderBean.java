@@ -19,6 +19,7 @@ public class OrderBean {
 	private String bookTime;
 	private String bookAddr;
 	private String createTime;
+	private String city;
 	
 	private Long userId;
 	private String phone;
@@ -179,6 +180,12 @@ public class OrderBean {
 	}
 	public void setConsumeCode(String consumeCode) {
 		this.consumeCode = consumeCode;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
 	}
 	
 }

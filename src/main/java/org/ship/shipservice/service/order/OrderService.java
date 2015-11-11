@@ -26,6 +26,7 @@ import org.ship.shipservice.repository.OrderDao;
 import org.ship.shipservice.repository.UserDao;
 import org.ship.shipservice.rest.BankController;
 import org.ship.shipservice.utils.CommonUtils;
+import org.ship.shipservice.utils.OrderPayClient;
 import org.ship.shipservice.utils.rsa.RSAUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,7 +144,7 @@ public class OrderService {
 	 */
 	public Map<String, String> createOrder(OrderBean order, Integer op) throws Exception{
 		Map<String, String> result = new HashMap<String, String>();
-		SjPayClient client = SjPayClient.getInstance();
+		OrderPayClient client = OrderPayClient.getInstance();
 		PaymentOrder pOrder = new PaymentOrder();
 		try {
 			//根据ID获取最新商品信息
